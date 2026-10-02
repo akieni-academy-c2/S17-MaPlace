@@ -29,29 +29,29 @@ const tickets = [
   {
     establishmentEmail: 'pharmacie@example.com',
     number: 1,
-    customerName: 'Jean',
-    customerPhone: '0611111111',
+    name: 'Jean',
+    phone: '0611111111',
     status: 'COMPLETED',
   },
   {
     establishmentEmail: 'pharmacie@example.com',
     number: 2,
-    customerName: 'Paul',
-    customerPhone: '0622222222',
+    name: 'Paul',
+    phone: '0622222222',
     status: 'SERVING',
   },
   {
     establishmentEmail: 'pharmacie@example.com',
     number: 3,
-    customerName: 'Marie',
-    customerPhone: '0633333333',
+    name: 'Marie',
+    phone: '0633333333',
     status: 'WAITING',
   },
   {
     establishmentEmail: 'pharmacie@example.com',
     number: 4,
-    customerName: 'David',
-    customerPhone: '0644444444',
+    name: 'David',
+    phone: '0644444444',
     status: 'WAITING',
   },
 ];
@@ -76,6 +76,7 @@ const seed = async () => {
     // ==========================================
 
     const establishmentIds = {};
+    const queueIds = {};
 
     for (const establishment of establishments) {
       const passwordHash = await bcrypt.hash(
@@ -107,6 +108,38 @@ const seed = async () => {
       establishmentIds[establishment.email] =
         result.rows[0].id;
 
+      const lastNumber = tickets.reduce(
+        (highest, ticket) =>
+          ticket.establishmentEmail === establishment.email
+            ? Math.max(highest, ticket.number)
+            : highest,
+        0
+      );
+
+      const queueResult = await client.query(
+        `
+          INSERT INTO queues (
+            establishment_id,
+            status,
+            last_number,
+            closed_at
+          )
+          VALUES ($1, $2, $3, $4)
+          RETURNING id
+        `,
+        [
+          establishmentIds[establishment.email],
+          establishment.queueStatus,
+          lastNumber,
+          establishment.queueStatus === 'CLOSED'
+            ? new Date()
+            : null,
+        ]
+      );
+
+      queueIds[establishment.email] =
+        queueResult.rows[0].id;
+
       console.log(
         `Created: ${establishment.name}`
       );
@@ -115,27 +148,25 @@ const seed = async () => {
     // ==========================================
     // CRÉATION DES TICKETS
     // ==========================================
-
     for (const ticket of tickets) {
-      const establishmentId =
-        establishmentIds[ticket.establishmentEmail];
+      const queueId = queueIds[ticket.establishmentEmail];
 
       await client.query(
         `
           INSERT INTO tickets (
-            establishment_id,
+            queue_id,
             number,
-            customer_name,
-            customer_phone,
+            name,
+            phone,
             status
           )
           VALUES ($1, $2, $3, $4, $5)
         `,
         [
-          establishmentId,
+          queueId,
           ticket.number,
-          ticket.customerName,
-          ticket.customerPhone,
+          ticket.name,
+          ticket.phone,
           ticket.status,
         ]
       );

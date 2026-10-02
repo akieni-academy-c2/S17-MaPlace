@@ -6,6 +6,8 @@ import pool from './src/config/database.js';
 import authRoutes from './src/routes/authRoutes.js';
 import establishmentRoutes
   from './src/routes/establishmentRoutes.js';
+import queueRoutes from './src/routes/queueRoutes.js';
+import ticketRoutes from './src/routes/ticketRoutes.js';
 
 import errorMiddleware
   from './src/middleware/errorMiddleware.js';
@@ -53,6 +55,12 @@ app.use(
   '/api/establishments',
   establishmentRoutes
 );
+
+// Gestion de la file par l'établissement authentifié.
+app.use('/api/queue', queueRoutes);
+
+// Création et suivi des tickets visiteurs.
+app.use('/api/tickets', ticketRoutes);
 
 // ==========================================
 // GESTION DES ERREURS
