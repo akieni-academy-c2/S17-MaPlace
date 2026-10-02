@@ -13,7 +13,8 @@
     "test:users": "bash tests/users.test.sh",
     "test:establishments": "bash tests/establishments.test.sh",
     "test:services": "bash tests/services.test.sh",
-    "test:queues": "bash tests/queues.test.sh"
+    "test:queues": "bash tests/queues.test.sh",
+    "test:tickets": "bash tests/tickets.test.sh"
   },
   "keywords": [],
   "author": "",

@@ -7,6 +7,7 @@ import establishmentRouter from './src/route/establishment.js';
 import categoryRouter from './src/route/category.js';
 import serviceRouter from './src/route/service.js';
 import queueRouter from './src/route/queue.js';
+import ticketRouter from './src/route/ticket.js';
 import { notFound, errorHandler } from './src/middleware/errorHandler.js';
 
 const app = express();
@@ -15,25 +16,17 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-app.get('/', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT NOW()');
-
-        res.json({
+app.get('/', (req, res) => {
+    res.json({
             message: 'Ma Place API fonctionne',
-            database: result.rows[0],
-        });
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            message: 'Erreur de connexion à la base de données',
-        });
-    }
+    });
 });
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
+// Les tickets sont publics (client anonyme possible) : ils doivent être
+// montés AVANT les routeurs qui imposent authenticate sur /api/establishments.
+app.use('/api/establishments', ticketRouter);
 app.use('/api/establishments', establishmentRouter);
 app.use('/api/establishments', serviceRouter);
 app.use('/api/establishments', queueRouter);

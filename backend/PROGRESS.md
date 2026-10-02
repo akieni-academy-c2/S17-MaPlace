@@ -1,7 +1,7 @@
 # MA PLACE — Suivi du backend
 
 > **Fichier de reprise.** Lire ce fichier en premier pour continuer le développement.
-> Dernière mise à jour : étape 5 (Files d'attente) validée — **120 tests verts**.
+> Dernière mise à jour : étape 6 (Tickets) validée — **161 tests verts**.
 
 ---
 
@@ -14,7 +14,8 @@
 | 3 | Établissements | ✅ Validé | `npm run test:establishments` (30) |
 | 4 | Services + migration 001 | ✅ Validé | `npm run test:services` (34) |
 | **5** | **Files d'attente + migration 002** | ✅ **Validé** | `npm run test:queues` (31) |
-| 6 | Tickets / clients | ⬜ **À faire (prochaine étape)** | — |
+| **6** | **Tickets** | ✅ **Validé** | `npm run test:tickets` (41) |
+| 7 | Gestion de la file (gestionnaire) | ⬜ **À faire (prochaine étape)** | — |
 | 7 | Gestion de la file (gestionnaire) | ⬜ | — |
 | 8 | Temps réel (WebSocket) | ⬜ | — |
 | 9 | QR Code (accès public) | ⬜ | — |
@@ -28,7 +29,7 @@
 
 ```bash
 cd backend
-npm test        # LA commande : démarre le serveur si besoin, lance les 5
+npm test        # LA commande : démarre le serveur si besoin, lance les 6
                 # scripts de tests, nettoie les données de test, arrête le serveur
 ```
 
@@ -133,20 +134,42 @@ Fichiers : `model/queueModel.js`, `controller/queueController.js`, `route/queue.
 `getQueueStats()` : ils resteront à `0` / `null` tant que l'étape 6 (tickets)
 n'existe pas.
 
-### Étape 6 — Tickets ⬜ (prochaine)
-- Parcours : QR → établissement → service → file du jour → nom + téléphone →
-  ticket → position.
-- Endpoints : rejoindre (créer ticket avec `number` séquentiel par queue,
-  `tracking_token`), récupérer son ticket, position / nb de personnes devant,
-  quitter la file, état du ticket.
-- Gérer les doublons (contraintes `UNIQUE`) et les erreurs PG propres.
-- `model/ticketModel.js`, `controller/ticketController.js`, `route/ticket.js`,
-  `tests/tickets.test.sh`.
-- **Déjà en place** : `getQueueStats()` (queueModel) compte les personnes présentes
-  et le ticket appelé — à brancher sur la réponse de `GET .../queue` (déjà fait) et
-  à réutiliser pour la position.
+### Étape 6 — Tickets ✅ Validé
 
-### Étape 7 — Gestion de la file par le gestionnaire ⬜
+**Aucune migration** : la table `tickets` existait déjà dans `schema.sql`.
+
+Routes publiques (JWT **optionnel**) — montées **en premier** dans `app.js` :
+
+| Méthode | Chemin | Rôle |
+|---|---|---|
+| POST | `.../queue/tickets` | Rejoindre : `{name, phone, channel?}` → 201 `{ticket, position, peopleAhead}` |
+| GET | `.../queue/tickets/:trackingToken` | Suivre son ticket (anonyme possible) |
+| DELETE | `.../queue/tickets/:trackingToken` | Quitter → annulation logique `CANCELLED` |
+
+Points importants :
+
+- **Auth facultative** : `optionalAuthenticate` (`middleware/auth.js`). Sans token →
+  `user_id = NULL` (client anonyme). Avec token → il doit être valide, sinon 401
+  (on ne perd jamais silencieusement l'identité).
+- **`tracking_token`** : jeton de 24 caractères URL-sûr (`randomBytes`), unique.
+  C'est la clé de suivi anonyme : il donne accès en lecture/annulation du ticket.
+- **Numérotation séquentielle** : `SELECT ... FOR UPDATE` sur la ligne `queues`
+  dans une transaction → deux créations concurrentes ne peuvent pas avoir le même
+  numéro. `ticket_events` reçoit un événement à la création et à l'annulation.
+- **Position** = 1 + tickets **actifs** de numéro inférieur (les annulés/terminés
+  ne bloquent plus). Un numéro annulé n'est jamais réutilisé.
+- **Un seul ticket actif par compte et par file** → 409.
+- Inscriptions possibles si la file est `OPEN` ou `PAUSED` ; 400 si
+  `REGISTRATION_CLOSED` / `CLOSED`.
+- ⚠️ **Ordre des routeurs** : `ticketRouter` est monté **avant**
+  `establishment/service/queue` dans `app.js`, sinon leur
+  `router.use(authenticate)` renvoie 401 sur les routes publiques.
+
+Fichiers : `model/ticketModel.js`, `controller/ticketController.js`,
+`route/ticket.js`, `middleware/auth.js` (+`optionalAuthenticate`),
+`tests/tickets.test.sh` (41 tests).
+
+### Étape 7 — Gestion de la file par le gestionnaire ⬜ (prochaine)
 - Actions : suivant (appeler), absent, servi, annuler, pause, reprendre, fermer.
 - Centraliser la logique métier (ne pas la mettre dans le controller),
   tout consigner dans `ticket_events` (`old_status`, `new_status`, `actor_id`).
