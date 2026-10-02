@@ -5,6 +5,7 @@ import authRouter from './src/route/auth.js';
 import userRouter from './src/route/user.js';
 import establishmentRouter from './src/route/establishment.js';
 import categoryRouter from './src/route/category.js';
+import serviceRouter from './src/route/service.js';
 import { notFound, errorHandler } from './src/middleware/errorHandler.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.get('/', async (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/establishments', establishmentRouter);
+app.use('/api/establishments', serviceRouter);
 app.use('/api/categories', categoryRouter);
 
 app.use(notFound);

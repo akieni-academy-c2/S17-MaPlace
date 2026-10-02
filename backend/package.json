@@ -8,9 +8,11 @@
     "dev": "node --watch app.js",
     "start": "node app.js",
     "seed": "node database/reset-seed.js",
+    "migrate": "node database/migrate.js",
     "test:auth": "bash tests/auth.test.sh",
     "test:users": "bash tests/users.test.sh",
-    "test:establishments": "bash tests/establishments.test.sh"
+    "test:establishments": "bash tests/establishments.test.sh",
+    "test:services": "bash tests/services.test.sh"
   },
   "keywords": [],
   "author": "",

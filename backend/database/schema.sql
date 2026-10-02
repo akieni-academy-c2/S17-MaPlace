@@ -115,7 +115,36 @@ CREATE TABLE establishments (
 
 
 -- =========================================================
--- 6. TABLE QUEUE
+-- 6. TABLE SERVICE
+-- =========================================================
+
+CREATE TABLE services (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    establishment_id UUID NOT NULL,
+
+    name VARCHAR(150) NOT NULL,
+
+    description TEXT,
+
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_service_establishment
+        FOREIGN KEY (establishment_id)
+        REFERENCES establishments(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_service_name_per_establishment
+        UNIQUE (establishment_id, name)
+);
+
+
+-- =========================================================
+-- 7. TABLE QUEUE
 -- =========================================================
 
 CREATE TABLE queues (
@@ -142,7 +171,7 @@ CREATE TABLE queues (
 
 
 -- =========================================================
--- 7. TABLE TICKET
+-- 8. TABLE TICKET
 -- =========================================================
 
 CREATE TABLE tickets (
@@ -194,7 +223,7 @@ CREATE TABLE tickets (
 
 
 -- =========================================================
--- 8. TABLE TICKET_EVENT
+-- 9. TABLE TICKET_EVENT
 -- =========================================================
 
 CREATE TABLE ticket_events (
@@ -223,7 +252,7 @@ CREATE TABLE ticket_events (
 
 
 -- =========================================================
--- 9. INDEX
+-- 10. INDEX
 -- =========================================================
 
 CREATE INDEX idx_establishments_category_id
@@ -237,6 +266,9 @@ CREATE INDEX idx_queues_establishment_id
 
 CREATE INDEX idx_queues_date
     ON queues(date);
+
+CREATE INDEX idx_services_establishment_id
+    ON services(establishment_id);
 
 CREATE INDEX idx_tickets_queue_id
     ON tickets(queue_id);
