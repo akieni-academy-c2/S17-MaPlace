@@ -9,7 +9,8 @@
     "start": "node app.js",
     "seed": "node database/reset-seed.js",
     "test:auth": "bash tests/auth.test.sh",
-    "test:users": "bash tests/users.test.sh"
+    "test:users": "bash tests/users.test.sh",
+    "test:establishments": "bash tests/establishments.test.sh"
   },
   "keywords": [],
   "author": "",

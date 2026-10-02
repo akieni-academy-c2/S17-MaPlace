@@ -43,6 +43,22 @@ function errorHandler(err, req, res, next) {
     });
   }
 
+  // Violation de clé étrangère (ex : catégorie inexistante).
+  if (err.code === "23503") {
+    return res.status(400).json({
+      success: false,
+      message: "Référence invalide : la ressource liée est introuvable.",
+    });
+  }
+
+  // Identifiant au mauvais format (ex : UUID invalide).
+  if (err.code === "22P02") {
+    return res.status(400).json({
+      success: false,
+      message: "Format d'identifiant invalide.",
+    });
+  }
+
   console.error(err);
 
   res.status(500).json({

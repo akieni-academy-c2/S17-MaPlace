@@ -72,16 +72,22 @@ json_field() {
 }
 
 # Nettoie un utilisateur de test créé pendant le script.
+# Supprime d'abord ses établissements (FK manager en ON DELETE RESTRICT).
 #
 # $1 : email de l'utilisateur à supprimer
 delete_user() {
     node --input-type=module -e "
         import 'dotenv/config';
         import pool from './src/config/database.js';
-        const r = await pool.query('DELETE FROM users WHERE email = \$1', ['$1']);
-        console.log('Utilisateur de test supprimé :', r.rowCount);
+        const email = process.argv[1];
+        const e = await pool.query(
+            'DELETE FROM establishments WHERE manager_id IN (SELECT id FROM users WHERE email = \$1)',
+            [email]
+        );
+        const u = await pool.query('DELETE FROM users WHERE email = \$1', [email]);
+        console.log('Nettoyage : ' + e.rowCount + ' établissement(s), ' + u.rowCount + ' utilisateur(s).');
         await pool.end();
-    " || echo "(nettoyage ignoré)"
+    " "$1" || echo "(nettoyage ignoré)"
 }
 
 # Affiche le résumé des tests.
