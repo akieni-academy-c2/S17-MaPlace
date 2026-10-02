@@ -72,7 +72,8 @@ json_field() {
 }
 
 # Nettoie un utilisateur de test créé pendant le script.
-# Supprime d'abord ses établissements (FK manager en ON DELETE RESTRICT).
+# Ordre imposé par les FK : files d'attente (RESTRICT vers services),
+# puis établissements (ON DELETE RESTRICT vers users), puis l'utilisateur.
 #
 # $1 : email de l'utilisateur à supprimer
 delete_user() {
@@ -80,12 +81,16 @@ delete_user() {
         import 'dotenv/config';
         import pool from './src/config/database.js';
         const email = process.argv[1];
+        const q = await pool.query(
+            'DELETE FROM queues WHERE establishment_id IN (SELECT id FROM establishments WHERE manager_id IN (SELECT id FROM users WHERE email = \$1))',
+            [email]
+        );
         const e = await pool.query(
             'DELETE FROM establishments WHERE manager_id IN (SELECT id FROM users WHERE email = \$1)',
             [email]
         );
         const u = await pool.query('DELETE FROM users WHERE email = \$1', [email]);
-        console.log('Nettoyage : ' + e.rowCount + ' établissement(s), ' + u.rowCount + ' utilisateur(s).');
+        console.log('Nettoyage : ' + q.rowCount + ' file(s), ' + e.rowCount + ' établissement(s), ' + u.rowCount + ' utilisateur(s).');
         await pool.end();
     " "$1" || echo "(nettoyage ignoré)"
 }

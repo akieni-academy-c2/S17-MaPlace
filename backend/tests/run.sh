@@ -63,8 +63,12 @@ echo ""
 bash tests/services.test.sh
 SERVICES_CODE=$?
 
+echo ""
+bash tests/queues.test.sh
+QUEUES_CODE=$?
+
 # Échec global si au moins un script a échoué.
-if [ "$USERS_CODE" -ne 0 ] || [ "$ESTAB_CODE" -ne 0 ] || [ "$SERVICES_CODE" -ne 0 ]; then
+if [ "$USERS_CODE" -ne 0 ] || [ "$ESTAB_CODE" -ne 0 ] || [ "$SERVICES_CODE" -ne 0 ] || [ "$QUEUES_CODE" -ne 0 ]; then
     CODE=1
 fi
 

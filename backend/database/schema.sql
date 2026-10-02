@@ -152,6 +152,8 @@ CREATE TABLE queues (
 
     establishment_id UUID NOT NULL,
 
+    service_id UUID NOT NULL,
+
     date DATE NOT NULL DEFAULT CURRENT_DATE,
 
     status queue_status NOT NULL DEFAULT 'OPEN',
@@ -165,8 +167,15 @@ CREATE TABLE queues (
         REFERENCES establishments(id)
         ON DELETE CASCADE,
 
-    CONSTRAINT unique_queue_per_day
-        UNIQUE (establishment_id, date)
+    -- Un service supprimé avec un historique de files est refusé (RESTRICT).
+    CONSTRAINT fk_queue_service
+        FOREIGN KEY (service_id)
+        REFERENCES services(id)
+        ON DELETE RESTRICT,
+
+    -- Règle d'or : une file = un service + une journée.
+    CONSTRAINT unique_queue_per_service_per_day
+        UNIQUE (service_id, date)
 );
 
 
@@ -263,6 +272,9 @@ CREATE INDEX idx_establishments_manager_id
 
 CREATE INDEX idx_queues_establishment_id
     ON queues(establishment_id);
+
+CREATE INDEX idx_queues_service_id
+    ON queues(service_id);
 
 CREATE INDEX idx_queues_date
     ON queues(date);

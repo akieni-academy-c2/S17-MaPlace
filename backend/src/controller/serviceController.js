@@ -8,6 +8,7 @@ import {
     updateServiceStatus,
     deleteService,
 } from '../model/serviceModel.js';
+import { countQueuesByService } from '../model/queueModel.js';
 import { findEstablishmentById } from '../model/establishmentModel.js';
 
 /**
@@ -265,6 +266,17 @@ async function deleteServiceHandler(req, res, next) {
             req.user.id
         );
 
+        // FK RESTRICT depuis queues : on refuse proprement un service
+        // qui a déjà une historique de files d'attente.
+        const queueCount = await countQueuesByService(service.id);
+
+        if (queueCount > 0) {
+            throw new AppError(
+                'Ce service a un historique de files d\'attente : suppression impossible.',
+                400
+            );
+        }
+
         await deleteService(service.id);
 
         res.status(200).json({
@@ -283,4 +295,5 @@ export {
     updateServiceHandler,
     updateServiceStatusHandler,
     deleteServiceHandler,
+    getOwnedService,
 };
