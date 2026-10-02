@@ -4,10 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "bash tests/run.sh",
     "dev": "node --watch app.js",
     "start": "node app.js",
-    "seed": "node database/reset-seed.js"
+    "seed": "node database/reset-seed.js",
+    "test:auth": "bash tests/auth.test.sh",
+    "test:users": "bash tests/users.test.sh"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +19,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.1"
   }
 }

@@ -1,6 +1,9 @@
-import express from 'express';
 import 'dotenv/config';
+import express from 'express';
 import pool from './src/config/database.js';
+import authRouter from './src/route/auth.js';
+import userRouter from './src/route/user.js';
+import { notFound, errorHandler } from './src/middleware/errorHandler.js';
 
 const app = express();
 
@@ -24,6 +27,12 @@ app.get('/', async (req, res) => {
         });
     }
 });
+
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Serveur lancé sur http://localhost:${PORT}`);
