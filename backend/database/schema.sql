@@ -1,19 +1,4 @@
--- =========================================================
--- MA PLACE
--- Schéma PostgreSQL - MVP
--- =========================================================
-
-
--- =========================================================
--- 1. EXTENSION UUID
--- =========================================================
-
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
-
--- =========================================================
--- 2. ENUMS
--- =========================================================
 
 CREATE TYPE queue_status AS ENUM (
     'OPEN',
@@ -29,10 +14,6 @@ CREATE TYPE ticket_status AS ENUM (
 );
 
 
--- =========================================================
--- 3. TABLE : ESTABLISHMENTS
--- =========================================================
-
 CREATE TABLE establishments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
@@ -44,11 +25,7 @@ CREATE TABLE establishments (
 
     phone VARCHAR(30),
 
-    -- MIROIR du statut de la file du jour.
-    -- La source de vérité est la table queues (colonne status).
-    -- Ce champ est synchronisé par queueService lors de chaque
-    -- transition et permet au GET /api/establishments (public)
-    -- de savoir si la file est ouverte sans jointure.
+    -- Miroir du statut de la file, synchronisé lors des transitions.
     queue_status queue_status NOT NULL DEFAULT 'CLOSED',
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -56,13 +33,6 @@ CREATE TABLE establishments (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-
--- =========================================================
--- 4. TABLE : QUEUES
--- =========================================================
--- Une file = une journée.
--- Chaque ouverture de file crée une nouvelle ligne.
--- L'historique est conservé (les files CLOSED restent en base).
 
 CREATE TABLE queues (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -72,8 +42,6 @@ CREATE TABLE queues (
     status queue_status NOT NULL DEFAULT 'OPEN',
 
     -- Dernier numéro attribué sur cette file.
-    -- Permet de générer le prochain numéro sans collision
-    -- lors de créations simultanées.
     last_number INTEGER NOT NULL DEFAULT 0,
 
     opened_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -92,8 +60,7 @@ CREATE TABLE queues (
     CONSTRAINT queues_last_number_positive
         CHECK (last_number >= 0),
 
-    -- Une file ne peut être fermée sans date de fermeture,
-    -- et ne peut pas être ouverte avec une date de fermeture.
+    -- La date de fermeture doit correspondre au statut CLOSED.
     CONSTRAINT queues_closed_at_consistent
         CHECK (
             (status = 'CLOSED' AND closed_at IS NOT NULL)
@@ -103,14 +70,9 @@ CREATE TABLE queues (
 );
 
 
--- =========================================================
--- 5. TABLE : TICKETS
--- =========================================================
-
 CREATE TABLE tickets (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-    -- Un ticket appartient à une file (donc à une journée).
     queue_id UUID NOT NULL,
 
     number INTEGER NOT NULL,
@@ -130,7 +92,6 @@ CREATE TABLE tickets (
         REFERENCES queues(id)
         ON DELETE CASCADE,
 
-    -- Un numéro ne peut être attribué qu'une seule fois par file.
     CONSTRAINT tickets_number_positive
         CHECK (number > 0),
 
@@ -139,14 +100,9 @@ CREATE TABLE tickets (
 );
 
 
--- =========================================================
--- 6. INDEX
--- =========================================================
-
 CREATE INDEX idx_queues_establishment_id
     ON queues(establishment_id);
 
--- Recherche de la file du jour (status OPEN ou PAUSED).
 CREATE INDEX idx_queues_establishment_status
     ON queues(establishment_id, status);
 
@@ -162,10 +118,6 @@ CREATE INDEX idx_tickets_queue_status
 CREATE INDEX idx_tickets_queue_number
     ON tickets(queue_id, number);
 
-
--- =========================================================
--- 7. TRIGGER : updated_at
--- =========================================================
 
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$

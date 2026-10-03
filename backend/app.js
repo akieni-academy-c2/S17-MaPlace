@@ -16,15 +16,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// ==========================================
-// MIDDLEWARES
-// ==========================================
-
 app.use(express.json());
-
-// ==========================================
-// ROUTES
-// ==========================================
 
 app.get('/', (req, res) => {
   res.json({
@@ -32,7 +24,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// Vérification de l'API et de PostgreSQL.
 app.get('/health', async (req, res, next) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -47,30 +38,18 @@ app.get('/health', async (req, res, next) => {
   }
 });
 
-// Authentification des établissements.
 app.use('/api/auth', authRoutes);
 
-// Gestion des établissements.
 app.use(
   '/api/establishments',
   establishmentRoutes
 );
 
-// Gestion de la file par l'établissement authentifié.
 app.use('/api/queue', queueRoutes);
 
-// Création et suivi des tickets visiteurs.
 app.use('/api/tickets', ticketRoutes);
 
-// ==========================================
-// GESTION DES ERREURS
-// ==========================================
-
 app.use(errorMiddleware);
-
-// ==========================================
-// SERVEUR
-// ==========================================
 
 app.listen(PORT, () => {
   console.log(

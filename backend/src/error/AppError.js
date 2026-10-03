@@ -5,8 +5,7 @@ class AppError extends Error {
     this.name = 'AppError';
     this.statusCode = statusCode;
 
-    // Permet au middleware d'erreur de distinguer
-    // nos erreurs prévues des erreurs inattendues.
+    // Identifie les erreurs prévues par l'application.
     this.isOperational = true;
   }
 }
