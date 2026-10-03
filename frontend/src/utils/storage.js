@@ -17,5 +17,6 @@ export const STORAGE_KEYS = {
   token: 'ma-place:token',
   establishment: 'ma-place:establishment',
   currentTicket: 'ma-place:current-ticket',
+  cancelTokens: 'ma-place:cancel-tokens',
   favorites: 'ma-place:favorites',
 }

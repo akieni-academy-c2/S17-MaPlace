@@ -53,6 +53,13 @@
 }
 .danger:hover:not(:disabled) { background: var(--color-status-cancelled-bg); }
 
+.danger-solid {
+  background: var(--color-status-cancelled);
+  color: var(--color-on-error);
+  box-shadow: var(--shadow-card);
+}
+.danger-solid:hover:not(:disabled) { background: var(--color-error); }
+
 .danger-soft {
   background: var(--color-status-cancelled-bg);
   color: var(--color-status-cancelled);

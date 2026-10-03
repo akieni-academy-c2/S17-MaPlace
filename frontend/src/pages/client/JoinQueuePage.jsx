@@ -8,14 +8,16 @@ import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { ICONS } from '@/constants/icons'
 import { to } from '@/constants/routes'
+import { formatPhone, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
 
-const PHONE_RE = /^(?:\+33\s?|0)[1-9](?:[\s.-]?\d{2}){4}$/
+/** 9 chiffres commençant par 0, ex. 06 123 23 23 */
+const PHONE_RE = /^0\d{8}$/
 
 const validate = ({ name, phone }) => {
   const errors = {}
   if (name.trim().length < 2) errors.name = 'Indiquez votre nom (2 caractères minimum).'
-  if (!PHONE_RE.test(phone.trim())) errors.phone = 'Numéro de téléphone invalide.'
+  if (!PHONE_RE.test(normalizePhone(phone))) errors.phone = 'Numéro invalide. Format attendu : 06 123 23 23.'
   return errors
 }
 
@@ -33,6 +35,7 @@ export default function JoinQueuePage() {
   const [submitting, setSubmitting] = useState(false)
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
+  const updatePhone = (e) => setForm((f) => ({ ...f, phone: formatPhone(normalizePhone(e.target.value)) }))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -46,9 +49,9 @@ export default function JoinQueuePage() {
       const { ticket } = await createTicket({
         establishmentId,
         name: form.name.trim(),
-        phone: form.phone.replace(/[\s.-]/g, ''),
+        phone: normalizePhone(form.phone),
       })
-      save(ticket.id)
+      save(ticket.id, ticket.cancelToken)
       navigate(to.ticket(ticket.id), { replace: true })
     } catch (err) {
       setSubmitError(err.status === 409 ? "La file n'accepte pas de nouveaux tickets pour le moment." : err.message)
@@ -59,7 +62,7 @@ export default function JoinQueuePage() {
 
   return (
     <>
-      <AppHeader title="Prise de ticket" backTo={to.establishment(establishmentId)} />
+      <AppHeader title="Prise de ticket" />
       <PageContent>
         <div className={styles.context}>
           <Button variant="ghost" size="sm" icon={ICONS.back} to={to.establishment(establishmentId)} className={styles.back}>
@@ -91,10 +94,11 @@ export default function JoinQueuePage() {
               icon={ICONS.phone}
               type="tel"
               inputMode="tel"
-              placeholder="06 12 34 56 78"
+              placeholder="06 123 23 23"
+              maxLength={12}
               autoComplete="tel"
               value={form.phone}
-              onChange={update('phone')}
+              onChange={updatePhone}
               error={errors.phone}
             />
 

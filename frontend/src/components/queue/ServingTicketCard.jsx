@@ -1,4 +1,5 @@
 import { Button, Icon, StatusBadge, TicketNumber } from '@/components/ui'
+import { ICONS } from '@/constants/icons'
 import { formatPhone, formatSince } from '@/utils/format'
 import styles from './ServingTicketCard.module.css'
 
@@ -7,7 +8,7 @@ export function ServingTicketCard({ ticket, loading, onComplete }) {
   if (!ticket) {
     return (
       <section className={`${styles.card} ${styles.empty}`}>
-        <Icon name="person_pin" size={32} />
+        <Icon name={ICONS.personPin} size={32} />
         <p>Aucun client au guichet pour le moment.</p>
       </section>
     )
@@ -26,16 +27,16 @@ export function ServingTicketCard({ ticket, loading, onComplete }) {
         <p className={styles.name}>{ticket.name}</p>
         {ticket.phone && (
           <p className={styles.meta}>
-            <Icon name="phone" size={18} /> {formatPhone(ticket.phone)}
+            <Icon name={ICONS.phone} size={18} /> {formatPhone(ticket.phone)}
           </p>
         )}
-        {(ticket.called_at ?? ticket.updated_at) && (
+        {ticket.updatedAt && (
           <p className={styles.meta}>
-            <Icon name="timer" size={18} /> Pris en charge {formatSince(ticket.called_at ?? ticket.updated_at)}
+            <Icon name={ICONS.timer} size={18} /> Pris en charge {formatSince(ticket.updatedAt)}
           </p>
         )}
       </div>
-      <Button variant="success" size="lg" fullWidth icon="task_alt" loading={loading} onClick={() => onComplete(ticket.id)}>
+      <Button variant="success" size="lg" fullWidth icon={ICONS.taskAlt} loading={loading} onClick={() => onComplete(ticket.id)}>
         Terminer ce ticket
       </Button>
     </section>

@@ -54,5 +54,5 @@
   color: var(--color-primary-container);
 }
 .place { display: flex; align-items: center; gap: 6px; font: 600 17px/24px var(--font-body); color: var(--color-on-surface); }
-.place :global(.material-symbols-outlined) { color: var(--color-secondary); }
+.place :global(.lucide) { color: var(--color-secondary); }
 .meta { display: flex; justify-content: space-between; font: var(--text-body-md); color: var(--color-on-surface-variant); }

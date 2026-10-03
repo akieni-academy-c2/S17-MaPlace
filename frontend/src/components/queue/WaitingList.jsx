@@ -1,24 +1,40 @@
 import { Button, EmptyState, Icon, TicketNumber, TicketStatusBadge } from '@/components/ui'
-import { formatPhone, plural } from '@/utils/format'
+import { ICONS } from '@/constants/icons'
+import { TICKET_STATUS } from '@/constants/status'
+import { formatPhone, formatTime, plural } from '@/utils/format'
 import styles from './WaitingList.module.css'
 
-/** Liste des tickets WAITING (tableau en desktop, cartes en mobile) avec action « Annuler ». */
-export function WaitingList({ tickets, cancellingId, onCancel }) {
+/**
+ * Liste de tickets (tableau en desktop, cartes en mobile).
+ * Action selon le statut : WAITING → « Annuler », SERVING → « Terminer » (si `onComplete`).
+ */
+export function WaitingList({
+  tickets,
+  pendingId,
+  onCancel,
+  onComplete,
+  title = 'Prochains clients en file',
+  countLabel = ['ticket restant', 'tickets restants'],
+  emptyTitle = 'File vide',
+  emptyText = 'Les nouveaux tickets apparaîtront ici automatiquement.',
+  showTime = false,
+  id = 'file-attente',
+}) {
   return (
-    <section id="file-attente" className={styles.section}>
+    <section id={id} className={styles.section}>
       <header className={styles.header}>
         <h2 className={styles.title}>
-          <Icon name="format_list_numbered" /> Prochains clients en file
+          <Icon name={ICONS.queue} /> {title}
         </h2>
-        <span className={styles.count}>{plural(tickets.length, 'ticket restant', 'tickets restants')}</span>
+        <span className={styles.count}>{plural(tickets.length, ...countLabel)}</span>
       </header>
 
       {tickets.length === 0 ? (
-        <EmptyState icon="groups" title="File vide">
-          Les nouveaux tickets apparaîtront ici automatiquement.
+        <EmptyState icon={ICONS.groups} title={emptyTitle}>
+          {emptyText}
         </EmptyState>
       ) : (
-        <div className={styles.table} role="table" aria-label="Tickets en attente">
+        <div className={styles.table} role="table" aria-label={title}>
           <div className={styles.headRow} role="row">
             <span role="columnheader">Ticket</span>
             <span role="columnheader">Client</span>
@@ -36,7 +52,12 @@ export function WaitingList({ tickets, cancellingId, onCancel }) {
                 <span className={styles.name}>{ticket.name}</span>
                 {ticket.phone && (
                   <span className={styles.phone}>
-                    <Icon name="phone" size={16} /> {formatPhone(ticket.phone)}
+                    <Icon name={ICONS.phone} size={16} /> {formatPhone(ticket.phone)}
+                  </span>
+                )}
+                {showTime && ticket.createdAt && (
+                  <span className={styles.phone}>
+                    <Icon name={ICONS.schedule} size={16} /> Arrivé à {formatTime(ticket.createdAt)}
                   </span>
                 )}
               </span>
@@ -44,15 +65,28 @@ export function WaitingList({ tickets, cancellingId, onCancel }) {
                 <TicketStatusBadge status={ticket.status} />
               </span>
               <span role="cell" className={styles.right}>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  icon="close"
-                  loading={cancellingId === ticket.id}
-                  onClick={() => onCancel(ticket.id)}
-                >
-                  Annuler
-                </Button>
+                {ticket.status === TICKET_STATUS.WAITING && onCancel && (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    icon={ICONS.close}
+                    loading={pendingId === ticket.id}
+                    onClick={() => onCancel(ticket.id)}
+                  >
+                    Annuler
+                  </Button>
+                )}
+                {ticket.status === TICKET_STATUS.SERVING && onComplete && (
+                  <Button
+                    variant="success"
+                    size="sm"
+                    icon={ICONS.taskAlt}
+                    loading={pendingId === ticket.id}
+                    onClick={() => onComplete(ticket.id)}
+                  >
+                    Terminer
+                  </Button>
+                )}
               </span>
             </div>
           ))}

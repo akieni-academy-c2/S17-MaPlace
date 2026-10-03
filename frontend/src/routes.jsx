@@ -11,9 +11,10 @@ const TicketPage = lazy(() => import('@/pages/client/TicketPage'))
 const TicketCalledPage = lazy(() => import('@/pages/client/TicketCalledPage'))
 const TicketEndPage = lazy(() => import('@/pages/client/TicketEndPage'))
 
-// Pages établissement (2)
+// Pages établissement (3)
 const LoginPage = lazy(() => import('@/pages/establishment/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/establishment/DashboardPage'))
+const QueuePage = lazy(() => import('@/pages/establishment/QueuePage'))
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
@@ -36,7 +37,10 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <ProLayout />,
-        children: [{ path: PATHS.proDashboard, element: <DashboardPage /> }],
+        children: [
+          { path: PATHS.proDashboard, element: <DashboardPage /> },
+          { path: PATHS.proQueue, element: <QueuePage /> },
+        ],
       },
     ],
   },

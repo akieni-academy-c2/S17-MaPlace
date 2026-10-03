@@ -1,26 +1,28 @@
+import { ICONS } from '@/constants/icons'
 import styles from './Icon.module.css'
 
 /**
- * Icône Material Symbols Outlined (police variable auto-hébergée via `material-symbols`).
- * @param {string}  name    nom Material (utiliser ICONS.* de '@/constants/icons')
+ * Icône Lucide (SVG, tree-shaké).
+ * @param {import('react').ComponentType|string} name  composant Lucide (ICONS.*) ou clé de ICONS
  * @param {number}  size    taille en px (défaut 24)
- * @param {boolean} filled  variante pleine (axe FILL)
- * @param {number}  weight  graisse 100–700
+ * @param {boolean} filled  remplit la forme (étoile favorite, onglet actif…)
+ * @param {number}  weight  graisse 100–700, convertie en épaisseur de trait
  */
 export function Icon({ name, size = 24, filled = false, weight = 400, className = '', label, ...rest }) {
+  const Component = typeof name === 'string' ? ICONS[name] : name
+  if (!Component) return null
+
   return (
-    <span
-      className={`material-symbols-outlined ${styles.icon} ${className}`}
-      style={{
-        fontSize: size,
-        fontVariationSettings: `'FILL' ${filled ? 1 : 0}, 'wght' ${weight}, 'GRAD' 0, 'opsz' ${Math.min(48, Math.max(20, size))}`,
-      }}
+    <Component
+      size={size}
+      strokeWidth={weight >= 600 ? 2.5 : weight <= 300 ? 1.5 : 2}
+      fill={filled ? 'currentColor' : 'none'}
+      className={`${styles.icon} ${className}`}
       aria-hidden={label ? undefined : true}
       aria-label={label}
       role={label ? 'img' : undefined}
+      focusable="false"
       {...rest}
-    >
-      {name}
-    </span>
+    />
   )
 }

@@ -7,7 +7,7 @@
   font: var(--text-headline-md);
   letter-spacing: var(--tracking-headline-md);
 }
-.title :global(.material-symbols-outlined) { color: var(--color-primary-container); }
+.title :global(.lucide) { color: var(--color-primary-container); }
 .count { font: var(--text-label-md); color: var(--color-on-surface-variant); }
 
 .table {

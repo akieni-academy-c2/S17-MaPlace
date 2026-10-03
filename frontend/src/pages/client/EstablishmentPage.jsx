@@ -22,7 +22,7 @@ export default function EstablishmentPage() {
 
   return (
     <>
-      <AppHeader title="Détails du lieu" backTo={PATHS.home} />
+      <AppHeader title="Détails du lieu" />
       <PageContent>
         <div className={styles.toolbar}>
           <Button variant="ghost" size="sm" icon={ICONS.back} to={`${PATHS.home}#etablissements`} className={styles.backLink}>
@@ -60,7 +60,8 @@ export default function EstablishmentPage() {
                   <Icon name={ICONS.groups} size={20} /> En attente
                 </span>
                 <span className={styles.waiting}>
-                  <strong>{establishment.waiting_count ?? '—'}</strong> personnes
+                  <strong>{establishment.waiting_count ?? '—'}</strong>{' '}
+                  {establishment.waiting_count > 1 ? 'personnes' : 'personne'}
                 </span>
               </div>
             </div>

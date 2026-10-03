@@ -16,8 +16,18 @@ export const formatSince = (date) => {
   return `il y a ${Math.floor(minutes / 60)} h`
 }
 
-/** "0612345678" -> "06 12 34 56 78" */
-export const formatPhone = (phone = '') => phone.replace(/\D/g, '').replace(/(\d{2})(?=\d)/g, '$1 ')
+/** Ne garde que les chiffres (max 9) : "06 123 23 23" -> "061232323" */
+export const normalizePhone = (phone = '') => phone.replace(/\D/g, '').slice(0, 9)
+
+/**
+ * Format 2-3-2-2 : "061232323" -> "06 123 23 23".
+ * Fonctionne aussi en cours de saisie ("0612" -> "06 12").
+ */
+export const formatPhone = (phone = '') => {
+  const digits = phone.replace(/\D/g, '')
+  if (digits.length > 9) return digits.replace(/(\d{2})(?=\d)/g, '$1 ') // ancien format (seed, etc.)
+  return [digits.slice(0, 2), digits.slice(2, 5), digits.slice(5, 7), digits.slice(7, 9)].filter(Boolean).join(' ')
+}
 
 export const plural = (count, singular, pluralForm = `${singular}s`) =>
   `${count} ${count > 1 ? pluralForm : singular}`

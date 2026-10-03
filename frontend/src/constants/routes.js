@@ -9,9 +9,10 @@
  *   /tickets/:ticketId/appel               C'est votre tour (SERVING)
  *   /tickets/:ticketId/fin                 Ticket terminé / annulé
  *
- * Côté établissement (2 pages)
+ * Côté établissement (3 pages)
  *   /pro/connexion                         Connexion gestionnaire
  *   /pro/tableau-de-bord                   Tableau de bord de la file (JWT)
+ *   /pro/file-attente                      Liste complète des tickets de la session (JWT)
  */
 export const PATHS = Object.freeze({
   home: '/',
@@ -23,6 +24,7 @@ export const PATHS = Object.freeze({
 
   proLogin: '/pro/connexion',
   proDashboard: '/pro/tableau-de-bord',
+  proQueue: '/pro/file-attente',
 })
 
 export const to = {
@@ -34,4 +36,5 @@ export const to = {
   ticketEnd: (id) => `/tickets/${id}/fin`,
   proLogin: () => PATHS.proLogin,
   proDashboard: () => PATHS.proDashboard,
+  proQueue: () => PATHS.proQueue,
 }

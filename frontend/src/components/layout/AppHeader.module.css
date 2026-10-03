@@ -32,3 +32,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.start {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}

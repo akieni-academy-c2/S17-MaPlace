@@ -15,7 +15,7 @@
   background: var(--color-surface-container-low);
 }
 .statLabel { display: flex; align-items: flex-start; gap: 6px; font: var(--text-label-lg); color: var(--color-on-surface-variant); }
-.statLabel :global(.material-symbols-outlined) { color: var(--color-primary-container); }
+.statLabel :global(.lucide) { color: var(--color-primary-container); }
 .waiting { font: var(--text-body-md); color: var(--color-on-surface-variant); }
 .waiting strong { font: 800 56px/1 var(--font-display); color: var(--color-on-surface); margin-right: 4px; }
 .divider { border: none; border-top: 2px dashed var(--color-surface-container-high); }

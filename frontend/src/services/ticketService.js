@@ -13,7 +13,6 @@ export const completeTicket = (id) => api.post(`/api/tickets/${id}/complete`, un
 /** POST /api/tickets/:id/cancel (JWT) — WAITING → CANCELLED */
 export const cancelTicket = (id) => api.post(`/api/tickets/${id}/cancel`, undefined, { auth: true })
 
-/*
- * Annulation côté client (cancelToken) : non confirmée dans la doc backend de référence.
- * À brancher ici quand la route publique sera validée.
- */
+/** POST /api/tickets/:id/cancel-by-client (public, cancelToken) — WAITING → CANCELLED */
+export const cancelTicketByClient = (id, cancelToken) =>
+  api.post(`/api/tickets/${id}/cancel-by-client`, { cancelToken })
