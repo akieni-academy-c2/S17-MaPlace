@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { ConfirmDialog, Icon, IconButton, Logo } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
@@ -21,7 +21,6 @@ const tabClass = ({ isActive }) => `${styles.tab} ${isActive ? styles.tabActive 
 /** Gabarit de l'espace établissement : sidebar (desktop) / barre haute + onglets (mobile). */
 export function ProLayout() {
   const { establishment, logout } = useAuth()
-  const navigate = useNavigate()
   const [confirmLogout, setConfirmLogout] = useState(false)
   const [leaving, setLeaving] = useState(false)
   const timer = useRef(null)
@@ -31,11 +30,8 @@ export function ProLayout() {
   const handleLogout = () => {
     setConfirmLogout(false)
     setLeaving(true)
-    timer.current = setTimeout(async () => {
-      // On quitte d'abord l'espace protégé pour éviter la redirection vers /pro/connexion
-      await navigate(PATHS.home, { replace: true })
-      logout()
-    }, FAREWELL_DURATION)
+    // ProtectedRoute redirige vers l'accueil après une déconnexion volontaire
+    timer.current = setTimeout(() => logout('user'), FAREWELL_DURATION)
   }
 
   return (

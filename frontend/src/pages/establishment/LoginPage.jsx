@@ -40,8 +40,7 @@ export default function LoginPage() {
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.brand}>
               <span className={styles.logo}>
-                <Logo size={88} showText={false} />
-                <span className={styles.online} />
+                <Logo size={80} />
               </span>
               <StatusBadge tone="waiting" icon={ICONS.store}>
                 Portail pro

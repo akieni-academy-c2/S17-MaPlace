@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { AppHeader, PageContent } from '@/components/layout'
-import { EmptyState, FilterChips, Icon, InfoNote, Loader, SearchBar, Button } from '@/components/ui'
+import { Button, EmptyState, FilterChips, Icon, InfoNote, Loader, QueueStatusBadge, SearchBar, TicketNumber } from '@/components/ui'
 import { EstablishmentCard } from '@/components/establishment'
 import { listEstablishments } from '@/services/establishmentService'
 import { usePolling } from '@/hooks/usePolling'
@@ -47,7 +47,7 @@ export default function HomePage() {
           </Button>
         }
       />
-      <PageContent>
+      <PageContent width="wide">
         <section className={styles.hero}>
           <span className={styles.kicker}>
             <Icon name={ICONS.bolt} size={18} filled /> Votre file d&apos;attente, simplement.
@@ -59,6 +59,25 @@ export default function HomePage() {
           <Button href="#etablissements" iconRight={ICONS.down} className={styles.heroCta}>
             Trouver un établissement
           </Button>
+
+          {/* Aperçu décoratif d'un ticket (desktop uniquement) */}
+          <div className={styles.heroVisual} aria-hidden="true">
+            <div className={styles.previewTicket}>
+              <div className={styles.previewHead}>
+                <span className="text-overline">Votre ticket</span>
+                <QueueStatusBadge status="OPEN" />
+              </div>
+              <TicketNumber number={12} size="xl" />
+              <div className={styles.previewStats}>
+                <span>
+                  <strong>3</strong> devant vous
+                </span>
+                <span>
+                  <Icon name={ICONS.sync} size={16} /> En direct
+                </span>
+              </div>
+            </div>
+          </div>
         </section>
 
         {favorites.length > 0 && (
@@ -66,9 +85,11 @@ export default function HomePage() {
             <h2 className={styles.sectionTitle}>
               <Icon name={ICONS.star} filled className={styles.star} /> Mes favoris
             </h2>
-            {favorites.map((e) => (
-              <EstablishmentCard key={e.id} establishment={e} isFavorite onToggleFavorite={toggle} />
-            ))}
+            <div className={styles.grid}>
+              {favorites.map((e) => (
+                <EstablishmentCard key={e.id} establishment={e} isFavorite onToggleFavorite={toggle} />
+              ))}
+            </div>
           </section>
         )}
 
@@ -77,8 +98,10 @@ export default function HomePage() {
             <h2 className={styles.sectionTitle}>Établissements</h2>
             <span className="text-label-md text-muted">{plural(visible.length, 'disponible')}</span>
           </div>
-          <SearchBar value={query} onChange={setQuery} placeholder="Rechercher un établissement..." />
-          <FilterChips options={FILTERS} value={filter} onChange={setFilter} label="Filtrer par état de la file" />
+          <div className={styles.filters}>
+            <SearchBar value={query} onChange={setQuery} placeholder="Rechercher un établissement..." />
+            <FilterChips options={FILTERS} value={filter} onChange={setFilter} label="Filtrer par état de la file" />
+          </div>
 
           {loading && <Loader />}
           {error && <InfoNote tone="error" icon={ICONS.warning}>{error.message}</InfoNote>}
@@ -87,9 +110,11 @@ export default function HomePage() {
               Essayez de modifier votre mot-clé ou de réinitialiser les filtres.
             </EmptyState>
           )}
-          {visible.map((e) => (
-            <EstablishmentCard key={e.id} establishment={e} isFavorite={isFavorite(e.id)} onToggleFavorite={toggle} />
-          ))}
+          <div className={styles.grid}>
+            {visible.map((e) => (
+              <EstablishmentCard key={e.id} establishment={e} isFavorite={isFavorite(e.id)} onToggleFavorite={toggle} />
+            ))}
+          </div>
         </section>
       </PageContent>
     </>

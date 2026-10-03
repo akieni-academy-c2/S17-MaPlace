@@ -21,3 +21,6 @@
 }
 .favorite:hover { background: var(--color-surface-container-low); }
 .isFavorite { color: var(--color-primary-container); }
+/* En grille, toutes les cartes d'une rangée ont la même hauteur et le bouton reste en bas. */
+.card > :last-child { margin-top: auto; }
+.card { height: 100%; }

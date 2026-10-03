@@ -8,7 +8,7 @@ export function FarewellScreen({ name }) {
     <div className={styles.overlay} role="status" aria-live="polite">
       <div className={styles.content}>
         <span className={styles.logo}>
-          <Logo size={88} showText={false} />
+          <Logo size={96} tone="white" />
         </span>
         <h2 className={styles.title}>Au revoir{name ? ',' : ''}</h2>
         {name && <p className={styles.name}>{name}</p>}
