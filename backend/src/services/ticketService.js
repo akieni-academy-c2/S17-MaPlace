@@ -2,6 +2,7 @@ import AppError from '../error/AppError.js';
 
 import {
   callNextForEstablishment,
+  cancelByClient,
   createForEstablishment,
   findById,
   updateOwnedTicketStatus,
@@ -148,10 +149,46 @@ const cancelTicket = async (ticketId, establishmentId) =>
     () => 'Seul un ticket en attente peut être annulé.'
   );
 
+  const cancelTicketByClient = async (ticketId, cancelToken) => {
+  validateId(ticketId, 'Identifiant du ticket');
+
+  if (
+    typeof cancelToken !== 'string' ||
+    !cancelToken.trim()
+  ) {
+    throw new AppError(
+      'Le token d’annulation est obligatoire.',
+      400
+    );
+  }
+
+  const result = await cancelByClient(
+    ticketId,
+    cancelToken.trim()
+  );
+
+  if (result.outcome === 'ticket_not_found') {
+    throw new AppError(
+      'Ticket introuvable ou token d’annulation invalide.',
+      404
+    );
+  }
+
+  if (result.outcome === 'invalid_status') {
+    throw new AppError(
+      'Seul un ticket en attente peut être annulé.',
+      409
+    );
+  }
+
+  return result.ticket;
+};
+
 export {
   callNextTicket,
   cancelTicket,
   completeTicket,
   createTicket,
   getTicket,
+  cancelTicketByClient,
 };

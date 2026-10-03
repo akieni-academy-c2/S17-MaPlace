@@ -58,9 +58,29 @@ const cancel = async (req, res, next) => {
   }
 };
 
+const cancelByClient = async (req, res, next) => {
+  try {
+    const { cancelToken } = req.body || {};
+
+    const ticket =
+      await ticketService.cancelTicketByClient(
+        req.params.id,
+        cancelToken
+      );
+
+    return res.status(200).json({
+      status: 'success',
+      data: { ticket },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   cancel,
   complete,
   create,
   getOne,
+  cancelByClient
 };
