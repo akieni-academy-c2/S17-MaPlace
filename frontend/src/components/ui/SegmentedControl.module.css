@@ -1,0 +1,25 @@
+.segmented {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container);
+}
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  min-height: 40px;
+  border-radius: var(--radius-md);
+  font: var(--text-label-lg);
+  color: var(--color-on-surface-variant);
+  transition: background-color var(--duration-base), color var(--duration-base);
+}
+.active {
+  background: var(--color-surface-container-lowest);
+  color: var(--color-primary-container);
+  box-shadow: var(--shadow-card);
+}

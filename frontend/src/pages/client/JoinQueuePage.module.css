@@ -1,0 +1,11 @@
+.context { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
+.back { padding-left: 0; font-size: 16px; }
+.form { display: flex; flex-direction: column; gap: var(--space-lg); }
+.footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: var(--text-body-sm);
+  color: var(--color-on-surface-variant);
+}

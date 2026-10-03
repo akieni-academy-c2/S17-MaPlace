@@ -14,8 +14,21 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
+      ecmaVersion: 2020,
       globals: globals.browser,
-      parserOptions: { ecmaFeatures: { jsx: true } },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
     },
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+  {
+    // Table de routage : déclare des composants lazy, pas de Fast Refresh nécessaire
+    files: ['src/routes.jsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])
