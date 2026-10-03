@@ -10,18 +10,11 @@
 .breadcrumb { font: var(--text-label-md); color: var(--color-on-surface-variant); }
 .breadcrumb span { color: var(--color-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
 
-.kpis { display: grid; gap: var(--space-md); }
-@media (min-width: 640px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
-
-.columns { display: grid; gap: var(--space-xl); align-items: start; }
-@media (min-width: 1100px) { .columns { grid-template-columns: minmax(320px, 2fr) 3fr; gap: var(--space-lg); } }
-
-.sectionTitle {
+.toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-sm);
-  font: var(--text-headline-md);
-  letter-spacing: var(--tracking-headline-md);
+  justify-content: space-between;
+  gap: var(--space-md);
 }
-.sectionTitle > :global(.lucide) { color: var(--color-primary-container); }
+.toolbar > :first-child { min-width: 0; max-width: 100%; }

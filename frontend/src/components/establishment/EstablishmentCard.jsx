@@ -1,4 +1,5 @@
 import { Button, Icon, QueueStatusBadge } from '@/components/ui'
+import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS } from '@/constants/status'
 import { to } from '@/constants/routes'
 import styles from './EstablishmentCard.module.css'
@@ -22,7 +23,7 @@ export function EstablishmentCard({ establishment, isFavorite, onToggleFavorite 
           aria-label={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
           onClick={() => onToggleFavorite(id)}
         >
-          <Icon name="star" filled={isFavorite} />
+          <Icon name={ICONS.star} filled={isFavorite} />
         </button>
       </div>
       <Button variant={isOpen ? 'primary' : 'secondary'} fullWidth to={isOpen ? to.joinQueue(id) : to.establishment(id)}>

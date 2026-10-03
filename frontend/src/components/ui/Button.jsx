@@ -1,10 +1,11 @@
+import { ICONS } from '@/constants/icons'
 import { Link } from 'react-router-dom'
 import { Icon } from './Icon'
 import styles from './Button.module.css'
 
 /**
  * Bouton du design system.
- * variant : primary | secondary | success | danger | danger-soft | ghost | inverse
+ * variant : primary | secondary | success | danger | danger-soft | danger-solid | ghost | inverse
  * size    : sm | md | lg
  * `to` → rendu en <Link>, `href` → <a>
  */
@@ -38,7 +39,7 @@ export function Button({
   const content = (
     <>
       {loading ? (
-        <Icon name="progress_activity" size={iconSize} className={styles.spinner} />
+        <Icon name={ICONS.spinner} size={iconSize} className={styles.spinner} />
       ) : (
         icon && <Icon name={icon} size={iconSize} />
       )}

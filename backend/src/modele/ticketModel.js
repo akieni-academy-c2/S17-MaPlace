@@ -111,10 +111,19 @@ const findById = async (ticketId) => {
         t.name,
         t.status,
         t.created_at,
+        t.updated_at,
         e.id AS establishment_id,
         e.name AS establishment_name,
         q.status AS queue_status,
-        COUNT(ahead.id)::INTEGER AS people_ahead
+        COUNT(ahead.id)::INTEGER AS people_ahead,
+        (
+          SELECT serving.number
+          FROM tickets serving
+          WHERE serving.queue_id = t.queue_id
+            AND serving.status = 'SERVING'
+          ORDER BY serving.number DESC
+          LIMIT 1
+        ) AS current_number
       FROM tickets t
       JOIN queues q ON q.id = t.queue_id
       JOIN establishments e ON e.id = q.establishment_id
@@ -144,6 +153,8 @@ const findById = async (ticketId) => {
     name: row.name,
     status: row.status,
     createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    currentNumber: row.current_number,
     position: isWaiting ? peopleAhead + 1 : null,
     peopleAhead,
     queueStatus: row.queue_status,
@@ -164,7 +175,8 @@ const findAllForCurrentQueue = async (establishmentId) => {
         t.name,
         t.phone,
         t.status,
-        t.created_at AS "createdAt"
+        t.created_at AS "createdAt",
+        t.updated_at AS "updatedAt"
       FROM tickets t
       JOIN queues q ON q.id = t.queue_id
       WHERE q.establishment_id = $1

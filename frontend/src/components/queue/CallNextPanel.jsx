@@ -1,4 +1,5 @@
 import { Icon } from '@/components/ui'
+import { ICONS } from '@/constants/icons'
 import { formatTicketNumber } from '@/utils/format'
 import styles from './CallNextPanel.module.css'
 
@@ -25,9 +26,9 @@ export function CallNextPanel({ nextTicket, disabled, loading, onCallNext }) {
         </p>
       </div>
       <button type="button" className={styles.cta} onClick={onCallNext} disabled={disabled || loading || !nextTicket}>
-        <Icon name={loading ? 'progress_activity' : 'notifications_active'} size={28} className={loading ? styles.spin : ''} />
+        <Icon name={loading ? ICONS.spinner : ICONS.bell} size={28} className={loading ? styles.spin : ''} />
         <span>Faire entrer {nextTicket ? formatTicketNumber(nextTicket.number) : ''}</span>
-        <Icon name="arrow_forward" size={24} />
+        <Icon name={ICONS.forward} size={24} />
       </button>
     </section>
   )

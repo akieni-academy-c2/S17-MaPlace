@@ -67,7 +67,7 @@
   font: 600 28px/36px var(--font-display);
   letter-spacing: -0.02em;
 }
-.namePill :global(.material-symbols-outlined) { color: var(--color-tertiary-fixed-dim); }
+.namePill :global(.lucide) { color: var(--color-tertiary-fixed-dim); }
 .heroText {
   width: 100%;
   padding: var(--space-lg);

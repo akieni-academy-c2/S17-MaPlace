@@ -29,7 +29,7 @@ export function BottomNav() {
               aria-current={active ? 'page' : undefined}
               className={`${styles.link} ${active ? styles.active : ''}`}
             >
-              <Icon name={item.icon} size={26} filled={active} />
+              <Icon name={item.icon} size={26} weight={active ? 600 : 400} />
               <span>{item.label}</span>
             </NavLink>
           )

@@ -39,6 +39,6 @@
   font: var(--text-label-md);
   color: var(--color-on-surface);
 }
-.secure :global(.material-symbols-outlined) { color: var(--color-tertiary-container); }
+.secure :global(.lucide) { color: var(--color-tertiary-container); }
 .after { max-width: 440px; }
 .links { display: flex; gap: var(--space-sm); }

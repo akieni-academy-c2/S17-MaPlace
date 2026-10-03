@@ -1,8 +1,8 @@
 /* Polices auto-hébergées (pas de CDN) */
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/plus-jakarta-sans';
-/* Icônes Material Symbols Outlined (police variable : FILL, wght, GRAD, opsz) */
-@import 'material-symbols/outlined.css';
+/* Icônes : lucide-react (SVG inline, aucune police à charger) */
+
 
 @import './styles/tokens.css';
 @import './styles/base.css';

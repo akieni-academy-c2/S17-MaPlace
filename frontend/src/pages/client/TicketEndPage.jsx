@@ -83,7 +83,7 @@ export default function TicketEndPage() {
                 </p>
                 <p className={styles.meta}>
                   <span>Ticket {cancelled ? 'annulé' : 'terminé'}</span>
-                  <span>{formatTime(ticket.completed_at ?? ticket.updated_at)}</span>
+                  <span>{formatTime(ticket.updatedAt)}</span>
                 </p>
               </div>
 
