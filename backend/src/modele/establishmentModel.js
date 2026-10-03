@@ -1,7 +1,6 @@
 import pool from '../config/database.js';
 
-// Récupère tous les établissements.
-// On ne retourne jamais le password_hash.
+// Les requêtes publiques n'exposent pas password_hash.
 const findAll = async () => {
   const result = await pool.query(`
     SELECT
@@ -17,7 +16,6 @@ const findAll = async () => {
   return result.rows;
 };
 
-// Récupère un établissement à partir de son ID.
 const findById = async (id) => {
   const result = await pool.query(
     `
@@ -36,8 +34,6 @@ const findById = async (id) => {
   return result.rows[0] || null;
 };
 
-// Utilisé par l'authentification.
-// Ici, le password_hash est nécessaire pour bcrypt.
 const findByEmail = async (email) => {
   const result = await pool.query(
     `

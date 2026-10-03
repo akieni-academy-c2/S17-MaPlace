@@ -1,7 +1,6 @@
 import * as establishmentService
   from '../services/establishmentService.js';
 
-// GET /api/establishments
 const getAll = async (req, res, next) => {
   try {
     const establishments =
@@ -18,7 +17,6 @@ const getAll = async (req, res, next) => {
   }
 };
 
-// GET /api/establishments/:id
 const getOne = async (req, res, next) => {
   try {
     const { id } = req.params;

@@ -7,10 +7,8 @@ import {
 
 const router = Router();
 
-// Liste publique des établissements.
 router.get('/', getAll);
 
-// Détails d'un établissement.
 router.get('/:id', getOne);
 
 export default router;

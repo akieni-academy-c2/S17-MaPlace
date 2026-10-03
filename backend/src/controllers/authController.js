@@ -1,12 +1,10 @@
 import * as authService from '../services/authService.js';
 import AppError from '../error/AppError.js';
 
-// POST /api/auth/login
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Vérification minimale des données reçues.
     if (!email || !password) {
       throw new AppError(
         'Email et mot de passe sont obligatoires.',
@@ -29,11 +27,8 @@ const login = async (req, res, next) => {
   }
 };
 
-// GET /api/auth/me
 const me = async (req, res, next) => {
   try {
-    // req.user est ajouté par authMiddleware
-    // après vérification du JWT.
     const establishment =
       await authService.getAuthenticatedEstablishment(
         req.user.id

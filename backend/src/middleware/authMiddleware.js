@@ -26,14 +26,11 @@ const authMiddleware = (req, res, next) => {
       );
     }
 
-    // Vérifie la signature et l'expiration du JWT.
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
     );
 
-    // On rend les informations du JWT disponibles
-    // pour les controllers suivants.
     req.user = decoded;
 
     next();

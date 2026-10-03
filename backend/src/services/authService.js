@@ -7,12 +7,10 @@ import {
   findById,
 } from '../modele/establishmentModel.js';
 
-// Vérifie les identifiants et génère le JWT.
 const login = async (email, password) => {
   const establishment = await findByEmail(email);
 
-  // On utilise volontairement le même message
-  // si l'email ou le mot de passe est incorrect.
+  // Même erreur pour un email ou un mot de passe incorrect.
   if (!establishment) {
     throw new AppError(
       'Email ou mot de passe incorrect.',
@@ -20,8 +18,6 @@ const login = async (email, password) => {
     );
   }
 
-  // Compare le mot de passe envoyé avec le hash
-  // enregistré dans PostgreSQL.
   const passwordIsValid = await bcrypt.compare(
     password,
     establishment.password_hash
@@ -34,8 +30,7 @@ const login = async (email, password) => {
     );
   }
 
-  // Le JWT contient seulement les informations
-  // nécessaires pour identifier l'établissement.
+  // Le JWT identifie l'établissement.
   const token = jwt.sign(
     {
       id: establishment.id,
@@ -60,7 +55,6 @@ const login = async (email, password) => {
   };
 };
 
-// Récupère l'établissement correspondant au JWT.
 const getAuthenticatedEstablishment = async (id) => {
   const establishment = await findById(id);
 
