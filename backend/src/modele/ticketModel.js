@@ -1,4 +1,5 @@
 import pool from '../config/database.js';
+import crypto from 'node:crypto';
 
 const createForEstablishment = async (
   establishmentId,
@@ -6,6 +7,7 @@ const createForEstablishment = async (
   phone
 ) => {
   const client = await pool.connect();
+  const cancelToken = crypto.randomBytes(32).toString('hex');
 
   try {
     await client.query('BEGIN');
@@ -63,18 +65,33 @@ const createForEstablishment = async (
 
     const ticketResult = await client.query(
       `
-        INSERT INTO tickets (queue_id, number, name, phone)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO tickets (
+          queue_id,
+          number,
+          name,
+          phone,
+          cancel_token
+        )
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id, queue_id, number, name, status, created_at
       `,
-      [queue.id, numberResult.rows[0].last_number, name, phone]
+      [
+        queue.id,
+        numberResult.rows[0].last_number,
+        name,
+        phone,
+        cancelToken,
+      ]
     );
 
     await client.query('COMMIT');
 
     return {
       outcome: 'created',
-      ticket: ticketResult.rows[0],
+      ticket: {
+        ...ticketResult.rows[0],
+        cancelToken,
+      },
     };
   } catch (error) {
     await client.query('ROLLBACK');
@@ -349,8 +366,75 @@ const updateOwnedTicketStatus = async (
   }
 };
 
+const cancelByClient = async (ticketId, cancelToken) => {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const ticketResult = await client.query(
+      `
+        SELECT
+          id,
+          queue_id,
+          number,
+          name,
+          status,
+          created_at
+        FROM tickets
+        WHERE id = $1
+          AND cancel_token = $2
+        FOR UPDATE
+      `,
+      [ticketId, cancelToken]
+    );
+
+    if (ticketResult.rowCount === 0) {
+      await client.query('COMMIT');
+
+      return {
+        outcome: 'ticket_not_found',
+      };
+    }
+
+    const ticket = ticketResult.rows[0];
+
+    if (ticket.status !== 'WAITING') {
+      await client.query('COMMIT');
+
+      return {
+        outcome: 'invalid_status',
+        ticket,
+      };
+    }
+
+    const result = await client.query(
+      `
+        UPDATE tickets
+        SET status = 'CANCELLED'
+        WHERE id = $1
+        RETURNING id, queue_id, number, name, status, created_at
+      `,
+      [ticketId]
+    );
+
+    await client.query('COMMIT');
+
+    return {
+      outcome: 'updated',
+      ticket: result.rows[0],
+    };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 export {
   callNextForEstablishment,
+  cancelByClient,
   createForEstablishment,
   findAllForCurrentQueue,
   findById,
