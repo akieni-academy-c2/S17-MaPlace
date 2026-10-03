@@ -1,0 +1,1 @@
+export { EstablishmentCard } from './EstablishmentCard'

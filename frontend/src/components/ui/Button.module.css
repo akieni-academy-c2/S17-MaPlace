@@ -1,0 +1,84 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-lg);
+  font: var(--text-label-lg);
+  letter-spacing: var(--tracking-label-lg);
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-base) var(--easing-standard),
+    color var(--duration-base) var(--easing-standard),
+    box-shadow var(--duration-base) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.button:disabled {
+  opacity: 0.55;
+}
+
+/* Tailles */
+.sm { min-height: 36px; padding: 0 var(--space-md); font: var(--text-label-md); }
+.md { min-height: var(--touch-target); padding: 0 var(--space-lg); }
+.lg { min-height: 56px; padding: 0 var(--space-lg); font-size: 17px; }
+.fullWidth { width: 100%; }
+
+/* Variantes */
+.primary {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-card);
+}
+.primary:hover:not(:disabled) { background: var(--color-secondary); }
+
+.secondary {
+  background: var(--color-surface-container);
+  color: var(--color-primary-container);
+}
+.secondary:hover:not(:disabled) { background: var(--color-surface-container-high); }
+
+.success {
+  background: var(--color-tertiary-container);
+  color: var(--color-on-tertiary);
+  box-shadow: var(--shadow-card);
+}
+.success:hover:not(:disabled) { background: var(--color-on-tertiary-fixed-variant); }
+
+.danger {
+  background: transparent;
+  color: var(--color-error);
+}
+.danger:hover:not(:disabled) { background: var(--color-status-cancelled-bg); }
+
+.danger-solid {
+  background: var(--color-status-cancelled);
+  color: var(--color-on-error);
+  box-shadow: var(--shadow-card);
+}
+.danger-solid:hover:not(:disabled) { background: var(--color-error); }
+
+.danger-soft {
+  background: var(--color-status-cancelled-bg);
+  color: var(--color-status-cancelled);
+}
+.danger-soft:hover:not(:disabled) { background: var(--color-error-container); }
+
+.ghost {
+  background: transparent;
+  color: var(--color-on-surface-variant);
+}
+.ghost:hover:not(:disabled) { background: var(--color-surface-container-low); }
+
+.inverse {
+  background: var(--color-surface-container-lowest);
+  color: var(--color-primary-container);
+  box-shadow: var(--shadow-active);
+}
+.inverse:hover:not(:disabled) { background: var(--color-primary-fixed); }
+
+/* Chargement */
+.spinner { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
