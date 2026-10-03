@@ -1,0 +1,20 @@
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+}
+.icon { margin-top: 1px; }
+.content { display: flex; flex-direction: column; gap: 2px; }
+.title { font: 600 17px/24px var(--font-body); color: var(--color-on-surface); }
+.text { font: var(--text-body-md); color: var(--color-on-surface-variant); }
+
+.info { background: var(--color-surface-container-low); }
+.info .icon { color: var(--color-primary-container); }
+.plain { padding: 0; }
+.plain .icon { color: var(--color-primary-container); }
+.warning { background: var(--color-status-paused-bg); }
+.warning .icon { color: var(--color-status-paused-text); }
+.error { background: var(--color-error-container); }
+.error .icon, .error .text { color: var(--color-on-error-container); }

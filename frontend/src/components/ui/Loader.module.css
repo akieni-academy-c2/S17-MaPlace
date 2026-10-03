@@ -1,0 +1,11 @@
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-md);
+  color: var(--color-on-surface-variant);
+  font: var(--text-body-sm);
+}
+.spin { color: var(--color-primary-container); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

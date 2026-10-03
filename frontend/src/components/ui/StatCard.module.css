@@ -1,0 +1,42 @@
+.stat {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container-lowest);
+  box-shadow: var(--shadow-card);
+}
+.body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.label { font: var(--text-label-lg); color: var(--color-on-surface-variant); }
+.value {
+  font: 800 34px/42px var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--color-on-surface);
+}
+.caption { font: var(--text-body-sm); color: var(--color-on-surface-variant); }
+.iconBox {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container);
+  color: var(--color-primary-container);
+}
+
+.primary .value { color: var(--color-primary-container); }
+.success .caption { color: var(--color-tertiary-container); }
+.success .iconBox { background: var(--color-status-open-bg); color: var(--color-tertiary-container); }
+
+/* Variante compacte, centrée (stats du ticket client) */
+.compact {
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-md) var(--space-sm);
+  box-shadow: none;
+}
+.compact .body { align-items: center; }
+.compact .label { font: var(--text-label-md); letter-spacing: 0.06em; text-transform: uppercase; }
+.compact .value { font-size: 28px; line-height: 36px; }

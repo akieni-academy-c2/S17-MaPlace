@@ -1,0 +1,12 @@
+.shell {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: var(--container-mobile);
+  margin: 0 auto;
+  padding: var(--space-md) var(--margin-mobile) var(--space-xl);
+}

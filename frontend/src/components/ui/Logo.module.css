@@ -1,0 +1,24 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.mark {
+  border-radius: var(--radius-md);
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.title {
+  font: 700 22px/26px var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--color-primary-container);
+}
+.subtitle {
+  font: var(--text-label-badge);
+  letter-spacing: var(--tracking-label-badge);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
