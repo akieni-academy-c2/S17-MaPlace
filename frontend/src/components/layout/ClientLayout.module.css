@@ -10,3 +10,15 @@
   margin: 0 auto;
   padding: var(--space-md) var(--margin-mobile) var(--space-xl);
 }
+
+@media (min-width: 768px) {
+  .content {
+    max-width: var(--container-reading);
+    padding: var(--space-lg) var(--margin) var(--space-xl);
+  }
+}
+@media (min-width: 1024px) {
+  .shell { padding-bottom: 0; }
+  .content { padding: var(--space-xl) var(--margin) calc(var(--space-xl) * 2); }
+  .wide { max-width: var(--container-client); }
+}

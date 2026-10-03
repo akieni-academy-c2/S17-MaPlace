@@ -25,3 +25,32 @@
 }
 .link:hover { color: var(--color-on-surface); }
 .active { color: var(--color-primary-container); }
+
+/* ---------- Desktop (≥ 1024px) : navigation dans l'en-tête ---------- */
+.topNav { display: none; }
+
+@media (min-width: 1024px) {
+  .nav { display: none; }
+  .topNav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  .topLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 40px;
+    padding: 0 var(--space-md);
+    border-radius: var(--radius-full);
+    font: var(--text-label-lg);
+    color: var(--color-on-surface-variant);
+    transition: background-color var(--duration-base), color var(--duration-base);
+  }
+  .topLink:hover { background: var(--color-surface-container-low); color: var(--color-on-surface); }
+  .topActive,
+  .topActive:hover {
+    background: var(--color-surface-container);
+    color: var(--color-primary-container);
+  }
+}

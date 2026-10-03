@@ -129,6 +129,8 @@
 
   /* ---------- Layout ---------- */
   --container-mobile: 480px;
+  --container-reading: 720px; /* parcours client sur tablette / desktop */
+  --container-client: 1200px; /* accueil client sur desktop */
   --container-desktop: 1440px;
   --header-height: 4rem;
   --bottom-nav-height: 4.5rem;

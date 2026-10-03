@@ -47,16 +47,22 @@
     background: var(--color-surface-container-lowest);
     box-shadow: var(--shadow-card);
   }
+  /* Mêmes pistes pour l'en-tête et les lignes : les colonnes restent alignées. */
   .headRow,
   .row {
     display: grid;
-    grid-template-columns: 100px 1.5fr 1fr auto;
+    grid-template-columns: 96px minmax(0, 1.6fr) minmax(0, 1fr) 132px;
     grid-template-areas: none;
     align-items: center;
+    justify-items: center;
     gap: var(--space-md);
     padding: var(--space-md) var(--space-lg);
+    text-align: center;
   }
   .row > * { grid-area: auto !important; }
+  .client { align-items: center; }
+  .phone { justify-content: center; }
+  .right { justify-self: center; text-align: center; }
   .headRow {
     background: var(--color-surface-container-low);
     font: var(--text-label-md);
