@@ -1,0 +1,72 @@
+.section { display: flex; flex-direction: column; gap: var(--space-md); scroll-margin-top: 80px; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font: var(--text-headline-md);
+  letter-spacing: var(--tracking-headline-md);
+}
+.title :global(.material-symbols-outlined) { color: var(--color-primary-container); }
+.count { font: var(--text-label-md); color: var(--color-on-surface-variant); }
+
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.headRow { display: none; }
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'num client action'
+    'num status action';
+  align-items: center;
+  column-gap: var(--space-md);
+  row-gap: var(--space-xs);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container-lowest);
+  box-shadow: var(--shadow-card);
+}
+.row > :nth-child(1) { grid-area: num; }
+.row > :nth-child(2) { grid-area: client; }
+.row > :nth-child(3) { grid-area: status; }
+.row > :nth-child(4) { grid-area: action; }
+.client { display: flex; flex-direction: column; min-width: 0; }
+.name { font: 600 17px/24px var(--font-body); color: var(--color-on-surface); }
+.phone { display: flex; align-items: center; gap: 4px; font: var(--text-body-sm); color: var(--color-on-surface-variant); }
+.right { justify-self: end; text-align: right; }
+
+@media (min-width: 768px) {
+  .table {
+    gap: 0;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-container-lowest);
+    box-shadow: var(--shadow-card);
+  }
+  .headRow,
+  .row {
+    display: grid;
+    grid-template-columns: 100px 1.5fr 1fr auto;
+    grid-template-areas: none;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+  }
+  .row > * { grid-area: auto !important; }
+  .headRow {
+    background: var(--color-surface-container-low);
+    font: var(--text-label-md);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-on-surface-variant);
+  }
+  .row {
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid var(--color-surface-container);
+  }
+}

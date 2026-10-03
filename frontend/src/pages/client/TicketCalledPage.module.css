@@ -1,0 +1,91 @@
+.liveBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-container);
+}
+.liveStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font: var(--text-label-lg);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-tertiary-container);
+}
+.liveDot { width: 12px; height: 12px; border-radius: var(--radius-full); background: var(--color-tertiary-container); animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+.liveTag { display: inline-flex; align-items: center; gap: 4px; font: var(--text-label-lg); color: var(--color-on-surface-variant); }
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl) var(--space-lg);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  color: var(--color-on-tertiary);
+  background:
+    radial-gradient(80% 60% at 30% 0%, rgba(111, 251, 190, 0.15), transparent 70%),
+    linear-gradient(160deg, var(--color-tertiary-container), var(--color-tertiary));
+  box-shadow: var(--shadow-active);
+}
+.heroIcon {
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-tertiary-fixed-dim);
+}
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-tertiary-fixed);
+  color: var(--color-on-tertiary-fixed);
+  font: var(--text-label-lg);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.heroTitle { color: inherit; font: 700 36px/44px var(--font-display); letter-spacing: -0.03em; }
+.numberBox { padding: var(--space-md) var(--space-xl); border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.1); }
+.namePill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  font: 600 28px/36px var(--font-display);
+  letter-spacing: -0.02em;
+}
+.namePill :global(.material-symbols-outlined) { color: var(--color-tertiary-fixed-dim); }
+.heroText {
+  width: 100%;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.12);
+  font: var(--text-body-lg);
+}
+
+.cardHead { display: flex; align-items: center; justify-content: space-between; }
+.verified { color: var(--color-secondary); }
+.place { display: flex; align-items: center; gap: var(--space-md); }
+.placeIcon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container);
+  color: var(--color-primary-container);
+}
+.placeName { font: 600 26px/34px var(--font-display); letter-spacing: -0.02em; color: var(--color-on-surface); }

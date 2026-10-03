@@ -1,0 +1,17 @@
+.card {
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-container-lowest);
+}
+.default { box-shadow: var(--shadow-card); }
+.elevated { box-shadow: var(--shadow-active); }
+.tinted { background: var(--color-surface-container-low); }
+.outlined { border: 1px solid var(--color-outline-variant); }
+
+.pad-none { padding: 0; }
+.pad-sm { padding: var(--space-md); }
+.pad-md { padding: var(--space-lg); }
+.pad-lg { padding: var(--space-xl) var(--space-lg); }
+
+@media (min-width: 768px) {
+  .pad-lg { padding: var(--space-xl); }
+}

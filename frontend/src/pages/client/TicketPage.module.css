@@ -1,0 +1,21 @@
+.intro { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); text-align: center; }
+.active {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font: var(--text-label-lg);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
+.activeDot { width: 12px; height: 12px; border-radius: var(--radius-full); background: var(--color-secondary-container); }
+.underline { width: 64px; height: 6px; border-radius: var(--radius-full); background: var(--color-primary-fixed); }
+.live { background: var(--color-surface-container); }
+.cancel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container-low);
+}
