@@ -1,0 +1,25 @@
+# Zones partagées : toute PR qui les modifie doit être approuvée par le lead dev (giovani-mouk)
+# ou, pour les PR du lead lui-même, par l'admin du dépôt (chrislainInfo).
+# Effectif seulement si la protection de branche active « Require review from Code Owners ».
+
+/frontend/src/components/ui/       @giovani-mouk @chrislainInfo
+/frontend/src/components/layout/   @giovani-mouk @chrislainInfo
+/frontend/src/constants/           @giovani-mouk @chrislainInfo
+/frontend/src/services/            @giovani-mouk @chrislainInfo
+/frontend/src/hooks/               @giovani-mouk @chrislainInfo
+/frontend/src/context/             @giovani-mouk @chrislainInfo
+/frontend/src/utils/               @giovani-mouk @chrislainInfo
+/frontend/src/styles/              @giovani-mouk @chrislainInfo
+/frontend/src/routes.jsx           @giovani-mouk @chrislainInfo
+/frontend/src/App.jsx              @giovani-mouk @chrislainInfo
+/frontend/src/main.jsx             @giovani-mouk @chrislainInfo
+/frontend/package.json             @giovani-mouk @chrislainInfo
+/frontend/package-lock.json        @giovani-mouk @chrislainInfo
+/frontend/vite.config.js           @giovani-mouk @chrislainInfo
+/frontend/jsconfig.json            @giovani-mouk @chrislainInfo
+/frontend/eslint.config.js         @giovani-mouk @chrislainInfo
+
+/backend/                          @giovani-mouk @chrislainInfo
+
+/.github/                          @giovani-mouk @chrislainInfo
+/CONTRIBUTING.md                   @giovani-mouk @chrislainInfo

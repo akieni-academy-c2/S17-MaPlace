@@ -1,6 +1,6 @@
 # Contribuer à Ma Place
 
-Ce guide fixe la façon de travailler à plusieurs sur le dépôt. **La structure du frontend est figée** : chacun ajoute son travail dans les fichiers qui lui sont confiés, en réutilisant les composants, hooks et services existants.
+Ce guide fixe la façon de travailler à plusieurs sur le dépôt. La répartition des tâches est dans [docs/REPARTITION.md](docs/REPARTITION.md). **La structure du frontend est figée** : chacun ajoute son travail dans les fichiers qui lui sont confiés, en réutilisant les composants, hooks et services existants.
 
 ## 1. Branches
 
@@ -38,9 +38,11 @@ git push -u origin feat/djenna-recherche-file   # puis ouvrir la PR vers develop
 | `frontend/src/components/layout/` | En-têtes, navigation, gabarits client / pro |
 | `frontend/src/constants/` | Routes, statuts, registre d'icônes |
 | `frontend/src/services/` | Seul point d'accès à l'API |
-| `frontend/src/hooks/`, `frontend/src/context/` | Logique partagée (polling, auth, file, ticket) |
+| `frontend/src/hooks/`, `frontend/src/context/`, `frontend/src/utils/` | Logique partagée (polling, auth, file, ticket, formats) |
 | `frontend/src/routes.jsx`, `frontend/src/styles/tokens.css` | Routage et jetons de design |
 | `backend/` | Schéma et logique métier établis |
+
+Ces zones sont déclarées dans [.github/CODEOWNERS](.github/CODEOWNERS) : une PR qui les modifie ne peut pas être fusionnée sans l'approbation du lead.
 
 Besoin d'un nouveau composant, d'une icône, d'une route ou d'un champ d'API ? Ouvrir une issue ou demander au lead : il l'ajoute au socle, puis vous l'utilisez.
 
