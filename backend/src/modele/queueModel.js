@@ -189,6 +189,24 @@ const transitionCurrentStatus = async (
       [queue.id, targetStatus]
     );
 
+    // Fermeture : les tickets non traités sont réinitialisés. Le client au
+    // guichet est considéré comme servi, les tickets en attente sont annulés
+    // (la numérotation repart de #1 à la prochaine ouverture).
+    if (targetStatus === 'CLOSED') {
+      await client.query(
+        `
+          UPDATE tickets
+          SET status = CASE
+            WHEN status = 'SERVING' THEN 'COMPLETED'::ticket_status
+            ELSE 'CANCELLED'::ticket_status
+          END
+          WHERE queue_id = $1
+            AND status IN ('WAITING', 'SERVING')
+        `,
+        [queue.id]
+      );
+    }
+
     await client.query(
       'UPDATE establishments SET queue_status = $1 WHERE id = $2',
       [targetStatus, establishmentId]
