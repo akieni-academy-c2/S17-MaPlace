@@ -2,7 +2,7 @@ import styles from './Card.module.css'
 
 /**
  * Conteneur de contenu.
- * variant : default (blanc + ombre douce) | elevated (ticket actif) | tinted (surface bleutée) | outlined
+ * variant : default (blanc + bordure légère) | elevated (ombre douce) | tinted (surface menthe) | outlined
  * padding : none | sm | md | lg
  */
 export function Card({ as: Tag = 'div', variant = 'default', padding = 'md', className = '', children, ...rest }) {

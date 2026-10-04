@@ -1,0 +1,23 @@
+.form { display: flex; flex-direction: column; gap: var(--space-5); }
+.note { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-caption); color: var(--text-secondary); text-align: center; }
+
+.result { display: flex; flex-direction: column; gap: var(--space-5); }
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-4);
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: center;
+}
+.name { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: var(--fw-bold); overflow-wrap: anywhere; }
+.meta { font-size: var(--fs-small); color: var(--text-secondary); }
+.actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+.footerActions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2); }
+
+@media (min-width: 480px) {
+  .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

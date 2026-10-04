@@ -1,48 +1,50 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-2);
+  min-width: 0;
 }
 .labelRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: var(--space-2);
 }
 .label {
-  font: var(--text-label-lg);
-  letter-spacing: var(--tracking-label-lg);
-  color: var(--color-on-surface);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
 }
 .control {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  min-height: 56px;
-  padding: 0 var(--space-md);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-container-low);
-  border: 1.5px solid transparent;
-  transition: border-color var(--duration-base), box-shadow var(--duration-base), background-color var(--duration-base);
+  gap: var(--space-3);
+  min-height: 52px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  border: 1.5px solid var(--border-strong);
+  transition: border-color var(--duration-base), box-shadow var(--duration-base);
 }
+.control:hover { border-color: var(--text-tertiary); }
 .control:focus-within {
-  background: var(--color-surface-container-lowest);
-  border-color: var(--color-secondary);
+  border-color: var(--primary-500);
   box-shadow: var(--shadow-focus);
 }
-.invalid { border-color: var(--color-error); }
-.icon { color: var(--color-on-surface-variant); }
+.invalid,
+.invalid:hover { border-color: var(--danger); }
+.icon { color: var(--text-tertiary); }
+.control:focus-within .icon { color: var(--primary); }
 .input {
   flex: 1;
   min-width: 0;
-  height: 100%;
-  min-height: 52px;
+  min-height: 48px;
   border: none;
   outline: none;
   background: transparent;
-  font: var(--text-body-lg);
-  color: var(--color-on-surface);
+  font-size: 1rem; /* 16px : évite le zoom auto sur iOS */
+  color: var(--text-primary);
 }
-.input::placeholder { color: var(--color-outline); }
-.hint { font: var(--text-body-sm); color: var(--color-on-surface-variant); }
-.error { font: var(--text-body-sm); color: var(--color-error); }
+.input::placeholder { color: var(--text-tertiary); }
+.hint { font-size: var(--fs-small); color: var(--text-secondary); }
+.error { font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--danger); }

@@ -1,19 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { ConfirmDialog, Icon, IconButton, Logo } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { PATHS } from '@/constants/routes'
+import { PATHS, to } from '@/constants/routes'
 import { useAuth } from '@/hooks/useAuth'
-import { FarewellScreen } from './FarewellScreen'
+import { initials } from '@/constants/establishments'
+import { useTransitionScreen } from '@/hooks/useTransitionScreen'
 import styles from './ProLayout.module.css'
 
 const NAV = [
   { to: PATHS.proDashboard, label: 'Tableau de bord', icon: ICONS.dashboard },
   { to: PATHS.proQueue, label: "File d'attente", icon: ICONS.group },
 ]
-
-/** Durée de l'écran « Au revoir » avant le retour à l'accueil. */
-const FAREWELL_DURATION = 2000
 
 const navClass = ({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`
 const tabClass = ({ isActive }) => `${styles.tab} ${isActive ? styles.tabActive : ''}`
@@ -22,42 +20,51 @@ const tabClass = ({ isActive }) => `${styles.tab} ${isActive ? styles.tabActive 
 export function ProLayout() {
   const { establishment, logout } = useAuth()
   const [confirmLogout, setConfirmLogout] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const timer = useRef(null)
-
-  useEffect(() => () => clearTimeout(timer.current), [])
+  const { show } = useTransitionScreen()
 
   const handleLogout = () => {
     setConfirmLogout(false)
-    setLeaving(true)
-    // ProtectedRoute redirige vers l'accueil après une déconnexion volontaire
-    timer.current = setTimeout(() => logout('user'), FAREWELL_DURATION)
+    // L'écran « Au revoir » couvre la redirection vers l'accueil (ProtectedRoute après une déconnexion volontaire)
+    show({ title: `Au revoir${establishment?.name ? ',' : ''}`, name: establishment?.name, text: 'À très bientôt sur Ma Place.' })
+    logout('user')
   }
 
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
-        <Logo size={40} subtitle="Espace établissement" />
+        <Link to={PATHS.proDashboard} aria-label="Tableau de bord">
+          <Logo size={44} subtitle="Espace établissement" tone="white" />
+        </Link>
         <nav className={styles.nav} aria-label="Espace établissement">
+          <p className={styles.navTitle}>Gestion</p>
           {NAV.map((item) => (
             <NavLink key={item.to} to={item.to} end className={navClass}>
-              <Icon name={item.icon} size={22} />
+              <Icon name={item.icon} size={20} />
               {item.label}
             </NavLink>
           ))}
+          <p className={styles.navTitle}>Liens utiles</p>
+          {establishment?.id && (
+            <a href={to.establishment(establishment.id)} target="_blank" rel="noreferrer" className={styles.navLink}>
+              <Icon name={ICONS.external} size={20} />
+              Page publique
+            </a>
+          )}
+          <Link to={PATHS.home} className={styles.navLink}>
+            <Icon name={ICONS.home} size={20} />
+            Site Ma Place
+          </Link>
         </nav>
         <div className={styles.account}>
           <div className={styles.accountInfo}>
-            <span className={styles.accountIcon}>
-              <Icon name={ICONS.store} size={22} />
-            </span>
-            <div>
+            <span className={styles.accountIcon}>{initials(establishment?.name ?? 'É')}</span>
+            <div className={styles.accountText}>
               <p className={styles.accountName}>{establishment?.name ?? 'Établissement'}</p>
-              <p className={styles.accountRole}>Guichet actif</p>
+              <p className={styles.accountRole}>{establishment?.email ?? 'Gestionnaire'}</p>
             </div>
           </div>
           <button type="button" className={styles.logout} onClick={() => setConfirmLogout(true)}>
-            <Icon name={ICONS.logout} size={20} />
+            <Icon name={ICONS.logout} size={18} />
             Se déconnecter
           </button>
         </div>
@@ -65,8 +72,10 @@ export function ProLayout() {
 
       <header className={styles.mobileBar}>
         <div className={styles.mobileTop}>
-          <Logo size={36} subtitle="Espace pro" />
-          <IconButton icon={ICONS.logout} label="Se déconnecter" variant="tonal" onClick={() => setConfirmLogout(true)} />
+          <Link to={PATHS.proDashboard} aria-label="Tableau de bord">
+            <Logo size={40} subtitle="Espace pro" />
+          </Link>
+          <IconButton icon={ICONS.logout} label="Se déconnecter" variant="outline" size={44} onClick={() => setConfirmLogout(true)} />
         </div>
         <nav className={styles.tabs} aria-label="Espace établissement">
           {NAV.map((item) => (
@@ -96,7 +105,6 @@ export function ProLayout() {
         son état actuel : pensez à la mettre en pause ou à la fermer si nécessaire.
       </ConfirmDialog>
 
-      {leaving && <FarewellScreen name={establishment?.name} />}
     </div>
   )
 }

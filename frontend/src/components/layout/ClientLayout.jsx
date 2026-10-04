@@ -1,21 +1,41 @@
-import { Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
+import { SiteFooter } from './SiteFooter'
+import { SiteHeader } from './SiteHeader'
 import styles from './ClientLayout.module.css'
 
-/** Gabarit mobile-first du parcours client : colonne centrée + navigation basse (en-tête sur desktop). */
+/** Fait défiler jusqu'à l'ancre (#faq, #comment-ca-marche…) après la navigation. */
+function useHashScroll() {
+  const { hash, pathname } = useLocation()
+  useEffect(() => {
+    if (!hash) return undefined
+    // Laisse le temps aux pages chargées à la demande de s'afficher
+    const timer = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' }), 80)
+    return () => clearTimeout(timer)
+  }, [hash, pathname])
+}
+
+/** Gabarit du parcours client : en-tête, contenu, pied de page et navigation basse (mobile). */
 export function ClientLayout() {
+  useHashScroll()
   return (
     <div className={styles.shell}>
-      <Outlet />
+      <SiteHeader />
+      <div className={styles.main}>
+        <Outlet />
+      </div>
+      <SiteFooter />
       <BottomNav />
+      <ScrollRestoration getKey={(location) => location.pathname} />
     </div>
   )
 }
 
 /**
- * Zone de contenu d'une page client (à placer sous <AppHeader>).
- * width : reading (colonne centrée, parcours) | wide (accueil en grille sur desktop)
+ * Zone de contenu d'une page client.
+ * width : narrow (parcours ticket, formulaires) | wide (listes, grilles)
  */
-export function PageContent({ children, width = 'reading', className = '' }) {
-  return <main className={`${styles.content} ${styles[width]} ${className}`}>{children}</main>
+export function PageContent({ children, width = 'wide', className = '' }) {
+  return <main className={`${styles.content} ${width === 'narrow' ? 'container-narrow' : 'container'} ${className}`}>{children}</main>
 }

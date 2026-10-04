@@ -5,9 +5,10 @@ import styles from './Button.module.css'
 
 /**
  * Bouton du design system.
- * variant : primary | secondary | success | danger | danger-soft | danger-solid | ghost | inverse
+ * variant : primary (vert, action principale) | secondary (orange, action secondaire / attention)
+ *           | outline | ghost | danger | soft (vert pâle) | danger-soft | inverse (blanc sur fond vert)
  * size    : sm | md | lg
- * `to` → rendu en <Link>, `href` → <a>
+ * `to` → rendu en <Link>, `href` → <a>. Un lien `disabled` est rendu comme un bouton désactivé.
  */
 export function Button({
   variant = 'primary',
@@ -35,7 +36,7 @@ export function Button({
     .filter(Boolean)
     .join(' ')
 
-  const iconSize = size === 'lg' ? 24 : size === 'sm' ? 18 : 20
+  const iconSize = size === 'lg' ? 20 : 18
   const content = (
     <>
       {loading ? (
@@ -43,19 +44,19 @@ export function Button({
       ) : (
         icon && <Icon name={icon} size={iconSize} />
       )}
-      {children && <span>{children}</span>}
+      {children && <span className={styles.label}>{children}</span>}
       {iconRight && !loading && <Icon name={iconRight} size={iconSize} />}
     </>
   )
 
-  if (to) {
+  if (to && !disabled) {
     return (
       <Link to={to} className={classes} {...rest}>
         {content}
       </Link>
     )
   }
-  if (href) {
+  if (href && !disabled) {
     return (
       <a href={href} className={classes} {...rest}>
         {content}

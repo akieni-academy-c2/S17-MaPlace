@@ -53,6 +53,29 @@ const createForEstablishment = async (
       };
     }
 
+    // Un même numéro de téléphone ne peut avoir qu'un ticket en cours
+    // (WAITING ou SERVING) dans la file. Le verrou FOR UPDATE posé sur la
+    // file ci-dessus sérialise les créations : pas de doublon concurrent.
+    if (phone) {
+      const duplicate = await client.query(
+        `
+          SELECT id
+          FROM tickets
+          WHERE queue_id = $1
+            AND status IN ('WAITING', 'SERVING')
+            AND regexp_replace(phone, '\\D', '', 'g')
+              = regexp_replace($2, '\\D', '', 'g')
+          LIMIT 1
+        `,
+        [queue.id, phone]
+      );
+
+      if (duplicate.rowCount > 0) {
+        await client.query('COMMIT');
+        return { outcome: 'duplicate_phone' };
+      }
+    }
+
     const numberResult = await client.query(
       `
         UPDATE queues

@@ -1,20 +1,24 @@
 .note {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-md);
-  padding: var(--space-md);
-  border-radius: var(--radius-lg);
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
 }
-.icon { margin-top: 1px; }
-.content { display: flex; flex-direction: column; gap: 2px; }
-.title { font: 600 17px/24px var(--font-body); color: var(--color-on-surface); }
-.text { font: var(--text-body-md); color: var(--color-on-surface-variant); }
+.icon { margin-top: 2px; }
+.content { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.title { font-weight: var(--fw-semibold); color: var(--text-primary); }
+.text { font-size: var(--fs-small); line-height: 1.55; color: var(--text-secondary); }
 
-.info { background: var(--color-surface-container-low); }
-.info .icon { color: var(--color-primary-container); }
+.info { background: var(--primary-light); }
+.info .icon { color: var(--primary); }
 .plain { padding: 0; }
-.plain .icon { color: var(--color-primary-container); }
-.warning { background: var(--color-status-paused-bg); }
-.warning .icon { color: var(--color-status-paused-text); }
-.error { background: var(--color-error-container); }
-.error .icon, .error .text { color: var(--color-on-error-container); }
+.plain .icon { color: var(--primary); }
+.warning { background: var(--orange-light); border-color: #f8dcc0; }
+.warning .icon, .warning .title { color: var(--orange-dark); }
+.error { background: var(--danger-light); }
+.error .icon, .error .title, .error .text { color: var(--danger); }
+.success { background: var(--success-light); }
+.success .icon, .success .title { color: var(--success); }
