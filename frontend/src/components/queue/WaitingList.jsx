@@ -7,6 +7,7 @@ import styles from './WaitingList.module.css'
 /**
  * Liste de tickets (tableau en desktop, cartes en mobile).
  * Action selon le statut : WAITING → « Annuler », SERVING → « Terminer » (si `onComplete`).
+ * `total` : nombre affiché dans le compteur si la liste est tronquée ou paginée ; `footer` : sous la liste.
  */
 export function WaitingList({
   tickets,
@@ -19,6 +20,8 @@ export function WaitingList({
   emptyText = 'Les nouveaux tickets apparaîtront ici automatiquement.',
   showTime = false,
   id = 'file-attente',
+  total,
+  footer,
 }) {
   return (
     <section id={id} className={styles.section}>
@@ -26,7 +29,7 @@ export function WaitingList({
         <h2 className={styles.title}>
           <Icon name={ICONS.queue} size={20} /> {title}
         </h2>
-        <span className={styles.count}>{plural(tickets.length, ...countLabel)}</span>
+        <span className={styles.count}>{plural(total ?? tickets.length, ...countLabel)}</span>
       </header>
 
       {tickets.length === 0 ? (
@@ -91,6 +94,7 @@ export function WaitingList({
           ))}
         </div>
       )}
+      {footer}
     </section>
   )
 }

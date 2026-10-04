@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, ConfirmDialog, EmptyState, InfoNote, Loader, StatCard, TicketNumber, TicketStatusBadge } from '@/components/ui'
-import { CallNextPanel, QueueControls, ServingTicketCard, WaitingList } from '@/components/queue'
+import { CallNextPanel, QueueControls, ServingTicketCard, WaitingList, WalkInTicketDialog } from '@/components/queue'
 import { useAuth } from '@/hooks/useAuth'
 import { useQueueManager } from '@/hooks/useQueueManager'
 import { ICONS } from '@/constants/icons'
@@ -12,6 +12,8 @@ import { ProPageHeader } from './ProPageHeader'
 import styles from './DashboardPage.module.css'
 
 const HISTORY_SIZE = 5
+/** Nombre de tickets en attente affichés sur le tableau de bord (la liste complète est dans « File d'attente »). */
+const NEXT_SIZE = 5
 const today = () => new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 
 /** Établissement — Tableau de bord de la file (GET /api/queue + actions JWT). */
@@ -19,6 +21,7 @@ export default function DashboardPage() {
   const { establishment } = useAuth()
   const { status, tickets, serving, waiting, lastNumber, loading, error, pending, actions } = useQueueManager()
   const [confirmClose, setConfirmClose] = useState(false)
+  const [walkInOpen, setWalkInOpen] = useState(false)
 
   const completed = tickets.filter((t) => t.status === TICKET_STATUS.COMPLETED)
   const history = useMemo(
@@ -42,11 +45,16 @@ export default function DashboardPage() {
         title="Tableau de bord"
         subtitle={today()}
         actions={
-          establishment?.id && (
-            <Button variant="outline" size="sm" icon={ICONS.external} href={to.establishment(establishment.id)} target="_blank" rel="noreferrer">
-              Page publique
+          <>
+            {establishment?.id && (
+              <Button variant="outline" size="sm" icon={ICONS.external} href={to.establishment(establishment.id)} target="_blank" rel="noreferrer">
+                Page publique
+              </Button>
+            )}
+            <Button size="sm" icon={ICONS.ticketPlus} onClick={() => setWalkInOpen(true)} disabled={status !== QUEUE_STATUS.OPEN} title="Pour un client sans smartphone">
+              Créer un ticket
             </Button>
-          )
+          </>
         }
       />
 
@@ -96,7 +104,22 @@ export default function DashboardPage() {
               <h2 className={styles.sectionTitle}>Au guichet</h2>
               <ServingTicketCard ticket={serving} loading={pending === serving?.id} onComplete={actions.complete} />
             </div>
-            <WaitingList tickets={waiting} pendingId={pending} onCancel={actions.cancel} id="prochains-clients" />
+            <WaitingList
+              tickets={waiting.slice(0, NEXT_SIZE)}
+              total={waiting.length}
+              title={`${waiting.length > NEXT_SIZE ? `${NEXT_SIZE} prochains` : 'Prochains'} clients en file`}
+              countLabel={['en attente', 'en attente']}
+              pendingId={pending}
+              onCancel={actions.cancel}
+              id="prochains-clients"
+              footer={
+                waiting.length > NEXT_SIZE && (
+                  <Link to={PATHS.proQueue} className={styles.moreLink}>
+                    + {plural(waiting.length - NEXT_SIZE, 'autre ticket', 'autres tickets')} en attente · Voir toute la file
+                  </Link>
+                )
+              }
+            />
           </div>
 
           <Card className={styles.history}>
@@ -125,6 +148,13 @@ export default function DashboardPage() {
           </Card>
         </>
       )}
+
+      <WalkInTicketDialog
+        open={walkInOpen}
+        onClose={() => setWalkInOpen(false)}
+        onCreate={actions.createTicket}
+        establishmentName={establishment?.name}
+      />
 
       <ConfirmDialog
         open={confirmClose}

@@ -17,28 +17,33 @@ const validateId = (id, label) => {
   }
 };
 
-const createTicket = async ({ establishmentId, name, phone }) => {
-  validateId(establishmentId, 'Identifiant de l’établissement');
-
+const validateName = (name) => {
   if (typeof name !== 'string' || !name.trim() || name.trim().length > 100) {
     throw new AppError(
       'Le nom est obligatoire et doit contenir au maximum 100 caractères.',
       400
     );
   }
+};
+
+const validatePhone = (phone, { required }) => {
+  if (!required && (phone === undefined || phone === null || phone === '')) {
+    return;
+  }
 
   if (typeof phone !== 'string' || !phone.trim() || phone.trim().length > 30) {
     throw new AppError(
-      'Le numéro de téléphone est obligatoire et doit contenir au maximum 30 caractères.',
+      required
+        ? 'Le numéro de téléphone est obligatoire et doit contenir au maximum 30 caractères.'
+        : 'Le numéro de téléphone doit contenir au maximum 30 caractères.',
       400
     );
   }
+};
 
-  const result = await createForEstablishment(
-    establishmentId,
-    name.trim(),
-    phone.trim()
-  );
+// Création commune aux deux parcours (client en ligne, guichet).
+const createInQueue = async (establishmentId, name, phone) => {
+  const result = await createForEstablishment(establishmentId, name, phone);
 
   if (result.outcome === 'establishment_not_found') {
     throw new AppError('Établissement introuvable.', 404);
@@ -53,7 +58,38 @@ const createTicket = async ({ establishmentId, name, phone }) => {
     );
   }
 
+  if (result.outcome === 'duplicate_phone') {
+    throw new AppError(
+      'Ce numéro de téléphone a déjà un ticket en cours dans cette file.',
+      409
+    );
+  }
+
   return result.ticket;
+};
+
+const createTicket = async ({ establishmentId, name, phone }) => {
+  validateId(establishmentId, 'Identifiant de l’établissement');
+  validateName(name);
+  validatePhone(phone, { required: true });
+
+  return createInQueue(establishmentId, name.trim(), phone.trim());
+};
+
+// Ticket créé au guichet pour un client sans smartphone. Le téléphone est
+// facultatif (chaîne vide en base, la colonne étant NOT NULL). Renvoie la vue
+// complète du ticket (position, personnes devant…) pour l'impression.
+const createWalkInTicket = async (establishmentId, { name, phone } = {}) => {
+  validateName(name);
+  validatePhone(phone, { required: false });
+
+  const ticket = await createInQueue(
+    establishmentId,
+    name.trim(),
+    typeof phone === 'string' ? phone.trim() : ''
+  );
+
+  return findById(ticket.id);
 };
 
 const getTicket = async (ticketId) => {
@@ -189,6 +225,7 @@ export {
   cancelTicket,
   completeTicket,
   createTicket,
+  createWalkInTicket,
   getTicket,
   cancelTicketByClient,
 };

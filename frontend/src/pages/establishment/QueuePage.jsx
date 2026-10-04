@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react'
-import { Button, EmptyState, FilterChips, InfoNote, Loader, QueueStatusBadge } from '@/components/ui'
-import { WaitingList } from '@/components/queue'
+import { Button, EmptyState, FilterChips, InfoNote, Loader, Pagination, QueueStatusBadge } from '@/components/ui'
+import { WaitingList, WalkInTicketDialog } from '@/components/queue'
 import { useAuth } from '@/hooks/useAuth'
 import { useQueueManager } from '@/hooks/useQueueManager'
+import { usePagination } from '@/hooks/usePagination'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { PATHS } from '@/constants/routes'
 import { formatTicketNumber } from '@/utils/format'
 import { ProPageHeader } from './ProPageHeader'
 import styles from './QueuePage.module.css'
+
+const PAGE_SIZE = 10
 
 const FILTERS = [
   { value: 'ALL', label: 'Tous' },
@@ -39,6 +42,7 @@ export default function QueuePage() {
   const { establishment } = useAuth()
   const { status, tickets, waiting, loading, error, pending, actions } = useQueueManager()
   const [filter, setFilter] = useState('ALL')
+  const [walkInOpen, setWalkInOpen] = useState(false)
 
   const counts = useMemo(
     () => tickets.reduce((acc, t) => ({ ...acc, [t.status]: (acc[t.status] ?? 0) + 1 }), { ALL: tickets.length }),
@@ -47,6 +51,7 @@ export default function QueuePage() {
   const options = FILTERS.map((f) => ({ ...f, count: counts[f.value] ?? 0 }))
   const visible = filter === 'ALL' ? tickets : tickets.filter((t) => t.status === filter)
   const isActive = status !== QUEUE_STATUS.CLOSED
+  const pagination = usePagination(visible, PAGE_SIZE, filter)
 
   return (
     <div className={styles.page}>
@@ -54,7 +59,14 @@ export default function QueuePage() {
         breadcrumb={`File d’attente · ${establishment?.name ?? ''}`}
         title="Tickets de la session"
         subtitle="Tous les tickets émis depuis l’ouverture de la file."
-        actions={<QueueStatusBadge status={status} />}
+        actions={
+          <>
+            <QueueStatusBadge status={status} />
+            <Button size="sm" icon={ICONS.ticketPlus} onClick={() => setWalkInOpen(true)} disabled={status !== QUEUE_STATUS.OPEN} title="Pour un client sans smartphone">
+              Créer un ticket
+            </Button>
+          </>
+        }
       />
 
       {loading && <Loader label="Chargement de la file…" />}
@@ -103,16 +115,33 @@ export default function QueuePage() {
             id="file-attente"
             title={TITLES[filter]}
             countLabel={['ticket', 'tickets']}
-            tickets={visible}
+            tickets={pagination.pageItems}
+            total={visible.length}
             pendingId={pending}
             onCancel={actions.cancel}
             onComplete={actions.complete}
             emptyTitle="Aucun ticket"
             emptyText={EMPTY[filter]}
             showTime
+            footer={
+              <Pagination
+                {...pagination}
+                onChange={pagination.setPage}
+                itemLabel="tickets"
+                targetId="file-attente"
+                label="Pages de la file"
+              />
+            }
           />
         </>
       )}
+
+      <WalkInTicketDialog
+        open={walkInOpen}
+        onClose={() => setWalkInOpen(false)}
+        onCreate={actions.createTicket}
+        establishmentName={establishment?.name}
+      />
     </div>
   )
 }

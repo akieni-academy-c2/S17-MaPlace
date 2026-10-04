@@ -5,6 +5,8 @@ import { EstablishmentBrowser } from '@/components/establishment'
 import { listEstablishments } from '@/services/establishmentService'
 import { usePolling } from '@/hooks/usePolling'
 
+const PAGE_SIZE = 8
+
 /** Client — Tous les établissements (recherche, filtres, catégories). `?q=` pré-remplit la recherche. */
 export default function EstablishmentsPage() {
   const [params] = useSearchParams()
@@ -30,6 +32,7 @@ export default function EstablishmentsPage() {
         error={error}
         initialQuery={params.get('q') ?? ''}
         searchId="recherche"
+        pageSize={PAGE_SIZE}
       />
     </PageContent>
   )

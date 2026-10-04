@@ -1,4 +1,5 @@
 import { AVERAGE_SERVICE_MINUTES } from './establishments'
+import { APPROACHING_THRESHOLD, SOON_THRESHOLD } from './status'
 
 /** Questions fréquentes (accueil). Les réponses décrivent le fonctionnement réel de l'application. */
 export const FAQ = [
@@ -19,8 +20,7 @@ export const FAQ = [
   },
   {
     question: 'Comment savoir quand c’est mon tour ?',
-    answer:
-      'La page « Mon ticket » s’actualise automatiquement : vous voyez le numéro appelé, le nombre de personnes devant vous et votre position. Quand l’établissement vous appelle, l’écran passe en vert avec le message « C’est votre tour ! ». Gardez simplement la page ouverte.',
+    answer: `La page « Mon ticket » s’actualise automatiquement et change d’aspect à mesure que la file avance : « Votre tour approche » lorsqu’il reste ${APPROACHING_THRESHOLD} personnes ou moins devant vous, « Bientôt votre tour » à ${SOON_THRESHOLD} ou moins, puis l’écran passe au vert avec « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
   },
   {
     question: 'Que se passe-t-il lorsque la file est en pause ?',
@@ -35,7 +35,17 @@ export const FAQ = [
   {
     question: 'Puis-je prendre un ticket dans plusieurs établissements ?',
     answer:
-      'Vous pouvez prendre un ticket dans un autre établissement, mais cet appareil suit un seul ticket à la fois : le dernier ticket pris remplace le précédent dans « Mes tickets ». Conservez le lien de chaque ticket pour continuer à les suivre.',
+      'Oui, mais un même numéro de téléphone ne peut avoir qu’un seul ticket en cours dans une même file. Cet appareil suit par ailleurs un ticket à la fois : le dernier ticket pris remplace le précédent dans « Mes tickets ». Téléchargez ou conservez le lien de chaque ticket pour continuer à les suivre.',
+  },
+  {
+    question: 'Je n’ai pas de smartphone, comment faire ?',
+    answer:
+      'Présentez-vous à l’accueil de l’établissement : le personnel peut vous créer un ticket dans la même file d’attente que les clients connectés et vous l’imprimer. Vous êtes appelé dans l’ordre, comme tout le monde.',
+  },
+  {
+    question: 'Puis-je télécharger mon ticket ?',
+    answer:
+      'Oui. Depuis la page « Mon ticket », appuyez sur « Télécharger mon ticket » pour enregistrer une image avec votre numéro, l’établissement et le lien de suivi. Pratique pour le présenter au guichet.',
   },
   {
     question: 'Le temps d’attente affiché est-il exact ?',

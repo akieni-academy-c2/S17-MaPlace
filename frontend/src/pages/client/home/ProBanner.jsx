@@ -4,7 +4,12 @@ import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
 import styles from './ProBanner.module.css'
 
-const FEATURES = ['Ouvrir, mettre en pause ou fermer la file', 'Appeler le client suivant en un geste', 'Suivre l’affluence en direct']
+const FEATURES = [
+  'Ouvrir, mettre en pause ou fermer la file',
+  'Appeler le client suivant en un geste',
+  'Créer et imprimer un ticket pour les clients sans smartphone',
+  'Suivre l’affluence en direct',
+]
 
 /** Bandeau destiné aux gestionnaires d'établissements. */
 export function ProBanner() {

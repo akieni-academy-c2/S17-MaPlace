@@ -19,3 +19,6 @@ export const closeQueue = () => api.post('/api/queue/close', undefined, auth)
 
 /** POST /api/queue/next → { ticket } (404 si aucun WAITING, 409 si PAUSED/CLOSED) */
 export const callNext = () => api.post('/api/queue/next', undefined, auth)
+
+/** POST /api/queue/tickets → { ticket } — ticket créé au guichet (client sans smartphone). Téléphone facultatif. */
+export const createTicket = ({ name, phone }) => api.post('/api/queue/tickets', { name, phone }, auth)

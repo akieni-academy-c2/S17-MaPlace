@@ -106,75 +106,74 @@ export default function EstablishmentPage() {
             </Card>
           </aside>
 
-          {/* Détails */}
-          <div className={styles.main}>
-            <section className={styles.block} aria-labelledby="etat-file">
-              <div className={styles.blockHead}>
-                <h2 id="etat-file" className="text-h3">
-                  État de la file
-                </h2>
-                <span className={styles.live}>
-                  <span className={styles.liveDot} /> En direct
-                </span>
-              </div>
-              <div className={styles.stats}>
-                <StatCard tone="primary" label="Numéro appelé" value={isActive ? formatTicketNumber(establishment.current_number) : '—'} caption="au guichet" icon={ICONS.campaign} />
-                <StatCard label="En attente" value={isActive ? waiting : '—'} caption={waiting > 1 ? 'personnes' : 'personne'} icon={ICONS.groups} />
-                <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
-              </div>
-            </section>
-
-            <div className={styles.details}>
-              <Card className={styles.block}>
-                <h2 className="text-h3">À propos</h2>
-                <p className="text-muted">
-                  {info.description ??
-                    `${establishment.name} utilise Ma Place pour gérer son accueil : prenez votre ticket à distance et présentez-vous lorsque votre tour arrive.`}
-                </p>
-                <ul className={styles.facts}>
-                  <li>
-                    <Icon name={ICONS.schedule} size={18} />
-                    <span>
-                      <strong>Horaires</strong>
-                      {info.hours ?? 'Communiqués par l’établissement'}
-                    </span>
-                  </li>
-                  <li>
-                    <Icon name={ICONS.location} size={18} />
-                    <span>
-                      <strong>Adresse</strong>
-                      {[info.address, info.location].filter(Boolean).join(', ')}
-                    </span>
-                  </li>
-                  {establishment.phone && (
-                    <li>
-                      <Icon name={ICONS.phone} size={18} />
-                      <span>
-                        <strong>Téléphone</strong>
-                        <a href={`tel:${establishment.phone}`}>{formatPhone(establishment.phone)}</a>
-                      </span>
-                    </li>
-                  )}
-                </ul>
-              </Card>
-
-              <Card variant="tinted" className={styles.block}>
-                <h2 className="text-h3">Comment se passe votre visite ?</h2>
-                <ol className={styles.visit}>
-                  {VISIT_STEPS.map((step, i) => (
-                    <li key={step.text}>
-                      <span className={styles.visitIcon}>
-                        <Icon name={step.icon} size={18} />
-                      </span>
-                      <span>
-                        <strong>Étape {i + 1}</strong>
-                        {step.text}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </Card>
+          {/* État de la file : affiché avant l'action, y compris sur mobile */}
+          <section className={`${styles.block} ${styles.state}`} aria-labelledby="etat-file">
+            <div className={styles.blockHead}>
+              <h2 id="etat-file" className="text-h3">
+                État de la file
+              </h2>
+              <span className={styles.live}>
+                <span className={styles.liveDot} /> En direct
+              </span>
             </div>
+            <div className={styles.stats}>
+              <StatCard tone="primary" label="Numéro appelé" value={isActive ? formatTicketNumber(establishment.current_number) : '—'} caption="au guichet" icon={ICONS.campaign} />
+              <StatCard label="En attente" value={isActive ? waiting : '—'} caption={waiting > 1 ? 'personnes' : 'personne'} icon={ICONS.groups} />
+              <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
+            </div>
+          </section>
+
+          {/* Détails */}
+          <div className={styles.details}>
+            <Card className={styles.block}>
+              <h2 className="text-h3">À propos</h2>
+              <p className="text-muted">
+                {info.description ??
+                  `${establishment.name} utilise Ma Place pour gérer son accueil : prenez votre ticket à distance et présentez-vous lorsque votre tour arrive.`}
+              </p>
+              <ul className={styles.facts}>
+                <li>
+                  <Icon name={ICONS.schedule} size={18} />
+                  <span>
+                    <strong>Horaires</strong>
+                    {info.hours ?? 'Communiqués par l’établissement'}
+                  </span>
+                </li>
+                <li>
+                  <Icon name={ICONS.location} size={18} />
+                  <span>
+                    <strong>Adresse</strong>
+                    {[info.address, info.location].filter(Boolean).join(', ')}
+                  </span>
+                </li>
+                {establishment.phone && (
+                  <li>
+                    <Icon name={ICONS.phone} size={18} />
+                    <span>
+                      <strong>Téléphone</strong>
+                      <a href={`tel:${establishment.phone}`}>{formatPhone(establishment.phone)}</a>
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </Card>
+
+            <Card variant="tinted" className={styles.block}>
+              <h2 className="text-h3">Comment se passe votre visite ?</h2>
+              <ol className={styles.visit}>
+                {VISIT_STEPS.map((step, i) => (
+                  <li key={step.text}>
+                    <span className={styles.visitIcon}>
+                      <Icon name={step.icon} size={18} />
+                    </span>
+                    <span>
+                      <strong>Étape {i + 1}</strong>
+                      {step.text}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </Card>
           </div>
         </div>
       )}

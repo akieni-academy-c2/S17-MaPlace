@@ -56,16 +56,11 @@ export function EstablishmentCard({ establishment, isFavorite, onToggleFavorite 
           </div>
         </dl>
 
+        {/* Toujours vers la fiche : le client consulte l'état de la file avant le formulaire */}
         <div className={styles.actions}>
-          {isOpen ? (
-            <Button fullWidth icon={ICONS.ticket} to={to.joinQueue(id)}>
-              Prendre un ticket
-            </Button>
-          ) : (
-            <Button variant="outline" fullWidth iconRight={ICONS.forward} to={to.establishment(id)}>
-              Voir la file
-            </Button>
-          )}
+          <Button variant={isOpen ? 'primary' : 'outline'} fullWidth iconRight={ICONS.forward} to={to.establishment(id)}>
+            {isOpen ? 'Prendre un ticket' : 'Voir la file'}
+          </Button>
         </div>
       </div>
     </article>

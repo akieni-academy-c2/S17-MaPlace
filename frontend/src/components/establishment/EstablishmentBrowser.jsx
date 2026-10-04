@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { Button, EmptyState, FilterChips, Icon, InfoNote, Loader, SearchBar } from '@/components/ui'
+import { Button, EmptyState, FilterChips, Icon, InfoNote, Loader, Pagination, SearchBar } from '@/components/ui'
 import { useFavorites } from '@/hooks/useFavorites'
+import { usePagination } from '@/hooks/usePagination'
 import { CATEGORIES, describeEstablishment, inferCategory, normalizeText } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS } from '@/constants/status'
@@ -28,9 +29,10 @@ const SORTS = {
 
 /**
  * Recherche + filtres (état, catégorie) + tri + grille de cartes.
- * `limit` : nombre maximal de cartes affichées (accueil) ; `footer` s'affiche alors sous la grille.
+ * - `limit`    : n'affiche que les N premiers résultats filtrés (accueil) ; `footer` s'affiche s'il y en a plus
+ * - `pageSize` : pagine tous les résultats (page Établissements)
  */
-export function EstablishmentBrowser({ establishments, loading, error, initialQuery = '', limit, footer, searchId }) {
+export function EstablishmentBrowser({ establishments, loading, error, initialQuery = '', limit, pageSize, footer, searchId }) {
   const [query, setQuery] = useState(initialQuery)
   const [status, setStatus] = useState('ALL')
   const [category, setCategory] = useState('ALL')
@@ -69,7 +71,8 @@ export function EstablishmentBrowser({ establishments, loading, error, initialQu
       .sort(SORTS[sort].compare)
   }, [items, status, category, query, sort])
 
-  const shown = limit ? visible.slice(0, limit) : visible
+  const pagination = usePagination(visible, pageSize ?? Math.max(visible.length, 1), `${query}|${status}|${category}|${sort}`)
+  const shown = limit ? visible.slice(0, limit) : pagination.pageItems
   const hasFilters = query || status !== 'ALL' || category !== 'ALL'
   const reset = () => {
     setQuery('')
@@ -78,7 +81,7 @@ export function EstablishmentBrowser({ establishments, loading, error, initialQu
   }
 
   return (
-    <div className={styles.browser}>
+    <div className={styles.browser} id="liste-etablissements">
       <div className={styles.controls}>
         <div className={styles.searchRow}>
           <SearchBar
@@ -147,6 +150,16 @@ export function EstablishmentBrowser({ establishments, loading, error, initialQu
             <EstablishmentCard key={e.id} establishment={e} isFavorite={isFavorite(e.id)} onToggleFavorite={toggle} />
           ))}
         </div>
+      )}
+
+      {pageSize && (
+        <Pagination
+          {...pagination}
+          onChange={pagination.setPage}
+          itemLabel={visible.length > 1 ? 'établissements' : 'établissement'}
+          targetId="liste-etablissements"
+          label="Pages d’établissements"
+        />
       )}
 
       {footer && limit && visible.length > limit && footer}

@@ -43,3 +43,4 @@
 .accent { background: var(--orange-light); color: var(--orange-dark); }
 .neutral { background: var(--neutral-light); color: var(--text-secondary); }
 .onDark { background: rgba(255, 255, 255, 0.14); color: var(--white); }
+.approaching { background: #fff6e8; color: var(--orange-dark); border: 1px solid #f6d3ad; --badge-dot: var(--orange); }

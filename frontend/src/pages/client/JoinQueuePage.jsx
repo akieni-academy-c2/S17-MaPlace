@@ -7,11 +7,12 @@ import { getEstablishment } from '@/services/establishmentService'
 import { createTicket } from '@/services/ticketService'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
+import { useTransitionScreen } from '@/hooks/useTransitionScreen'
 import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS, QUEUE_STATUS_META } from '@/constants/status'
 import { to } from '@/constants/routes'
-import { formatPhone, normalizePhone } from '@/utils/format'
+import { formatPhone, formatTicketNumber, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
 
 /** 9 chiffres commençant par 0, ex. 06 123 23 23 */
@@ -39,6 +40,7 @@ export default function JoinQueuePage() {
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const { show } = useTransitionScreen()
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
   const updatePhone = (e) => setForm((f) => ({ ...f, phone: formatPhone(normalizePhone(e.target.value)) }))
@@ -58,10 +60,18 @@ export default function JoinQueuePage() {
         phone: normalizePhone(form.phone),
       })
       save(ticket.id, ticket.cancelToken)
+      show({
+        icon: ICONS.ticketCheck,
+        title: 'Ticket confirmé !',
+        highlight: formatTicketNumber(ticket.number),
+        name: establishment?.name,
+        text: 'Suivez votre position en direct sur la page suivante.',
+      })
       // `justCreated` : la page du ticket affiche la confirmation de prise de ticket
       navigate(to.ticket(ticket.id), { replace: true, state: { justCreated: true } })
     } catch (err) {
-      setSubmitError(err.status === 409 ? "La file n'accepte pas de nouveaux tickets pour le moment." : err.message)
+      // Les messages 409 du serveur sont explicites (file en pause/fermée, numéro déjà en file)
+      setSubmitError(err.message)
     } finally {
       setSubmitting(false)
     }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, ConfirmDialog, Icon, IconButton, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
@@ -8,9 +8,10 @@ import { getCancelToken } from '@/hooks/useCurrentTicket'
 import { cancelTicketByClient } from '@/services/ticketService'
 import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, SOON_THRESHOLD, TICKET_STATUS } from '@/constants/status'
+import { getTicketAlert, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { formatTicketNumber, formatTime, plural } from '@/utils/format'
 import { PATHS, to } from '@/constants/routes'
+import { downloadTicket, ticketExportData } from '@/utils/ticketExport'
 import styles from './TicketPage.module.css'
 
 /** Client — Mon ticket en attente (GET /api/tickets/:id, rafraîchi en continu). */
@@ -50,8 +51,28 @@ export default function TicketPage() {
     navigate(location.pathname, { replace: true, state: null })
   }
 
-  const soon = ticket && ticket.peopleAhead <= SOON_THRESHOLD
+  const alert = getTicketAlert(ticket)
   const paused = ticket?.queueStatus === QUEUE_STATUS.PAUSED
+  const [downloading, setDownloading] = useState(false)
+
+  // Le titre de l'onglet reflète l'alerte (visible même si l'utilisateur consulte un autre onglet)
+  useEffect(() => {
+    if (!ticket) return undefined
+    const previous = document.title
+    document.title = `${alert.key === 'waiting' ? '' : '⏳ '}${formatTicketNumber(ticket.number)} · ${alert.label} — Ma Place`
+    return () => {
+      document.title = previous
+    }
+  }, [ticket, alert])
+
+  const handleDownload = async () => {
+    setDownloading(true)
+    try {
+      await downloadTicket(ticketExportData(ticket))
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   return (
     <PageContent className={styles.page}>
@@ -85,12 +106,8 @@ export default function TicketPage() {
           <header className={styles.intro}>
             <div>
               <span className="text-eyebrow">Mon ticket</span>
-              <h1 className="text-h1">{soon ? 'Bientôt votre tour !' : 'Votre tour approche'}</h1>
-              <p className="text-muted">
-                {soon
-                  ? 'Rapprochez-vous de l’établissement : vous serez appelé dans quelques instants.'
-                  : 'Gardez l’esprit tranquille, nous suivons la file pour vous.'}
-              </p>
+              <h1 className={`text-h1 ${styles[`title-${alert.key}`] ?? ''}`}>{alert.title}</h1>
+              <p className="text-muted">{alert.text}</p>
             </div>
             <span className={styles.live}>
               <span className={styles.liveDot} /> Actualisé en direct
@@ -106,13 +123,20 @@ export default function TicketPage() {
           <div className={styles.layout}>
             <div className={styles.ticketCol}>
               <TicketCard
+                tone={alert.key}
                 header={
                   <>
                     <span className={styles.place}>
                       <Icon name={ICONS.store} size={16} /> {ticket.establishment?.name}
                     </span>
-                    <StatusBadge tone={soon ? 'soon' : 'onDark'} dot pulse={soon} size="sm" className={styles.headerBadge}>
-                      {soon ? 'Bientôt votre tour' : 'En attente'}
+                    <StatusBadge
+                      tone={alert.key === 'approaching' ? 'approaching' : 'onDark'}
+                      dot
+                      pulse={alert.key !== 'waiting'}
+                      size="sm"
+                      className={styles.headerBadge}
+                    >
+                      {alert.label}
                     </StatusBadge>
                   </>
                 }
@@ -138,6 +162,9 @@ export default function TicketPage() {
               </InfoNote>
 
               <div className={styles.cancel}>
+                <Button variant="outline" fullWidth icon={ICONS.download} loading={downloading} onClick={handleDownload}>
+                  Télécharger mon ticket
+                </Button>
                 {cancelError && (
                   <InfoNote tone="error" icon={ICONS.warning}>
                     {cancelError}

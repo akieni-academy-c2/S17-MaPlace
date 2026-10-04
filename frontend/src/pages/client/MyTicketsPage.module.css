@@ -9,7 +9,9 @@
   background: var(--white);
   box-shadow: var(--shadow-sm);
 }
-.called, .soon { border-top-color: var(--orange); }
+.approaching { border-top-color: #f6c08a; }
+.soon { border-top-color: var(--orange); }
+.called { border-top-color: var(--success); }
 .completed { border-top-color: var(--success); }
 .cancelled { border-top-color: var(--danger); }
 .cardHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }

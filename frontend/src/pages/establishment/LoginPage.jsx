@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Button, Icon, InfoNote, Logo, TextField } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
+import { useTransitionScreen } from '@/hooks/useTransitionScreen'
 import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
 import styles from './LoginPage.module.css'
@@ -9,6 +10,7 @@ import styles from './LoginPage.module.css'
 const BENEFITS = [
   { icon: ICONS.play, text: 'Ouvrez, mettez en pause ou fermez votre file en un geste.' },
   { icon: ICONS.bell, text: 'Appelez le client suivant : son écran affiche « C’est votre tour ! ».' },
+  { icon: ICONS.print, text: 'Créez et imprimez un ticket pour les clients sans smartphone.' },
   { icon: ICONS.activity, text: 'Suivez l’affluence et l’historique de la journée en direct.' },
 ]
 
@@ -22,6 +24,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const { show } = useTransitionScreen()
 
   if (isAuthenticated) return <Navigate to={PATHS.proDashboard} replace />
 
@@ -30,7 +33,8 @@ export default function LoginPage() {
     setSubmitting(true)
     setError(null)
     try {
-      await login(email.trim(), password)
+      const { establishment } = await login(email.trim(), password)
+      show({ title: 'Bienvenue,', name: establishment?.name, text: 'Votre espace de gestion est prêt.' })
       navigate(location.state?.from?.pathname ?? PATHS.proDashboard, { replace: true })
     } catch (err) {
       setError(err.status === 401 || err.status === 400 ? 'Email ou mot de passe incorrect.' : err.message)
