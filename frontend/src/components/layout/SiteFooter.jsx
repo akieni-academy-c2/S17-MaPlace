@@ -53,9 +53,6 @@ export function SiteFooter() {
       <div className={styles.bottom}>
         <div className={`container ${styles.bottomInner}`}>
           <p>© {new Date().getFullYear()} Ma Place. Tous droits réservés.</p>
-          <p className={styles.tagline}>
-            <Icon name={ICONS.heart} size={14} filled /> Une solution pour une ville plus fluide.
-          </p>
         </div>
       </div>
     </footer>
