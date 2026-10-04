@@ -1,0 +1,9 @@
+/* Polices auto-hébergées (pas de CDN) */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
+/* Icônes : lucide-react (SVG inline, aucune police à charger) */
+
+
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/utilities.css';

@@ -1,0 +1,34 @@
+.number {
+  font-family: var(--font-display);
+  font-weight: var(--fw-extrabold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+.sm { font-size: 1.25rem; letter-spacing: -0.01em; }
+.md { font-size: 1.75rem; letter-spacing: -0.02em; }
+.lg { font-size: clamp(2.25rem, 1.9rem + 1.6vw, 3rem); letter-spacing: -0.03em; }
+.xl { font-size: var(--fs-ticket); letter-spacing: -0.04em; }
+
+.primary { color: var(--primary); }
+.accent { color: var(--orange); }
+.ink { color: var(--text-primary); }
+.inverse { color: var(--white); }
+
+/* Niveaux d'alerte : jaune (15–11 devant), orange (10–6), rouge (5–1), vert (0) */
+.waiting { color: var(--primary); }
+.near { color: var(--yellow-dark); --number-bg: var(--yellow-light); }
+.approaching { color: var(--orange-dark); --number-bg: var(--orange-light); }
+.soon { color: var(--red-dark); --number-bg: var(--red-light); }
+.next,
+.called { color: var(--success); --number-bg: var(--success-light); }
+
+.boxed {
+  display: inline-grid;
+  place-items: center;
+  min-width: 52px;
+  min-height: 48px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--number-bg, var(--primary-light));
+}

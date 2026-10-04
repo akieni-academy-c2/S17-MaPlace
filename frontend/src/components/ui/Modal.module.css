@@ -1,0 +1,25 @@
+.dialog {
+  width: min(100% - 2rem, 480px);
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+}
+.dialog[open] { animation: dialog-in var(--duration-base) var(--easing); }
+.dialog::backdrop { background: var(--overlay); backdrop-filter: blur(3px); }
+.panel { display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-6) var(--space-5); }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.title { font-size: var(--fs-h3); font-weight: var(--fw-bold); }
+.description { margin-top: 4px; font-size: var(--fs-small); color: var(--text-secondary); }
+
+@media (min-width: 480px) {
+  .panel { padding: var(--space-8); }
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+}

@@ -1,0 +1,19 @@
+.card {
+  min-width: 0;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+}
+.default { border: 1px solid var(--border); box-shadow: var(--shadow-xs); }
+.elevated { border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+.tinted { background: var(--surface); border: 1px solid var(--border); }
+.outlined { border: 1px solid var(--border); }
+
+.pad-none { padding: 0; }
+.pad-sm { padding: var(--space-4); }
+.pad-md { padding: var(--space-5); }
+.pad-lg { padding: var(--space-6) var(--space-5); }
+
+@media (min-width: 768px) {
+  .pad-md { padding: var(--space-6); }
+  .pad-lg { padding: var(--space-8); }
+}

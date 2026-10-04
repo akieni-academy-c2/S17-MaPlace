@@ -1,0 +1,90 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--fs-button);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  text-align: center;
+  transition:
+    background-color var(--duration-base) var(--easing),
+    border-color var(--duration-base) var(--easing),
+    color var(--duration-base) var(--easing),
+    box-shadow var(--duration-base) var(--easing),
+    transform var(--duration-fast) var(--easing);
+}
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.button:disabled {
+  opacity: 0.5;
+}
+.label {
+  min-width: 0;
+}
+
+/* Tailles */
+.sm { min-height: 36px; padding: 0 var(--space-3); font-size: var(--fs-small); border-radius: var(--radius-xs); }
+.md { min-height: var(--touch-target); padding: 0 var(--space-5); }
+.lg { min-height: 52px; padding: 0 var(--space-6); font-size: 1rem; }
+.fullWidth { width: 100%; }
+
+/* Variantes */
+.primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.primary:hover:not(:disabled) { background: var(--primary-hover); box-shadow: var(--shadow-sm); }
+
+.secondary {
+  background: var(--orange);
+  color: var(--on-orange);
+}
+.secondary:hover:not(:disabled) { background: var(--orange-hover); box-shadow: var(--shadow-sm); }
+
+.outline {
+  background: var(--white);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.outline:hover:not(:disabled) { background: var(--primary-light); }
+
+.ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.ghost:hover:not(:disabled) { background: var(--surface-strong); color: var(--text-primary); }
+
+.soft {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.soft:hover:not(:disabled) { background: var(--primary-soft); }
+
+.danger {
+  background: var(--danger);
+  color: var(--white);
+}
+.danger:hover:not(:disabled) { background: var(--danger-hover); }
+
+.danger-soft {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--danger);
+}
+.danger-soft:hover:not(:disabled) { background: var(--danger-light); border-color: transparent; }
+
+.inverse {
+  background: var(--white);
+  color: var(--primary);
+}
+.inverse:hover:not(:disabled) { background: var(--primary-light); }
+
+/* Chargement */
+.spinner { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

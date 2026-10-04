@@ -1,0 +1,16 @@
+.iconButton {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration-base) var(--easing), color var(--duration-base) var(--easing);
+}
+.ghost { color: var(--text-primary); }
+.ghost:hover { background: var(--surface-strong); }
+.filled { background: var(--primary); color: var(--on-primary); }
+.filled:hover { background: var(--primary-hover); }
+.tonal { background: var(--primary-light); color: var(--primary); }
+.tonal:hover { background: var(--primary-soft); }
+.outline { border: 1px solid var(--border); background: var(--white); color: var(--text-primary); }
+.outline:hover { border-color: var(--border-strong); background: var(--surface); }

@@ -1,0 +1,137 @@
+/* =========================================================================
+   Ma Place — Design tokens
+   Identité : vert canard (marque) · orange (accent) · blanc (fond dominant)
+
+   Breakpoints (mobile first, à utiliser tels quels dans les CSS Modules) :
+     480px  grands smartphones
+     768px  tablettes
+     1024px petits laptops
+     1280px desktop / grands écrans
+   ========================================================================= */
+
+:root {
+  /* ---------- Marque : vert canard ---------- */
+  --primary-dark: #0b3532;
+  --primary: #134e4a;
+  --primary-hover: #0f413e;
+  --primary-500: #1d6b64;
+  --primary-light: #e8f2f0;
+  --primary-soft: #cfe4e0;
+  --on-primary: #ffffff;
+
+  /* ---------- Accent : orange ---------- */
+  --orange: #e8832a;
+  --orange-hover: #d2711b;
+  --orange-dark: #b45a10; /* texte orange lisible sur blanc */
+  --orange-light: #fdf1e6;
+  --on-orange: #ffffff;
+
+  /* ---------- Niveaux d'alerte du ticket (personnes devant) ---------- */
+  --yellow: #f2c230;       /* 15 – 11 */
+  --yellow-dark: #8a6500;  /* texte jaune lisible sur blanc */
+  --yellow-light: #fff8dc;
+  --red: #d64545;          /* 5 – 1 */
+  --red-dark: #b02f2f;
+  --red-light: #fdeceb;
+
+  /* ---------- Neutres ---------- */
+  --white: #ffffff;
+  --background: #ffffff;
+  --surface: #f5f9f8;        /* sections secondaires */
+  --surface-strong: #ebf3f1; /* fonds menthe (bandeaux, survols) */
+  --text-primary: #10302d;
+  --text-secondary: #5a6e6b;
+  --text-tertiary: #8a9b98;
+  --border: #e1ebe8;
+  --border-strong: #c9d8d5;
+
+  /* ---------- Sémantique ---------- */
+  --success: #1f8a5b;
+  --success-light: #e6f5ed;
+  --warning: var(--orange);
+  --warning-text: var(--orange-dark);
+  --warning-light: var(--orange-light);
+  --danger: #c93c3c;
+  --danger-hover: #b03030;
+  --danger-light: #fcecec;
+  --info: #2f7a8a;
+  --info-light: #e8f3f6;
+  --neutral: #6b7a78;
+  --neutral-light: #eef2f1;
+
+  /* ---------- Typographie ---------- */
+  --font-display: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+
+  /* Échelle fluide : mobile → desktop sans saut */
+  --fs-display: clamp(2rem, 1.35rem + 2.8vw, 3.5rem);   /* Hero */
+  --fs-h1: clamp(1.625rem, 1.3rem + 1.4vw, 2.375rem);
+  --fs-h2: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  --fs-h3: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --fs-body-lg: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --fs-body: 0.9375rem;   /* 15px */
+  --fs-small: 0.8125rem;  /* 13px */
+  --fs-caption: 0.75rem;  /* 12px */
+  --fs-button: 0.9375rem;
+  --fs-ticket: clamp(3rem, 2.2rem + 3.5vw, 4.5rem); /* numéro de ticket */
+
+  --lh-tight: 1.15;
+  --lh-heading: 1.25;
+  --lh-body: 1.6;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* ---------- Espacements (base 4px) ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --section-gap: clamp(3rem, 2rem + 4vw, 5.5rem);
+  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+
+  /* ---------- Arrondis ---------- */
+  --radius-xs: 6px;    /* petits éléments */
+  --radius-sm: 10px;   /* champs, boutons */
+  --radius-md: 14px;   /* cartes compactes */
+  --radius-lg: 20px;   /* cartes */
+  --radius-xl: 28px;   /* modales, hero */
+  --radius-full: 999px; /* badges, chips */
+
+  /* ---------- Ombres (très légères) ---------- */
+  --shadow-xs: 0 1px 2px rgba(16, 48, 45, 0.05);
+  --shadow-sm: 0 2px 8px -2px rgba(16, 48, 45, 0.08);
+  --shadow-md: 0 8px 24px -8px rgba(16, 48, 45, 0.12);
+  --shadow-lg: 0 20px 48px -16px rgba(16, 48, 45, 0.18);
+  --shadow-focus: 0 0 0 3px rgba(29, 107, 100, 0.22);
+  --overlay: rgba(11, 53, 50, 0.45);
+
+  /* ---------- Layout ---------- */
+  --container: 1240px;
+  --container-narrow: 760px;
+  --header-height: 64px;
+  --bottom-nav-height: 64px;
+  --sidebar-width: 264px;
+  --touch-target: 44px;
+
+  /* ---------- Motion ---------- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 76px;
+  }
+}
