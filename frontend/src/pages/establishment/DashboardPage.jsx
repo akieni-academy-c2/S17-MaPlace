@@ -167,6 +167,12 @@ export default function DashboardPage() {
         onCancel={() => setConfirmClose(false)}
       >
         La session sera terminée pour aujourd’hui et la numérotation repartira de #1 à la prochaine ouverture.
+        {waiting.length > 0 && (
+          <>
+            {' '}
+            <strong>{plural(waiting.length, 'ticket en attente sera annulé', 'tickets en attente seront annulés')}.</strong>
+          </>
+        )}
       </ConfirmDialog>
     </div>
   )
