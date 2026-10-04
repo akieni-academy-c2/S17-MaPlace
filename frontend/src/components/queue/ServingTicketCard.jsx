@@ -8,8 +8,11 @@ export function ServingTicketCard({ ticket, loading, onComplete }) {
   if (!ticket) {
     return (
       <section className={`${styles.card} ${styles.empty}`}>
-        <Icon name={ICONS.personPin} size={32} />
-        <p>Aucun client au guichet pour le moment.</p>
+        <span className={styles.emptyIcon}>
+          <Icon name={ICONS.personPin} size={26} />
+        </span>
+        <p className={styles.emptyTitle}>Guichet libre</p>
+        <p className="text-small text-muted">Appelez le prochain ticket pour accueillir un client.</p>
       </section>
     )
   }
@@ -17,8 +20,8 @@ export function ServingTicketCard({ ticket, loading, onComplete }) {
   return (
     <section className={styles.card}>
       <div className={styles.head}>
-        <span className="text-overline">Ticket actuellement appelé</span>
-        <StatusBadge tone="open" dot pulse>
+        <span className="text-eyebrow">Ticket appelé</span>
+        <StatusBadge tone="serving" dot pulse>
           En cours
         </StatusBadge>
       </div>
@@ -26,17 +29,17 @@ export function ServingTicketCard({ ticket, loading, onComplete }) {
       <div className={styles.client}>
         <p className={styles.name}>{ticket.name}</p>
         {ticket.phone && (
-          <p className={styles.meta}>
-            <Icon name={ICONS.phone} size={18} /> {formatPhone(ticket.phone)}
-          </p>
+          <a href={`tel:${ticket.phone}`} className={styles.meta}>
+            <Icon name={ICONS.phone} size={16} /> {formatPhone(ticket.phone)}
+          </a>
         )}
         {ticket.updatedAt && (
           <p className={styles.meta}>
-            <Icon name={ICONS.timer} size={18} /> Pris en charge {formatSince(ticket.updatedAt)}
+            <Icon name={ICONS.timer} size={16} /> Pris en charge {formatSince(ticket.updatedAt)}
           </p>
         )}
       </div>
-      <Button variant="success" size="lg" fullWidth icon={ICONS.taskAlt} loading={loading} onClick={() => onComplete(ticket.id)}>
+      <Button size="lg" fullWidth icon={ICONS.taskAlt} loading={loading} onClick={() => onComplete(ticket.id)}>
         Terminer ce ticket
       </Button>
     </section>

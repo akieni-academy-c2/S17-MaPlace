@@ -2,7 +2,8 @@ import styles from './TicketCard.module.css'
 
 /**
  * Carte « ticket » avec séparateur pointillé et encoches latérales (métaphore du ticket papier).
- * header : bandeau supérieur · children : partie principale · footer : partie détachable
+ * header : bandeau vert supérieur · children : partie principale · footer : partie détachable
+ * Les encoches prennent la couleur `--notch-bg` (fond de la page, blanc par défaut).
  */
 export function TicketCard({ header, children, footer, className = '' }) {
   return (

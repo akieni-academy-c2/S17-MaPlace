@@ -1,0 +1,108 @@
+.section { display: flex; flex-direction: column; gap: var(--space-8); }
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.map {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: #eef5f3;
+  background-image:
+    linear-gradient(rgba(19, 78, 74, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 78, 74, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.streets {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+.streets .river { stroke: #cfe4e0; stroke-width: 16; }
+.pin {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--neutral);
+  transform: translate(-50%, -100%);
+}
+.pinOpen { color: var(--primary); }
+.pin svg { filter: drop-shadow(0 2px 3px rgba(16, 48, 45, 0.25)); }
+.pinLabel {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+.mapBadge {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--white);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+}
+
+.districts { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.district {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.districtHead { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); line-height: 1.3; }
+.districtHead strong { display: block; color: var(--text-primary); }
+.districtHead small { font-size: var(--fs-caption); color: var(--text-secondary); }
+.districtIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-xs);
+  background: var(--orange-light);
+  color: var(--orange);
+}
+.places { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.place:hover { background: var(--surface); }
+.placeName {
+  flex: 1;
+  min-width: 0;
+  font-weight: var(--fw-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .map { min-height: 380px; }
+}

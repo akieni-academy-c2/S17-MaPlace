@@ -3,7 +3,7 @@ import styles from './StatCard.module.css'
 
 /**
  * Indicateur chiffré (KPI).
- * tone : neutral | primary | success
+ * tone : neutral | primary (fond vert) | accent (orange) | success
  */
 export function StatCard({ label, value, caption, icon, tone = 'neutral', compact = false, className = '' }) {
   return (
@@ -15,7 +15,7 @@ export function StatCard({ label, value, caption, icon, tone = 'neutral', compac
       </div>
       {icon && (
         <span className={styles.iconBox}>
-          <Icon name={icon} size={24} />
+          <Icon name={icon} size={compact ? 18 : 22} />
         </span>
       )}
     </div>

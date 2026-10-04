@@ -1,15 +1,31 @@
-import { useParams } from 'react-router-dom'
-import { AppHeader, PageContent } from '@/components/layout'
-import { Button, Card, Icon, InfoNote, Loader, QueueStatusBadge, TicketNumber } from '@/components/ui'
+import { Link, useParams } from 'react-router-dom'
+import { PageContent } from '@/components/layout'
+import { Button, Card, EmptyState, FavoriteButton, Icon, InfoNote, Loader, QueueStatusBadge, StatCard } from '@/components/ui'
+import { EstablishmentVisual } from '@/components/establishment'
 import { getEstablishment } from '@/services/establishmentService'
 import { usePolling } from '@/hooks/usePolling'
 import { useFavorites } from '@/hooks/useFavorites'
+import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS } from '@/constants/status'
+import { QUEUE_STATUS, QUEUE_STATUS_META } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
+import { formatPhone, formatTicketNumber, plural } from '@/utils/format'
 import styles from './EstablishmentPage.module.css'
 
-/** Client 2/6 — Fiche d'un établissement (GET /api/establishments/:id). */
+/** Message d'état de la file pour le bloc « Prendre un ticket ». */
+const STATUS_NOTE = {
+  [QUEUE_STATUS.OPEN]: { tone: 'success', icon: ICONS.checkCircle, title: 'La file est ouverte' },
+  [QUEUE_STATUS.PAUSED]: { tone: 'warning', icon: ICONS.pause, title: 'Nouveaux tickets temporairement suspendus' },
+  [QUEUE_STATUS.CLOSED]: { tone: 'info', icon: ICONS.power, title: 'Prise de ticket indisponible' },
+}
+
+const VISIT_STEPS = [
+  { icon: ICONS.ticket, text: 'Prenez votre ticket en indiquant votre nom et votre téléphone.' },
+  { icon: ICONS.activity, text: 'Suivez votre position en direct, d’où vous voulez.' },
+  { icon: ICONS.walk, text: 'Présentez-vous au guichet quand c’est votre tour.' },
+]
+
+/** Client — Fiche d'un établissement (GET /api/establishments/:id, rafraîchie en continu). */
 export default function EstablishmentPage() {
   const { establishmentId } = useParams()
   const { isFavorite, toggle } = useFavorites()
@@ -18,78 +34,150 @@ export default function EstablishmentPage() {
   })
   const establishment = data?.establishment
   const status = establishment?.queue_status ?? QUEUE_STATUS.CLOSED
-  const favorite = isFavorite(establishmentId)
+  const info = describeEstablishment(establishment)
+  const isOpen = status === QUEUE_STATUS.OPEN
+  const isActive = status !== QUEUE_STATUS.CLOSED
+  const note = STATUS_NOTE[status]
+  const waiting = establishment?.waiting_count ?? 0
 
   return (
-    <>
-      <AppHeader title="Détails du lieu" />
-      <PageContent>
-        <div className={styles.toolbar}>
-          <Button variant="ghost" size="sm" icon={ICONS.back} to={`${PATHS.home}#etablissements`} className={styles.backLink}>
-            Retour aux établissements
-          </Button>
-          <Button variant="secondary" size="sm" icon={ICONS.star} onClick={() => toggle(establishmentId)} aria-pressed={favorite}>
-            {favorite ? 'Favori' : 'Ajouter aux favoris'}
-          </Button>
-        </div>
+    <PageContent>
+      <Link to={PATHS.establishments} className={styles.back}>
+        <Icon name={ICONS.back} size={16} /> Tous les établissements
+      </Link>
 
-        {loading && <Loader />}
-        {error && (
-          <InfoNote tone="error" icon={ICONS.warning}>
-            {error.status === 404 ? "Cet établissement n'existe pas." : error.message}
-          </InfoNote>
-        )}
-
-        {establishment && (
-          <Card padding="lg" className="stack" style={{ '--stack-gap': 'var(--space-lg)' }}>
-            <div className={styles.head}>
-              {establishment.category && <span className="text-overline">{establishment.category}</span>}
-              <QueueStatusBadge status={status} className={styles.badge} />
-            </div>
-            <h2 className={styles.name}>{establishment.name}</h2>
-
-            <div className={styles.stats}>
-              <div className={styles.stat}>
-                <span className={styles.statLabel}>
-                  <Icon name={ICONS.campaign} size={20} /> Actuellement appelé
-                </span>
-                <TicketNumber number={establishment.current_number} size="lg" />
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statLabel}>
-                  <Icon name={ICONS.groups} size={20} /> En attente
-                </span>
-                <span className={styles.waiting}>
-                  <strong>{establishment.waiting_count ?? '—'}</strong>{' '}
-                  {establishment.waiting_count > 1 ? 'personnes' : 'personne'}
-                </span>
-              </div>
-            </div>
-
-            <hr className={styles.divider} />
-
-            <Button
-              size="lg"
-              fullWidth
-              icon={ICONS.ticket}
-              to={to.joinQueue(establishmentId)}
-              disabled={status !== QUEUE_STATUS.OPEN}
-              aria-disabled={status !== QUEUE_STATUS.OPEN}
-              className={status !== QUEUE_STATUS.OPEN ? styles.disabledLink : ''}
-            >
-              Rejoindre la file d&apos;attente
+      {loading && <Loader />}
+      {error && (
+        <EmptyState
+          icon={ICONS.searchOff}
+          title={error.status === 404 ? 'Établissement introuvable' : 'Chargement impossible'}
+          action={
+            <Button icon={ICONS.back} to={PATHS.establishments}>
+              Retour aux établissements
             </Button>
-            {status !== QUEUE_STATUS.OPEN && (
-              <InfoNote tone="warning" icon={ICONS.pause}>
-                La file n&apos;accepte pas de nouveaux tickets pour le moment.
+          }
+        >
+          {error.status === 404 ? 'Cet établissement n’existe pas ou n’est plus disponible.' : error.message}
+        </EmptyState>
+      )}
+
+      {establishment && (
+        <div className={styles.layout}>
+          {/* En-tête */}
+          <section className={styles.header}>
+            <EstablishmentVisual establishment={establishment} variant="banner" emblem={false} className={styles.banner}>
+              <QueueStatusBadge status={status} className={styles.bannerBadge} />
+            </EstablishmentVisual>
+            <div className={styles.identity}>
+              <EstablishmentVisual establishment={establishment} size={64} className={styles.avatar} />
+              <div className={styles.identityText}>
+                <span className={styles.category}>
+                  <Icon name={info.category.icon} size={15} /> {info.category.label}
+                </span>
+                <h1 className="text-h1">{establishment.name}</h1>
+                <p className={styles.location}>
+                  <Icon name={ICONS.location} size={16} /> {[info.address, info.location].filter(Boolean).join(' · ')}
+                </p>
+              </div>
+              <FavoriteButton variant="labeled" active={isFavorite(establishmentId)} name={establishment.name} onToggle={() => toggle(establishmentId)} className={styles.favorite} />
+            </div>
+          </section>
+
+          {/* Action principale */}
+          <aside className={styles.aside}>
+            <Card variant="elevated" padding="md" className={styles.cta}>
+              <div className={styles.ctaHead}>
+                <h2 className="text-h3">Prendre un ticket</h2>
+                <QueueStatusBadge status={status} short size="sm" />
+              </div>
+              <InfoNote tone={note.tone} icon={note.icon} title={note.title}>
+                {isOpen
+                  ? waiting > 0
+                    ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes)}.`
+                    : 'Personne n’attend : vous serez le prochain à être servi.'
+                  : QUEUE_STATUS_META[status].description}
               </InfoNote>
-            )}
-            <InfoNote tone="plain" icon={ICONS.shield}>
-              Aucun compte nécessaire. Vous renseignerez simplement votre prénom et numéro de téléphone.
-            </InfoNote>
-          </Card>
-        )}
-      </PageContent>
-    </>
+              <Button size="lg" fullWidth icon={ICONS.ticket} to={to.joinQueue(establishmentId)} disabled={!isOpen}>
+                Prendre un ticket
+              </Button>
+              <p className={styles.ctaFoot}>
+                <Icon name={ICONS.shield} size={15} /> Sans compte · nom et téléphone uniquement
+              </p>
+            </Card>
+          </aside>
+
+          {/* Détails */}
+          <div className={styles.main}>
+            <section className={styles.block} aria-labelledby="etat-file">
+              <div className={styles.blockHead}>
+                <h2 id="etat-file" className="text-h3">
+                  État de la file
+                </h2>
+                <span className={styles.live}>
+                  <span className={styles.liveDot} /> En direct
+                </span>
+              </div>
+              <div className={styles.stats}>
+                <StatCard tone="primary" label="Numéro appelé" value={isActive ? formatTicketNumber(establishment.current_number) : '—'} caption="au guichet" icon={ICONS.campaign} />
+                <StatCard label="En attente" value={isActive ? waiting : '—'} caption={waiting > 1 ? 'personnes' : 'personne'} icon={ICONS.groups} />
+                <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
+              </div>
+            </section>
+
+            <div className={styles.details}>
+              <Card className={styles.block}>
+                <h2 className="text-h3">À propos</h2>
+                <p className="text-muted">
+                  {info.description ??
+                    `${establishment.name} utilise Ma Place pour gérer son accueil : prenez votre ticket à distance et présentez-vous lorsque votre tour arrive.`}
+                </p>
+                <ul className={styles.facts}>
+                  <li>
+                    <Icon name={ICONS.schedule} size={18} />
+                    <span>
+                      <strong>Horaires</strong>
+                      {info.hours ?? 'Communiqués par l’établissement'}
+                    </span>
+                  </li>
+                  <li>
+                    <Icon name={ICONS.location} size={18} />
+                    <span>
+                      <strong>Adresse</strong>
+                      {[info.address, info.location].filter(Boolean).join(', ')}
+                    </span>
+                  </li>
+                  {establishment.phone && (
+                    <li>
+                      <Icon name={ICONS.phone} size={18} />
+                      <span>
+                        <strong>Téléphone</strong>
+                        <a href={`tel:${establishment.phone}`}>{formatPhone(establishment.phone)}</a>
+                      </span>
+                    </li>
+                  )}
+                </ul>
+              </Card>
+
+              <Card variant="tinted" className={styles.block}>
+                <h2 className="text-h3">Comment se passe votre visite ?</h2>
+                <ol className={styles.visit}>
+                  {VISIT_STEPS.map((step, i) => (
+                    <li key={step.text}>
+                      <span className={styles.visitIcon}>
+                        <Icon name={step.icon} size={18} />
+                      </span>
+                      <span>
+                        <strong>Étape {i + 1}</strong>
+                        {step.text}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
+    </PageContent>
   )
 }

@@ -1,12 +1,18 @@
 import { useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Button, Icon, InfoNote, Logo, StatusBadge, TextField } from '@/components/ui'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Button, Icon, InfoNote, Logo, TextField } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
 import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
 import styles from './LoginPage.module.css'
 
-/** Établissement 1/2 — Connexion gestionnaire (POST /api/auth/login). */
+const BENEFITS = [
+  { icon: ICONS.play, text: 'Ouvrez, mettez en pause ou fermez votre file en un geste.' },
+  { icon: ICONS.bell, text: 'Appelez le client suivant : son écran affiche « C’est votre tour ! ».' },
+  { icon: ICONS.activity, text: 'Suivez l’affluence et l’historique de la journée en direct.' },
+]
+
+/** Établissement — Connexion gestionnaire (POST /api/auth/login). */
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth()
   const navigate = useNavigate()
@@ -35,27 +41,54 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      <main className={styles.wrapper}>
+      {/* Panneau de marque (desktop) */}
+      <aside className={styles.brandPanel}>
+        <Link to={PATHS.home} aria-label="Ma Place — accueil">
+          <Logo size={48} subtitle="Espace établissement" tone="white" />
+        </Link>
+        <div className={styles.brandText}>
+          <h2 className={styles.brandTitle}>Gérez votre file d’attente, simplement.</h2>
+          <p>Vos clients patientent où ils veulent et se présentent au bon moment. Vous gardez la maîtrise de votre accueil.</p>
+          <ul className={styles.benefits}>
+            {BENEFITS.map((b) => (
+              <li key={b.text}>
+                <span>
+                  <Icon name={b.icon} size={18} />
+                </span>
+                {b.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className={styles.brandFoot}>© {new Date().getFullYear()} Ma Place · Brazzaville</p>
+      </aside>
+
+      <main className={styles.formSide}>
+        <div className={styles.topLinks}>
+          <Link to={PATHS.home} className={styles.mobileLogo} aria-label="Ma Place — accueil">
+            <Logo size={40} subtitle="Espace pro" />
+          </Link>
+          <Button variant="ghost" size="sm" icon={ICONS.back} to={PATHS.home}>
+            Retour au site
+          </Button>
+        </div>
+
         <div className={styles.card}>
           <form className={styles.form} onSubmit={handleSubmit}>
-            <div className={styles.brand}>
-              <span className={styles.logo}>
-                <Logo size={80} />
+            <div className={styles.head}>
+              <span className={styles.eyebrow}>
+                <Icon name={ICONS.store} size={14} /> Portail gestionnaire
               </span>
-              <StatusBadge tone="waiting" icon={ICONS.store}>
-                Portail pro
-              </StatusBadge>
-              <h1 className="text-headline-lg">Connexion établissement</h1>
-              <p className="text-body-md text-muted">Accédez à votre espace pour gérer votre file d&apos;attente.</p>
+              <h1 className="text-h1">Connexion établissement</h1>
+              <p className="text-muted">Accédez à votre espace pour gérer votre file d&apos;attente.</p>
             </div>
 
             <TextField
               label="Email professionnel"
-              aside={<span className="text-body-sm text-muted">Requis</span>}
               icon={ICONS.mail}
               type="email"
               autoComplete="email"
-              placeholder="contact@pharmacie-centrale.fr"
+              placeholder="contact@pharmacie-centrale.cg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -76,7 +109,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                 >
-                  <Icon name={showPassword ? ICONS.visibilityOff : ICONS.visibility} />
+                  <Icon name={showPassword ? ICONS.visibilityOff : ICONS.visibility} size={20} />
                 </button>
               }
             />
@@ -87,23 +120,19 @@ export default function LoginPage() {
               </InfoNote>
             )}
 
-            <Button type="submit" fullWidth iconRight={ICONS.forward} loading={submitting}>
+            <Button type="submit" size="lg" fullWidth iconRight={ICONS.forward} loading={submitting}>
               Se connecter
             </Button>
           </form>
           <p className={styles.secure}>
-            <Icon name={ICONS.shield} size={20} /> Accès sécurisé pour gestionnaires d&apos;accueil
+            <Icon name={ICONS.shield} size={16} /> Accès sécurisé réservé aux gestionnaires d&apos;accueil
           </p>
         </div>
 
-        <InfoNote tone="plain" icon={ICONS.info} className={styles.after}>
-          Après connexion, vous accédez directement à la gestion de file de votre établissement.
-        </InfoNote>
-        <nav className={styles.links}>
-          <Button variant="ghost" size="sm" to={PATHS.home}>
-            Retour à l&apos;accueil client
-          </Button>
-        </nav>
+        <p className={styles.note}>
+          Vous êtes un client ? Aucun compte n’est nécessaire :{' '}
+          <Link to={PATHS.establishments}>prenez directement votre ticket</Link>.
+        </p>
       </main>
     </div>
   )

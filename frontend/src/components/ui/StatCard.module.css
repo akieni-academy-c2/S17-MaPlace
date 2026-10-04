@@ -2,41 +2,56 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-md);
-  padding: var(--space-lg);
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface-container-lowest);
-  box-shadow: var(--shadow-card);
+  background: var(--white);
 }
-.body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.label { font: var(--text-label-lg); color: var(--color-on-surface-variant); }
+.body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.label { font-size: var(--fs-small); font-weight: var(--fw-semibold); color: var(--text-secondary); }
 .value {
-  font: 800 34px/42px var(--font-display);
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 1.4rem + 1vw, 2.125rem);
+  font-weight: var(--fw-extrabold);
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--color-on-surface);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
-.caption { font: var(--text-body-sm); color: var(--color-on-surface-variant); }
+.caption { font-size: var(--fs-small); color: var(--text-secondary); }
 .iconBox {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-container);
-  color: var(--color-primary-container);
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
-.primary .value { color: var(--color-primary-container); }
-.success .caption { color: var(--color-tertiary-container); }
-.success .iconBox { background: var(--color-status-open-bg); color: var(--color-tertiary-container); }
+.primary { background: var(--primary); border-color: var(--primary); }
+.primary .value, .primary .label { color: var(--white); }
+.primary .caption { color: rgba(255, 255, 255, 0.75); }
+.primary .iconBox { background: rgba(255, 255, 255, 0.14); color: var(--white); }
 
-/* Variante compacte, centrée (stats du ticket client) */
+.accent .iconBox { background: var(--orange-light); color: var(--orange-dark); }
+.accent .value { color: var(--orange-dark); }
+
+.success .iconBox { background: var(--success-light); color: var(--success); }
+
+/* Variante compacte (indicateurs du ticket client) */
 .compact {
-  justify-content: center;
-  text-align: center;
-  padding: var(--space-md) var(--space-sm);
-  box-shadow: none;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
 }
-.compact .body { align-items: center; }
-.compact .label { font: var(--text-label-md); letter-spacing: 0.06em; text-transform: uppercase; }
-.compact .value { font-size: 28px; line-height: 36px; }
+.compact .value { font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem); }
+.compact .label { font-size: var(--fs-caption); }
+.compact .iconBox { width: 36px; height: 36px; }
+
+/* Petits mobiles : l'icône s'efface pour laisser la place au libellé et à la valeur */
+@media (max-width: 479px) {
+  .iconBox { display: none; }
+}

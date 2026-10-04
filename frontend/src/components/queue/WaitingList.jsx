@@ -24,7 +24,7 @@ export function WaitingList({
     <section id={id} className={styles.section}>
       <header className={styles.header}>
         <h2 className={styles.title}>
-          <Icon name={ICONS.queue} /> {title}
+          <Icon name={ICONS.queue} size={20} /> {title}
         </h2>
         <span className={styles.count}>{plural(tickets.length, ...countLabel)}</span>
       </header>
@@ -46,18 +46,18 @@ export function WaitingList({
           {tickets.map((ticket) => (
             <div key={ticket.id} className={styles.row} role="row">
               <span role="cell">
-                <TicketNumber number={ticket.number} size="md" boxed />
+                <TicketNumber number={ticket.number} size="sm" boxed />
               </span>
               <span role="cell" className={styles.client}>
                 <span className={styles.name}>{ticket.name}</span>
                 {ticket.phone && (
                   <span className={styles.phone}>
-                    <Icon name={ICONS.phone} size={16} /> {formatPhone(ticket.phone)}
+                    <Icon name={ICONS.phone} size={14} /> {formatPhone(ticket.phone)}
                   </span>
                 )}
                 {showTime && ticket.createdAt && (
                   <span className={styles.phone}>
-                    <Icon name={ICONS.schedule} size={16} /> Arrivé à {formatTime(ticket.createdAt)}
+                    <Icon name={ICONS.schedule} size={14} /> Arrivé à {formatTime(ticket.createdAt)}
                   </span>
                 )}
               </span>
@@ -67,7 +67,7 @@ export function WaitingList({
               <span role="cell" className={styles.right}>
                 {ticket.status === TICKET_STATUS.WAITING && onCancel && (
                   <Button
-                    variant="danger"
+                    variant="danger-soft"
                     size="sm"
                     icon={ICONS.close}
                     loading={pendingId === ticket.id}
@@ -78,7 +78,6 @@ export function WaitingList({
                 )}
                 {ticket.status === TICKET_STATUS.SERVING && onComplete && (
                   <Button
-                    variant="success"
                     size="sm"
                     icon={ICONS.taskAlt}
                     loading={pendingId === ticket.id}

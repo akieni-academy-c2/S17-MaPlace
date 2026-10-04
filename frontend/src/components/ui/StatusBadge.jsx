@@ -2,14 +2,17 @@ import { Icon } from './Icon'
 import styles from './StatusBadge.module.css'
 
 /**
- * Pastille de statut (pill, label-badge uppercase).
- * tone : open | paused | closed | cancelled | waiting | primary | brand
+ * Pastille de statut.
+ * tone : open | paused | closed (file)
+ *        waiting | soon | called | serving | completed | cancelled (ticket)
+ *        brand | accent | neutral
+ * size : sm | md
  */
-export function StatusBadge({ tone = 'waiting', icon, dot = false, pulse = false, children, className = '' }) {
+export function StatusBadge({ tone = 'neutral', icon, dot = false, pulse = false, size = 'md', children, className = '' }) {
   return (
-    <span className={`${styles.badge} ${styles[tone]} ${className}`}>
+    <span className={`${styles.badge} ${styles[tone]} ${styles[size]} ${className}`}>
       {dot && <span className={`${styles.dot} ${pulse ? styles.pulse : ''}`} />}
-      {icon && <Icon name={icon} size={16} />}
+      {icon && <Icon name={icon} size={size === 'sm' ? 13 : 15} />}
       {children}
     </span>
   )

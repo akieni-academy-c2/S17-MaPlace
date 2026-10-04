@@ -1,0 +1,39 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-top: 5px solid var(--primary);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+.called, .soon { border-top-color: var(--orange); }
+.completed { border-top-color: var(--success); }
+.cancelled { border-top-color: var(--danger); }
+.cardHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.place { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-weight: var(--fw-semibold); }
+.place svg { color: var(--primary); }
+.cardBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+.cardBody > div:first-child { display: flex; flex-direction: column; gap: var(--space-1); }
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+.facts > div { padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface); }
+.facts dt { font-size: var(--fs-caption); color: var(--text-secondary); }
+.facts dd { margin: 0; font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 1.125rem; }
+.tips { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+.inlineLink { font-weight: var(--fw-semibold); color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (min-width: 600px) {
+  .cardBody { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-8); }
+  .tips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

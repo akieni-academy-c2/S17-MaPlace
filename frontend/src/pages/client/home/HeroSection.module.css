@@ -1,0 +1,233 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 80% at 100% 0%, var(--primary-light), transparent 70%),
+    linear-gradient(180deg, var(--surface) 0%, var(--white) 100%);
+}
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-10);
+  padding-block: var(--space-8) var(--space-12);
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.eyebrow svg { color: var(--orange); }
+.title { color: var(--primary); max-width: 16ch; }
+.highlight { color: var(--orange); }
+.lead {
+  max-width: 54ch;
+  font-size: var(--fs-body-lg);
+  color: var(--text-secondary);
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+.promises {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+}
+.promises li { display: inline-flex; align-items: center; gap: 6px; }
+.promises svg { color: var(--success); }
+
+/* ---------- Visuel ---------- */
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 380px;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 460px;
+}
+.blob {
+  position: absolute;
+  inset: 8% 6% 4% 10%;
+  border-radius: 46% 54% 44% 56% / 52% 42% 58% 48%;
+  background: linear-gradient(150deg, var(--primary-500), var(--primary-dark));
+}
+.ring {
+  position: absolute;
+  top: 0;
+  left: 2%;
+  width: 92px;
+  height: 92px;
+  border: 14px solid var(--primary-soft);
+  border-radius: 50%;
+}
+.sun {
+  position: absolute;
+  right: 4%;
+  bottom: 6%;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.phone {
+  position: relative;
+  z-index: 1;
+  width: 210px;
+  padding: 9px;
+  border-radius: 34px;
+  background: #0c2523;
+  box-shadow: var(--shadow-lg);
+  transform: rotate(-4deg);
+}
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 12px 16px;
+  border-radius: 26px;
+  background: var(--white);
+  font-size: 11px;
+}
+.screenTop { display: flex; align-items: center; justify-content: space-between; color: var(--text-secondary); }
+.screenPlace { display: flex; align-items: center; gap: 8px; line-height: 1.3; }
+.screenPlace strong { display: block; font-size: 11px; color: var(--text-primary); }
+.screenPlace small { font-size: 9px; color: var(--text-secondary); }
+.screenAvatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.screenTicket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px;
+  border-radius: 16px;
+  background: var(--primary);
+  color: var(--white);
+}
+.screenTicket small { font-size: 9px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; }
+.screenTicket strong { font-family: var(--font-display); font-size: 44px; line-height: 1; font-weight: 800; }
+.screenBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 9px;
+  font-weight: 600;
+}
+.screenBadge span { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+.screenStats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.screenStats span {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--surface);
+  line-height: 1.2;
+}
+.screenStats strong { font-family: var(--font-display); font-size: 14px; color: var(--text-primary); }
+.screenStats small { font-size: 9px; color: var(--text-secondary); }
+.screenBar { height: 6px; border-radius: 99px; background: var(--surface-strong); overflow: hidden; }
+.screenBar span { display: block; width: 62%; height: 100%; border-radius: inherit; background: var(--orange); }
+
+.float {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 10px;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+  line-height: 1.25;
+}
+.float strong { display: block; font-size: 13px; color: var(--text-primary); }
+.float small { font-size: 11px; color: var(--text-secondary); }
+.floatTurn { left: 0; bottom: 14%; animation: float 6s ease-in-out infinite; }
+.floatLive { right: 0; top: 14%; animation: float 6s ease-in-out 1.5s infinite; }
+.floatIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--success);
+  color: var(--white);
+}
+.liveDot {
+  width: 10px;
+  height: 10px;
+  margin-left: 4px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 4px var(--success-light);
+}
+.note {
+  position: absolute;
+  z-index: 2;
+  right: 2%;
+  bottom: -2%;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  color: var(--orange-dark);
+  transform: rotate(-6deg);
+  display: none;
+}
+
+@keyframes float {
+  50% { transform: translateY(-8px); }
+}
+
+@media (min-width: 480px) {
+  .actions { flex-direction: row; flex-wrap: wrap; width: auto; }
+  .visual { min-height: 440px; }
+  .phone { width: 236px; }
+}
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-12);
+    padding-block: var(--space-12) var(--space-20);
+  }
+  .visual { min-height: 500px; max-width: 520px; }
+  .phone { width: 250px; }
+  .note { display: block; right: -2%; bottom: 0; }
+}
