@@ -105,6 +105,7 @@ export default function DashboardPage() {
             </div>
             <WaitingList
               tickets={waiting.slice(0, NEXT_SIZE)}
+              waiting={waiting}
               total={waiting.length}
               title={`${waiting.length > NEXT_SIZE ? `${NEXT_SIZE} prochains` : 'Prochains'} clients en file`}
               countLabel={['en attente', 'en attente']}

@@ -32,8 +32,11 @@
 
 /* ---------- Ticket ---------- */
 .waiting { background: var(--primary-light); color: var(--primary); }
-.soon { background: var(--orange-light); color: var(--orange-dark); --badge-dot: var(--orange); }
-.called { background: var(--orange); color: var(--white); }
+.near { background: var(--yellow-light); color: var(--yellow-dark); --badge-dot: var(--yellow); }
+.approaching { background: var(--orange-light); color: var(--orange-dark); --badge-dot: var(--orange); }
+.soon { background: var(--red-light); color: var(--red-dark); --badge-dot: var(--red); }
+.next { background: var(--success-light); color: var(--success); }
+.called { background: var(--success); color: var(--white); }
 .serving { background: var(--primary); color: var(--white); }
 .completed { background: var(--success-light); color: var(--success); }
 .cancelled { background: var(--danger-light); color: var(--danger); }
@@ -43,4 +46,4 @@
 .accent { background: var(--orange-light); color: var(--orange-dark); }
 .neutral { background: var(--neutral-light); color: var(--text-secondary); }
 .onDark { background: rgba(255, 255, 255, 0.14); color: var(--white); }
-.approaching { background: #fff6e8; color: var(--orange-dark); border: 1px solid #f6d3ad; --badge-dot: var(--orange); }
+.onLight { background: rgba(255, 255, 255, 0.55); color: #3d2e00; }

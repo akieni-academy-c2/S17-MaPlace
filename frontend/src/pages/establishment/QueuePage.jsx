@@ -116,6 +116,7 @@ export default function QueuePage() {
             title={TITLES[filter]}
             countLabel={['ticket', 'tickets']}
             tickets={pagination.pageItems}
+            waiting={waiting}
             total={visible.length}
             pendingId={pending}
             onCancel={actions.cancel}

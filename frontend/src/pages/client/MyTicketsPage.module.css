@@ -9,8 +9,10 @@
   background: var(--white);
   box-shadow: var(--shadow-sm);
 }
-.approaching { border-top-color: #f6c08a; }
-.soon { border-top-color: var(--orange); }
+.near { border-top-color: var(--yellow); }
+.approaching { border-top-color: var(--orange); }
+.soon { border-top-color: var(--red); }
+.next { border-top-color: var(--success); }
 .called { border-top-color: var(--success); }
 .completed { border-top-color: var(--success); }
 .cancelled { border-top-color: var(--danger); }
