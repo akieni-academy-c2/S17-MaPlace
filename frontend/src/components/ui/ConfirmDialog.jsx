@@ -61,11 +61,11 @@ export function ConfirmDialog({
           </div>
         )}
         <div className={styles.actions}>
-          <Button variant="secondary" fullWidth onClick={onCancel} disabled={loading}>
+          <Button variant="outline" fullWidth onClick={onCancel} disabled={loading}>
             {cancelLabel}
           </Button>
           <Button
-            variant={tone === 'danger' ? 'danger-solid' : 'primary'}
+            variant={tone === 'danger' ? 'danger' : 'primary'}
             fullWidth
             icon={confirmIcon}
             loading={loading}

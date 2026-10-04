@@ -2,29 +2,44 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  max-width: 100%;
   border-radius: var(--radius-full);
-  font: var(--text-label-badge);
-  letter-spacing: var(--tracking-label-badge);
-  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  line-height: 1;
   white-space: nowrap;
+  --badge-dot: currentColor;
 }
+.md { padding: 6px 12px; font-size: var(--fs-small); }
+.sm { padding: 4px 9px; font-size: var(--fs-caption); }
+
 .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: currentColor;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--badge-dot);
 }
-.pulse { animation: pulse 1.6s ease-in-out infinite; }
+.pulse { animation: pulse 2s ease-out infinite; }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
-  50% { box-shadow: 0 0 0 4px transparent; opacity: 0.6; }
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--badge-dot) 50%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 6px transparent; }
 }
 
-.open { background: var(--color-status-open-bg); color: var(--color-status-open-text); }
-.paused { background: var(--color-status-paused-bg); color: var(--color-status-paused-text); }
-.closed { background: var(--color-status-closed-bg); color: var(--color-status-closed-text); }
-.cancelled { background: var(--color-status-cancelled-bg); color: var(--color-status-cancelled); }
-.waiting { background: var(--color-status-waiting-bg); color: var(--color-status-waiting-text); }
-.primary { background: var(--color-primary-container); color: var(--color-on-primary); }
-.brand { background: var(--color-tertiary-fixed); color: var(--color-on-tertiary-fixed-variant); }
+/* ---------- File ---------- */
+.open { background: var(--success-light); color: var(--success); }
+.paused { background: var(--orange-light); color: var(--orange-dark); --badge-dot: var(--orange); }
+.closed { background: var(--neutral-light); color: var(--neutral); }
+
+/* ---------- Ticket ---------- */
+.waiting { background: var(--primary-light); color: var(--primary); }
+.soon { background: var(--orange-light); color: var(--orange-dark); --badge-dot: var(--orange); }
+.called { background: var(--orange); color: var(--white); }
+.serving { background: var(--primary); color: var(--white); }
+.completed { background: var(--success-light); color: var(--success); }
+.cancelled { background: var(--danger-light); color: var(--danger); }
+
+/* ---------- Divers ---------- */
+.brand { background: var(--primary-light); color: var(--primary); }
+.accent { background: var(--orange-light); color: var(--orange-dark); }
+.neutral { background: var(--neutral-light); color: var(--text-secondary); }
+.onDark { background: rgba(255, 255, 255, 0.14); color: var(--white); }

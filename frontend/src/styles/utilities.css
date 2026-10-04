@@ -1,72 +1,93 @@
 /* =========================================================================
-   Classes utilitaires (typographie du design system + helpers)
+   Classes utilitaires : hiérarchie typographique + helpers de mise en page
    ========================================================================= */
 
 /* ---------- Typographie ---------- */
-.text-display-ticket {
-  font: var(--text-display-ticket);
-  letter-spacing: var(--tracking-display-ticket);
-  font-variant-numeric: tabular-nums;
+.text-display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.03em;
 }
-.text-display-ticket-mobile {
-  font: var(--text-display-ticket-mobile);
-  letter-spacing: var(--tracking-display-ticket-mobile);
-  font-variant-numeric: tabular-nums;
+.text-h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.02em;
 }
-.text-headline-lg {
-  font: var(--text-headline-lg-mobile);
-  letter-spacing: var(--tracking-headline-lg-mobile);
+.text-h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.02em;
 }
-@media (min-width: 768px) {
-  .text-headline-lg {
-    font: var(--text-headline-lg);
-    letter-spacing: var(--tracking-headline-lg);
-  }
+.text-h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
 }
-.text-headline-md {
-  font: var(--text-headline-md);
-  letter-spacing: var(--tracking-headline-md);
+.text-body-lg {
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-body);
 }
-.text-body-lg { font: var(--text-body-lg); }
-.text-body-md { font: var(--text-body-md); }
-.text-body-sm { font: var(--text-body-sm); }
-.text-label-lg {
-  font: var(--text-label-lg);
-  letter-spacing: var(--tracking-label-lg);
+.text-body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
-.text-label-md {
-  font: var(--text-label-md);
-  letter-spacing: var(--tracking-label-md);
+.text-small {
+  font-size: var(--fs-small);
+  line-height: 1.5;
 }
-.text-label-badge {
-  font: var(--text-label-badge);
-  letter-spacing: var(--tracking-label-badge);
-  text-transform: uppercase;
+.text-caption {
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  font-weight: var(--fw-medium);
 }
-.text-overline {
-  font: var(--text-label-md);
+.text-eyebrow {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-on-surface-variant);
+  color: var(--text-secondary);
 }
 .text-muted {
-  color: var(--color-on-surface-variant);
+  color: var(--text-secondary);
+}
+.text-accent {
+  color: var(--orange);
 }
 .text-center {
   text-align: center;
 }
 
 /* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container-narrow {
+  width: 100%;
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, var(--space-md));
+  gap: var(--stack-gap, var(--space-4));
 }
 .cluster {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--cluster-gap, var(--space-sm));
+  gap: var(--cluster-gap, var(--space-2));
 }
 
 /* ---------- Accessibilité ---------- */

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { ConfirmDialog, Icon, IconButton, Logo } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { PATHS } from '@/constants/routes'
+import { PATHS, to } from '@/constants/routes'
 import { useAuth } from '@/hooks/useAuth'
+import { initials } from '@/constants/establishments'
 import { FarewellScreen } from './FarewellScreen'
 import styles from './ProLayout.module.css'
 
@@ -37,27 +38,39 @@ export function ProLayout() {
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
-        <Logo size={40} subtitle="Espace établissement" />
+        <Link to={PATHS.proDashboard} aria-label="Tableau de bord">
+          <Logo size={44} subtitle="Espace établissement" tone="white" />
+        </Link>
         <nav className={styles.nav} aria-label="Espace établissement">
+          <p className={styles.navTitle}>Gestion</p>
           {NAV.map((item) => (
             <NavLink key={item.to} to={item.to} end className={navClass}>
-              <Icon name={item.icon} size={22} />
+              <Icon name={item.icon} size={20} />
               {item.label}
             </NavLink>
           ))}
+          <p className={styles.navTitle}>Liens utiles</p>
+          {establishment?.id && (
+            <a href={to.establishment(establishment.id)} target="_blank" rel="noreferrer" className={styles.navLink}>
+              <Icon name={ICONS.external} size={20} />
+              Page publique
+            </a>
+          )}
+          <Link to={PATHS.home} className={styles.navLink}>
+            <Icon name={ICONS.home} size={20} />
+            Site Ma Place
+          </Link>
         </nav>
         <div className={styles.account}>
           <div className={styles.accountInfo}>
-            <span className={styles.accountIcon}>
-              <Icon name={ICONS.store} size={22} />
-            </span>
-            <div>
+            <span className={styles.accountIcon}>{initials(establishment?.name ?? 'É')}</span>
+            <div className={styles.accountText}>
               <p className={styles.accountName}>{establishment?.name ?? 'Établissement'}</p>
-              <p className={styles.accountRole}>Guichet actif</p>
+              <p className={styles.accountRole}>{establishment?.email ?? 'Gestionnaire'}</p>
             </div>
           </div>
           <button type="button" className={styles.logout} onClick={() => setConfirmLogout(true)}>
-            <Icon name={ICONS.logout} size={20} />
+            <Icon name={ICONS.logout} size={18} />
             Se déconnecter
           </button>
         </div>
@@ -65,8 +78,10 @@ export function ProLayout() {
 
       <header className={styles.mobileBar}>
         <div className={styles.mobileTop}>
-          <Logo size={36} subtitle="Espace pro" />
-          <IconButton icon={ICONS.logout} label="Se déconnecter" variant="tonal" onClick={() => setConfirmLogout(true)} />
+          <Link to={PATHS.proDashboard} aria-label="Tableau de bord">
+            <Logo size={40} subtitle="Espace pro" />
+          </Link>
+          <IconButton icon={ICONS.logout} label="Se déconnecter" variant="outline" size={44} onClick={() => setConfirmLogout(true)} />
         </div>
         <nav className={styles.tabs} aria-label="Espace établissement">
           {NAV.map((item) => (

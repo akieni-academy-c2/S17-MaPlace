@@ -1,78 +1,98 @@
-.section { display: flex; flex-direction: column; gap: var(--space-md); scroll-margin-top: 80px; }
-.header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
+.section { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; scroll-margin-top: 120px; }
+.header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
 .title {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  font: var(--text-headline-md);
-  letter-spacing: var(--tracking-headline-md);
+  gap: var(--space-2);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
 }
-.title :global(.lucide) { color: var(--color-primary-container); }
-.count { font: var(--text-label-md); color: var(--color-on-surface-variant); }
+.title svg { color: var(--primary); }
+.count {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--primary);
+}
 
+/* Mobile : chaque ticket est une carte */
 .table {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-2);
 }
 .headRow { display: none; }
 .row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
     'num client action'
     'num status action';
   align-items: center;
-  column-gap: var(--space-md);
-  row-gap: var(--space-xs);
-  padding: var(--space-md);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-container-lowest);
-  box-shadow: var(--shadow-card);
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--white);
 }
 .row > :nth-child(1) { grid-area: num; }
 .row > :nth-child(2) { grid-area: client; }
 .row > :nth-child(3) { grid-area: status; }
 .row > :nth-child(4) { grid-area: action; }
 .client { display: flex; flex-direction: column; min-width: 0; }
-.name { font: 600 17px/24px var(--font-body); color: var(--color-on-surface); }
-.phone { display: flex; align-items: center; gap: 4px; font: var(--text-body-sm); color: var(--color-on-surface-variant); }
+.name { font-weight: var(--fw-semibold); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phone { display: flex; align-items: center; gap: 4px; font-size: var(--fs-caption); color: var(--text-secondary); }
+.status { justify-self: start; }
 .right { justify-self: end; text-align: right; }
 
+@media (max-width: 379px) {
+  /* Très petits écrans : l'action passe sous le client */
+  .row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'num client'
+      'num status'
+      'action action';
+  }
+  .right { justify-self: stretch; }
+  .right > * { width: 100%; }
+}
+
+/* Tablette et plus : vrai tableau, colonnes alignées */
 @media (min-width: 768px) {
   .table {
     gap: 0;
     overflow: hidden;
-    border-radius: var(--radius-xl);
-    background: var(--color-surface-container-lowest);
-    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
   }
-  /* Mêmes pistes pour l'en-tête et les lignes : les colonnes restent alignées. */
   .headRow,
   .row {
     display: grid;
-    grid-template-columns: 96px minmax(0, 1.6fr) minmax(0, 1fr) 132px;
+    grid-template-columns: 88px minmax(0, 1.6fr) minmax(0, 1fr) 140px;
     grid-template-areas: none;
     align-items: center;
-    justify-items: center;
-    gap: var(--space-md);
-    padding: var(--space-md) var(--space-lg);
-    text-align: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
   }
   .row > * { grid-area: auto !important; }
-  .client { align-items: center; }
-  .phone { justify-content: center; }
-  .right { justify-self: center; text-align: center; }
   .headRow {
-    background: var(--color-surface-container-low);
-    font: var(--text-label-md);
+    background: var(--surface);
+    font-size: 11px;
+    font-weight: var(--fw-bold);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-on-surface-variant);
+    color: var(--text-secondary);
   }
   .row {
+    border: none;
+    border-top: 1px solid var(--border);
     border-radius: 0;
-    box-shadow: none;
-    border-top: 1px solid var(--color-surface-container);
+    transition: background-color var(--duration-base);
   }
+  .row:hover { background: var(--surface); }
 }

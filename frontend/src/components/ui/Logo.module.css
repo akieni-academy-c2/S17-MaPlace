@@ -2,25 +2,34 @@
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 3px;
   line-height: 1;
 }
-.crop {
+.brand { color: var(--primary); }
+.white { color: var(--white); }
+
+.mark {
   display: inline-block;
   flex-shrink: 0;
-  overflow: hidden;
-  line-height: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--logo-url) no-repeat;
+  mask: var(--logo-url) no-repeat;
+  -webkit-mask-size: var(--logo-size);
+  mask-size: var(--logo-size);
+  -webkit-mask-position: var(--logo-position);
+  mask-position: var(--logo-position);
 }
-.image {
-  max-width: none;
-  user-select: none;
-}
-.white {
-  filter: brightness(0) invert(1);
-}
+
 .subtitle {
-  font: var(--text-label-badge);
-  letter-spacing: var(--tracking-label-badge);
-  text-transform: uppercase;
-  color: var(--color-on-surface-variant);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+.white .subtitle { color: rgba(255, 255, 255, 0.75); }
+
+/* Très petits écrans (< 360px) : le sous-titre est masqué pour libérer l'en-tête */
+@media (max-width: 359px) {
+  .subtitle { display: none; }
 }

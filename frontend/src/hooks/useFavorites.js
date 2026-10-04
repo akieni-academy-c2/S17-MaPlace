@@ -1,16 +1,17 @@
-import { useCallback, useState } from 'react'
-import { storage, STORAGE_KEYS } from '@/utils/storage'
+import { useCallback, useMemo, useSyncExternalStore } from 'react'
+import { readRaw, setAndNotify, storage, STORAGE_KEYS, subscribeStorage } from '@/utils/storage'
 
-/** Favoris stockés localement (aucune route backend dédiée). */
+const read = () => storage.get(STORAGE_KEYS.favorites) ?? []
+
+/** Favoris stockés localement (aucune route backend dédiée), synchronisés entre composants. */
 export function useFavorites() {
-  const [favorites, setFavorites] = useState(() => storage.get(STORAGE_KEYS.favorites) ?? [])
+  const raw = useSyncExternalStore(subscribeStorage, () => readRaw(STORAGE_KEYS.favorites))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const favorites = useMemo(() => read(), [raw])
 
   const toggle = useCallback((id) => {
-    setFavorites((prev) => {
-      const next = prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-      storage.set(STORAGE_KEYS.favorites, next)
-      return next
-    })
+    const prev = read()
+    setAndNotify(STORAGE_KEYS.favorites, prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id])
   }, [])
 
   const isFavorite = useCallback((id) => favorites.includes(id), [favorites])

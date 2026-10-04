@@ -1,46 +1,50 @@
 .ticket {
+  min-width: 0;
   overflow: hidden;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--color-surface-container-low);
-  box-shadow: var(--shadow-active);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
 }
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
-  padding: var(--space-md) var(--space-lg);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--primary);
+  color: var(--white);
 }
 .body {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xl) var(--space-lg);
-  background: var(--color-surface-container-lowest);
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-5) var(--space-6);
   text-align: center;
 }
 .perforation {
   position: relative;
   height: 24px;
-  background: var(--color-surface-container-lowest);
 }
 .perforation::before {
   content: '';
   position: absolute;
-  left: var(--space-lg);
-  right: var(--space-lg);
+  left: var(--space-6);
+  right: var(--space-6);
   top: 50%;
-  border-top: 2px dashed var(--color-surface-container-high);
+  border-top: 2px dashed var(--border-strong);
 }
 .perforation::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 0 -1px;
   background:
-    radial-gradient(circle at 0 50%, var(--color-background) 12px, transparent 13px),
-    radial-gradient(circle at 100% 50%, var(--color-background) 12px, transparent 13px);
+    radial-gradient(circle at 0 50%, var(--notch-bg, var(--background)) 11px, var(--border) 11px 12px, transparent 12.5px),
+    radial-gradient(circle at 100% 50%, var(--notch-bg, var(--background)) 11px, var(--border) 11px 12px, transparent 12.5px);
 }
 .footer {
-  padding: var(--space-lg);
+  padding: var(--space-4) var(--space-5) var(--space-5);
 }

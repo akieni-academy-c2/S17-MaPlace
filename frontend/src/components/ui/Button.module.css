@@ -2,82 +2,88 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
-  border-radius: var(--radius-lg);
-  font: var(--text-label-lg);
-  letter-spacing: var(--tracking-label-lg);
-  white-space: nowrap;
+  gap: var(--space-2);
+  max-width: 100%;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--fs-button);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  text-align: center;
   transition:
-    background-color var(--duration-base) var(--easing-standard),
-    color var(--duration-base) var(--easing-standard),
-    box-shadow var(--duration-base) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    background-color var(--duration-base) var(--easing),
+    border-color var(--duration-base) var(--easing),
+    color var(--duration-base) var(--easing),
+    box-shadow var(--duration-base) var(--easing),
+    transform var(--duration-fast) var(--easing);
 }
 .button:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: translateY(1px);
 }
 .button:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
+}
+.label {
+  min-width: 0;
 }
 
 /* Tailles */
-.sm { min-height: 36px; padding: 0 var(--space-md); font: var(--text-label-md); }
-.md { min-height: var(--touch-target); padding: 0 var(--space-lg); }
-.lg { min-height: 56px; padding: 0 var(--space-lg); font-size: 17px; }
+.sm { min-height: 36px; padding: 0 var(--space-3); font-size: var(--fs-small); border-radius: var(--radius-xs); }
+.md { min-height: var(--touch-target); padding: 0 var(--space-5); }
+.lg { min-height: 52px; padding: 0 var(--space-6); font-size: 1rem; }
 .fullWidth { width: 100%; }
 
 /* Variantes */
 .primary {
-  background: var(--color-primary-container);
-  color: var(--color-on-primary);
-  box-shadow: var(--shadow-card);
+  background: var(--primary);
+  color: var(--on-primary);
 }
-.primary:hover:not(:disabled) { background: var(--color-secondary); }
+.primary:hover:not(:disabled) { background: var(--primary-hover); box-shadow: var(--shadow-sm); }
 
 .secondary {
-  background: var(--color-surface-container);
-  color: var(--color-primary-container);
+  background: var(--orange);
+  color: var(--on-orange);
 }
-.secondary:hover:not(:disabled) { background: var(--color-surface-container-high); }
+.secondary:hover:not(:disabled) { background: var(--orange-hover); box-shadow: var(--shadow-sm); }
 
-.success {
-  background: var(--color-tertiary-container);
-  color: var(--color-on-tertiary);
-  box-shadow: var(--shadow-card);
+.outline {
+  background: var(--white);
+  border-color: var(--primary);
+  color: var(--primary);
 }
-.success:hover:not(:disabled) { background: var(--color-on-tertiary-fixed-variant); }
-
-.danger {
-  background: transparent;
-  color: var(--color-error);
-}
-.danger:hover:not(:disabled) { background: var(--color-status-cancelled-bg); }
-
-.danger-solid {
-  background: var(--color-status-cancelled);
-  color: var(--color-on-error);
-  box-shadow: var(--shadow-card);
-}
-.danger-solid:hover:not(:disabled) { background: var(--color-error); }
-
-.danger-soft {
-  background: var(--color-status-cancelled-bg);
-  color: var(--color-status-cancelled);
-}
-.danger-soft:hover:not(:disabled) { background: var(--color-error-container); }
+.outline:hover:not(:disabled) { background: var(--primary-light); }
 
 .ghost {
   background: transparent;
-  color: var(--color-on-surface-variant);
+  color: var(--text-secondary);
 }
-.ghost:hover:not(:disabled) { background: var(--color-surface-container-low); }
+.ghost:hover:not(:disabled) { background: var(--surface-strong); color: var(--text-primary); }
+
+.soft {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.soft:hover:not(:disabled) { background: var(--primary-soft); }
+
+.danger {
+  background: var(--danger);
+  color: var(--white);
+}
+.danger:hover:not(:disabled) { background: var(--danger-hover); }
+
+.danger-soft {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--danger);
+}
+.danger-soft:hover:not(:disabled) { background: var(--danger-light); border-color: transparent; }
 
 .inverse {
-  background: var(--color-surface-container-lowest);
-  color: var(--color-primary-container);
-  box-shadow: var(--shadow-active);
+  background: var(--white);
+  color: var(--primary);
 }
-.inverse:hover:not(:disabled) { background: var(--color-primary-fixed); }
+.inverse:hover:not(:disabled) { background: var(--primary-light); }
 
 /* Chargement */
 .spinner { animation: spin 0.9s linear infinite; }
