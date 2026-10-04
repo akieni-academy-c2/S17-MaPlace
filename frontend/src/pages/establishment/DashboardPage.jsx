@@ -41,7 +41,6 @@ export default function DashboardPage() {
   return (
     <div className={styles.page}>
       <ProPageHeader
-        breadcrumb={`Console d’accueil · ${establishment?.name ?? ''}`}
         title="Tableau de bord"
         subtitle={today()}
         actions={
