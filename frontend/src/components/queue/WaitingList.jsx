@@ -1,12 +1,13 @@
 import { Button, EmptyState, Icon, TicketNumber, TicketStatusBadge } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { TICKET_STATUS } from '@/constants/status'
+import { getAheadAlert, TICKET_STATUS } from '@/constants/status'
 import { formatPhone, formatTime, plural } from '@/utils/format'
 import styles from './WaitingList.module.css'
 
 /**
  * Liste de tickets (tableau en desktop, cartes en mobile).
  * Action selon le statut : WAITING → « Annuler », SERVING → « Terminer » (si `onComplete`).
+ * `waiting` : tickets WAITING de toute la file, dans l'ordre : colore chaque numéro selon le nombre de personnes devant.
  * `total` : nombre affiché dans le compteur si la liste est tronquée ou paginée ; `footer` : sous la liste.
  */
 export function WaitingList({
@@ -22,7 +23,10 @@ export function WaitingList({
   id = 'file-attente',
   total,
   footer,
+  waiting = [],
 }) {
+  const ahead = new Map(waiting.map((t, index) => [t.id, index]))
+
   return (
     <section id={id} className={styles.section}>
       <header className={styles.header}>
@@ -49,7 +53,12 @@ export function WaitingList({
           {tickets.map((ticket) => (
             <div key={ticket.id} className={styles.row} role="row">
               <span role="cell">
-                <TicketNumber number={ticket.number} size="sm" boxed />
+                <TicketNumber
+                  number={ticket.number}
+                  size="sm"
+                  boxed
+                  tone={ahead.has(ticket.id) ? getAheadAlert(ahead.get(ticket.id)).key : undefined}
+                />
               </span>
               <span role="cell" className={styles.client}>
                 <span className={styles.name}>{ticket.name}</span>

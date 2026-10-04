@@ -1,5 +1,5 @@
 import { AVERAGE_SERVICE_MINUTES } from './establishments'
-import { APPROACHING_THRESHOLD, SOON_THRESHOLD } from './status'
+import { APPROACHING_THRESHOLD, NEAR_THRESHOLD, SOON_THRESHOLD } from './status'
 
 /** Questions fréquentes (accueil). Les réponses décrivent le fonctionnement réel de l'application. */
 export const FAQ = [
@@ -20,7 +20,7 @@ export const FAQ = [
   },
   {
     question: 'Comment savoir quand c’est mon tour ?',
-    answer: `La page « Mon ticket » s’actualise automatiquement et change d’aspect à mesure que la file avance : « Votre tour approche » lorsqu’il reste ${APPROACHING_THRESHOLD} personnes ou moins devant vous, « Bientôt votre tour » à ${SOON_THRESHOLD} ou moins, puis l’écran passe au vert avec « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
+    answer: `La page « Mon ticket » s’actualise automatiquement et change de couleur à mesure que la file avance : jaune « Préparez-vous » à ${NEAR_THRESHOLD} personnes ou moins devant vous, orange « Votre tour approche » à ${APPROACHING_THRESHOLD} ou moins, rouge « Bientôt votre tour » à ${SOON_THRESHOLD} ou moins, puis vert quand personne n’est devant vous et « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
   },
   {
     question: 'Que se passe-t-il lorsque la file est en pause ?',

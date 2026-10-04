@@ -26,6 +26,14 @@
   --orange-light: #fdf1e6;
   --on-orange: #ffffff;
 
+  /* ---------- Niveaux d'alerte du ticket (personnes devant) ---------- */
+  --yellow: #f2c230;       /* 15 – 11 */
+  --yellow-dark: #8a6500;  /* texte jaune lisible sur blanc */
+  --yellow-light: #fff8dc;
+  --red: #d64545;          /* 5 – 1 */
+  --red-dark: #b02f2f;
+  --red-light: #fdeceb;
+
   /* ---------- Neutres ---------- */
   --white: #ffffff;
   --background: #ffffff;

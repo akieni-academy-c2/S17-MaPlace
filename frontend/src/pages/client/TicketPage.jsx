@@ -130,7 +130,7 @@ export default function TicketPage() {
                       <Icon name={ICONS.store} size={16} /> {ticket.establishment?.name}
                     </span>
                     <StatusBadge
-                      tone={alert.key === 'approaching' ? 'approaching' : 'onDark'}
+                      tone={alert.key === 'near' ? 'onLight' : 'onDark'}
                       dot
                       pulse={alert.key !== 'waiting'}
                       size="sm"
@@ -143,7 +143,7 @@ export default function TicketPage() {
                 footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} />}
               >
                 <span className="text-eyebrow">Votre numéro</span>
-                <TicketNumber number={ticket.number} size="xl" />
+                <TicketNumber number={ticket.number} size="xl" tone={alert.key} />
                 {ticket.name && <p className={styles.holder}>{ticket.name}</p>}
                 <p className={styles.service}>
                   <Icon name={ICONS.queue} size={14} /> File d’attente principale · pris à {formatTime(ticket.createdAt)}

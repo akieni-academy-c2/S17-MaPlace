@@ -47,11 +47,14 @@ export const TICKET_STATUS_META = {
 
 /**
  * Alertes de progression d'un ticket en attente, selon le nombre de personnes devant :
- *   > 10    normal       « En attente »
- *   10 – 6  approaching  « Votre tour approche »
- *   5 – 0   soon         « Bientôt votre tour »
+ *   > 15     waiting      brand   « En attente »
+ *   15 – 11  near         jaune   « Préparez-vous »
+ *   10 – 6   approaching  orange  « Votre tour approche »
+ *   5 – 1    soon         rouge   « Bientôt votre tour »
+ *   0        next         vert    « Vous êtes le prochain »
  * Un ticket SERVING passe à l'écran vert « C'est votre tour ! ».
  */
+export const NEAR_THRESHOLD = 15
 export const APPROACHING_THRESHOLD = 10
 export const SOON_THRESHOLD = 5
 
@@ -63,12 +66,19 @@ export const TICKET_ALERTS = {
     title: 'Votre ticket est enregistré',
     text: 'Gardez l’esprit tranquille, nous suivons la file pour vous.',
   },
+  near: {
+    key: 'near',
+    tone: 'near',
+    label: 'Préparez-vous',
+    title: 'Préparez-vous',
+    text: `Moins de ${NEAR_THRESHOLD + 1} personnes devant vous : prévoyez votre trajet vers l’établissement.`,
+  },
   approaching: {
     key: 'approaching',
     tone: 'approaching',
     label: 'Votre tour approche',
     title: 'Votre tour approche',
-    text: 'Moins de 10 personnes devant vous : commencez à vous rapprocher de l’établissement.',
+    text: `${APPROACHING_THRESHOLD} personnes ou moins devant vous : commencez à vous rapprocher de l’établissement.`,
   },
   soon: {
     key: 'soon',
@@ -76,6 +86,13 @@ export const TICKET_ALERTS = {
     label: 'Bientôt votre tour',
     title: 'Bientôt votre tour !',
     text: 'Plus que quelques personnes : présentez-vous à proximité du guichet.',
+  },
+  next: {
+    key: 'next',
+    tone: 'next',
+    label: 'Vous êtes le prochain',
+    title: 'Vous êtes le prochain !',
+    text: 'Personne devant vous : tenez-vous prêt, vous serez appelé au guichet dans un instant.',
   },
   called: {
     key: 'called',
@@ -86,11 +103,18 @@ export const TICKET_ALERTS = {
   },
 }
 
+/** Alerte d'un ticket en attente selon le nombre de personnes devant lui. */
+export function getAheadAlert(peopleAhead) {
+  const ahead = peopleAhead ?? Infinity
+  if (ahead <= 0) return TICKET_ALERTS.next
+  if (ahead <= SOON_THRESHOLD) return TICKET_ALERTS.soon
+  if (ahead <= APPROACHING_THRESHOLD) return TICKET_ALERTS.approaching
+  if (ahead <= NEAR_THRESHOLD) return TICKET_ALERTS.near
+  return TICKET_ALERTS.waiting
+}
+
 /** Alerte correspondant à un ticket (WAITING ou SERVING). */
 export function getTicketAlert(ticket) {
   if (ticket?.status === TICKET_STATUS.SERVING) return TICKET_ALERTS.called
-  const ahead = ticket?.peopleAhead ?? Infinity
-  if (ahead <= SOON_THRESHOLD) return TICKET_ALERTS.soon
-  if (ahead <= APPROACHING_THRESHOLD) return TICKET_ALERTS.approaching
-  return TICKET_ALERTS.waiting
+  return getAheadAlert(ticket?.peopleAhead)
 }

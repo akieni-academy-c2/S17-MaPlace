@@ -68,5 +68,7 @@
   .layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; gap: var(--space-8); }
 }
 
+.title-near { color: var(--yellow-dark); }
 .title-approaching { color: var(--orange-dark); }
-.title-soon { color: var(--orange); }
+.title-soon { color: var(--red-dark); }
+.title-next { color: var(--success); }
