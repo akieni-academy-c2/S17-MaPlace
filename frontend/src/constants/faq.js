@@ -25,7 +25,7 @@ export const FAQ = [
   {
     question: 'Que se passe-t-il lorsque la file est en pause ?',
     answer:
-      'L’établissement a temporairement suspendu son service. Les nouveaux tickets ne sont plus acceptés, mais votre ticket est conservé avec sa position. Les appels reprennent dès que la file est relancée.',
+      'L’établissement a temporairement suspendu son service. Les nouveaux tickets ne sont plus acceptés, mais votre ticket est conservé avec sa position. Les appels reprennent dès que la file est relancée. Si la file est reportée au lendemain, revenez le jour suivant : votre numéro reste le même.',
   },
   {
     question: 'Puis-je suivre mon ticket à distance ?',

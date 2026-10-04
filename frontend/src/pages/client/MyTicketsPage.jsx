@@ -6,7 +6,7 @@ import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { getTicketAlert, TICKET_STATUS } from '@/constants/status'
+import { getTicketAlert, PAUSE_REASON, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './MyTicketsPage.module.css'
@@ -16,7 +16,8 @@ const clientStatus = (ticket) => {
   if (ticket.status === TICKET_STATUS.COMPLETED) return { tone: 'completed', label: 'Terminé', link: to.ticketEnd }
   if (ticket.status === TICKET_STATUS.CANCELLED) return { tone: 'cancelled', label: 'Annulé', link: to.ticketEnd }
   const alert = getTicketAlert(ticket)
-  return { tone: alert.tone, label: alert.label, link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket }
+  const label = ticket.pauseReason === PAUSE_REASON.NEXT_DAY ? 'Reprise demain' : alert.label
+  return { tone: alert.tone, label, link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket }
 }
 
 /** Client — Mes tickets : ticket suivi depuis cet appareil (pas de compte client). */

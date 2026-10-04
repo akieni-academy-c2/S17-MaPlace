@@ -14,6 +14,9 @@ export const pauseQueue = () => api.post('/api/queue/pause', undefined, auth)
 /** POST /api/queue/resume → { queue } (PAUSED → OPEN) */
 export const resumeQueue = () => api.post('/api/queue/resume', undefined, auth)
 
+/** POST /api/queue/postpone → { queue } (OPEN|PAUSED → PAUSED « reprise demain », 409 si aucun ticket en attente) */
+export const postponeQueue = () => api.post('/api/queue/postpone', undefined, auth)
+
 /** POST /api/queue/close → { queue } */
 export const closeQueue = () => api.post('/api/queue/close', undefined, auth)
 

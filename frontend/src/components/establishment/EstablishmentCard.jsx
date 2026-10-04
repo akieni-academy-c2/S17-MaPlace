@@ -19,7 +19,7 @@ export function EstablishmentCard({ establishment, isFavorite, onToggleFavorite 
   return (
     <article className={styles.card}>
       <EstablishmentVisual establishment={establishment} variant="banner">
-        <QueueStatusBadge status={status} short className={styles.status} />
+        <QueueStatusBadge status={status} pauseReason={establishment.pause_reason} short className={styles.status} />
         <FavoriteButton active={isFavorite} name={name} onToggle={() => onToggleFavorite(id)} className={styles.favorite} />
       </EstablishmentVisual>
 

@@ -5,6 +5,17 @@ export const QUEUE_STATUS = Object.freeze({
   CLOSED: 'CLOSED',
 })
 
+/** Motif d'une pause (queues.pause_reason) : NEXT_DAY = file reportée au lendemain. */
+export const PAUSE_REASON = Object.freeze({
+  NEXT_DAY: 'NEXT_DAY',
+})
+
+/**
+ * Seuil à partir duquel le report au lendemain est recommandé au lieu de la fermeture
+ * (nombre de tickets encore en attente en fin de journée).
+ */
+export const POSTPONE_THRESHOLD = 5
+
 export const TICKET_STATUS = Object.freeze({
   WAITING: 'WAITING',
   SERVING: 'SERVING',
@@ -32,6 +43,21 @@ export const QUEUE_STATUS_META = {
     tone: 'closed',
     description: "La file est terminée pour aujourd'hui. Revenez à la prochaine ouverture.",
   },
+}
+
+/** File en pause jusqu'au lendemain (PAUSED + NEXT_DAY). */
+export const NEXT_DAY_META = {
+  label: 'Reprise demain',
+  short: 'Reprise demain',
+  tone: 'paused',
+  description:
+    'L’établissement a fermé pour aujourd’hui. Les clients déjà en attente conservent leur numéro : la file reprendra demain là où elle s’est arrêtée.',
+}
+
+/** Métadonnées d'affichage d'une file, en tenant compte du report au lendemain. */
+export function getQueueStatusMeta(status, pauseReason) {
+  if (status === QUEUE_STATUS.PAUSED && pauseReason === PAUSE_REASON.NEXT_DAY) return NEXT_DAY_META
+  return QUEUE_STATUS_META[status] ?? QUEUE_STATUS_META.CLOSED
 }
 
 /**

@@ -40,6 +40,19 @@ const pause = async (req, res, next) => {
   }
 };
 
+const postpone = async (req, res, next) => {
+  try {
+    const queue = await queueService.postponeQueue(req.user.id);
+
+    return res.status(200).json({
+      status: 'success',
+      data: { queue },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const resume = async (req, res, next) => {
   try {
     const queue = await queueService.resumeQueue(req.user.id);
@@ -102,6 +115,7 @@ export {
   getCurrent,
   open,
   pause,
+  postpone,
   resume,
   close,
 };
