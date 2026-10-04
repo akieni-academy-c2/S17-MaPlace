@@ -18,7 +18,7 @@ export const CLIENT_NAV = [
   { key: 'favorites', to: PATHS.favorites, label: 'Favoris', icon: ICONS.heart, isActive: (p) => p === PATHS.favorites },
 ]
 
-/** Liens d'information (menu mobile + pied de page). */
+/** Liens d'information (pied de page). */
 export const INFO_LINKS = [
   { to: '/#comment-ca-marche', label: 'Comment ça marche' },
   { to: '/#faq', label: 'Questions fréquentes' },

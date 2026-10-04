@@ -7,15 +7,14 @@ import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
 import { HeroSection } from './home/HeroSection'
 import { QuickAccess } from './home/QuickAccess'
-import { NearbySection } from './home/NearbySection'
 import { TicketCycle } from './home/TicketCycle'
 import { HowItWorks } from './home/HowItWorks'
 import { FaqSection } from './home/FaqSection'
 import { ProBanner } from './home/ProBanner'
 import styles from './HomePage.module.css'
 
-/** Nombre d'établissements affichés sur l'accueil (le reste sur /etablissements). */
-const HOME_LIMIT = 8
+/** Nombre d'établissements affichés sur l'accueil, après filtres (la liste complète est sur /etablissements). */
+const HOME_LIMIT = 4
 
 /** Client — Accueil (GET /api/establishments). */
 export default function HomePage() {
@@ -53,7 +52,6 @@ export default function HomePage() {
       </section>
 
       <TicketCycle />
-      <NearbySection establishments={establishments} />
       <HowItWorks />
       <FaqSection />
       <ProBanner />

@@ -3,7 +3,7 @@ import styles from './StatusBadge.module.css'
 
 /**
  * Pastille de statut.
- * tone : open | paused | closed (file)
+ * tone : open | paused | closed (file) · approaching (ticket à 6–10 personnes)
  *        waiting | soon | called | serving | completed | cancelled (ticket)
  *        brand | accent | neutral
  * size : sm | md

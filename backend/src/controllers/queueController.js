@@ -80,8 +80,25 @@ const callNext = async (req, res, next) => {
   }
 };
 
+const createTicket = async (req, res, next) => {
+  try {
+    const ticket = await ticketService.createWalkInTicket(
+      req.user.id,
+      req.body || {}
+    );
+
+    return res.status(201).json({
+      status: 'success',
+      data: { ticket },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   callNext,
+  createTicket,
   getCurrent,
   open,
   pause,

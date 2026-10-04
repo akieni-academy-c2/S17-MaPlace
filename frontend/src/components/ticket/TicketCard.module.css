@@ -48,3 +48,12 @@
 .footer {
   padding: var(--space-4) var(--space-5) var(--space-5);
 }
+
+/* ---------- Alertes de progression ---------- */
+.approaching { border-color: #f6d3ad; box-shadow: 0 8px 24px -10px rgba(232, 131, 42, 0.3); }
+.approaching .header { background: #fff3e4; color: var(--orange-dark); }
+.soon { border: 2px solid var(--orange); box-shadow: 0 0 0 6px var(--orange-light), var(--shadow-md); animation: glow 2.4s ease-in-out infinite; }
+.soon .header { background: var(--orange); color: var(--white); }
+@keyframes glow {
+  50% { box-shadow: 0 0 0 10px var(--orange-light), var(--shadow-md); }
+}

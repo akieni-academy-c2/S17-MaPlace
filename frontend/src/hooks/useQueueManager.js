@@ -37,6 +37,18 @@ export function useQueueManager() {
     }
   }
 
+  /** Ticket créé au guichet (client sans smartphone). Renvoie le ticket ; les erreurs sont levées pour le formulaire. */
+  const createTicket = async (payload) => {
+    setPending('create')
+    try {
+      const { ticket } = await queueService.createTicket(payload)
+      await refresh()
+      return ticket
+    } finally {
+      setPending(null)
+    }
+  }
+
   const actions = {
     open: () => run('queue', queueService.openQueue),
     pause: () => run('queue', queueService.pauseQueue),
@@ -45,6 +57,7 @@ export function useQueueManager() {
     callNext: () => run('next', queueService.callNext),
     complete: (id) => run(id, () => completeTicket(id)),
     cancel: (id) => run(id, () => cancelTicket(id)),
+    createTicket,
   }
 
   return {

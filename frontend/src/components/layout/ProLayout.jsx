@@ -1,20 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { ConfirmDialog, Icon, IconButton, Logo } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
 import { PATHS, to } from '@/constants/routes'
 import { useAuth } from '@/hooks/useAuth'
 import { initials } from '@/constants/establishments'
-import { FarewellScreen } from './FarewellScreen'
+import { useTransitionScreen } from '@/hooks/useTransitionScreen'
 import styles from './ProLayout.module.css'
 
 const NAV = [
   { to: PATHS.proDashboard, label: 'Tableau de bord', icon: ICONS.dashboard },
   { to: PATHS.proQueue, label: "File d'attente", icon: ICONS.group },
 ]
-
-/** Durée de l'écran « Au revoir » avant le retour à l'accueil. */
-const FAREWELL_DURATION = 2000
 
 const navClass = ({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`
 const tabClass = ({ isActive }) => `${styles.tab} ${isActive ? styles.tabActive : ''}`
@@ -23,16 +20,13 @@ const tabClass = ({ isActive }) => `${styles.tab} ${isActive ? styles.tabActive 
 export function ProLayout() {
   const { establishment, logout } = useAuth()
   const [confirmLogout, setConfirmLogout] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const timer = useRef(null)
-
-  useEffect(() => () => clearTimeout(timer.current), [])
+  const { show } = useTransitionScreen()
 
   const handleLogout = () => {
     setConfirmLogout(false)
-    setLeaving(true)
-    // ProtectedRoute redirige vers l'accueil après une déconnexion volontaire
-    timer.current = setTimeout(() => logout('user'), FAREWELL_DURATION)
+    // L'écran « Au revoir » couvre la redirection vers l'accueil (ProtectedRoute après une déconnexion volontaire)
+    show({ title: `Au revoir${establishment?.name ? ',' : ''}`, name: establishment?.name, text: 'À très bientôt sur Ma Place.' })
+    logout('user')
   }
 
   return (
@@ -111,7 +105,6 @@ export function ProLayout() {
         son état actuel : pensez à la mettre en pause ou à la fermer si nécessaire.
       </ConfirmDialog>
 
-      {leaving && <FarewellScreen name={establishment?.name} />}
     </div>
   )
 }

@@ -6,18 +6,17 @@ import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { SOON_THRESHOLD, TICKET_STATUS } from '@/constants/status'
+import { getTicketAlert, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './MyTicketsPage.module.css'
 
-/** Statut affiché côté client (« Appelé » pour un ticket SERVING, « Bientôt » sous le seuil). */
+/** Statut affiché côté client : alerte de progression (en attente, approche, bientôt, appelé) ou fin. */
 const clientStatus = (ticket) => {
-  if (ticket.status === TICKET_STATUS.SERVING) return { tone: 'called', label: 'C’est votre tour', link: to.ticketCalled }
   if (ticket.status === TICKET_STATUS.COMPLETED) return { tone: 'completed', label: 'Terminé', link: to.ticketEnd }
   if (ticket.status === TICKET_STATUS.CANCELLED) return { tone: 'cancelled', label: 'Annulé', link: to.ticketEnd }
-  if (ticket.peopleAhead <= SOON_THRESHOLD) return { tone: 'soon', label: 'Bientôt votre tour', link: to.ticket }
-  return { tone: 'waiting', label: 'En attente', link: to.ticket }
+  const alert = getTicketAlert(ticket)
+  return { tone: alert.tone, label: alert.label, link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket }
 }
 
 /** Client — Mes tickets : ticket suivi depuis cet appareil (pas de compte client). */
