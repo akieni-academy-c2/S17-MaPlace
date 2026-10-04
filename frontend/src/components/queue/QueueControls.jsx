@@ -1,6 +1,6 @@
 import { Button, Icon, QueueStatusBadge } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, QUEUE_STATUS_META } from '@/constants/status'
+import { getQueueStatusMeta, PAUSE_REASON, QUEUE_STATUS } from '@/constants/status'
 import styles from './QueueControls.module.css'
 
 const STATUS_ICON = {
@@ -10,9 +10,10 @@ const STATUS_ICON = {
 }
 
 /** État de la file + transitions autorisées (open / pause / resume / close). */
-export function QueueControls({ status = QUEUE_STATUS.CLOSED, busy, onOpen, onPause, onResume, onClose }) {
+export function QueueControls({ status = QUEUE_STATUS.CLOSED, pauseReason, busy, onOpen, onPause, onResume, onClose }) {
   const isActive = status === QUEUE_STATUS.OPEN || status === QUEUE_STATUS.PAUSED
-  const meta = QUEUE_STATUS_META[status] ?? QUEUE_STATUS_META.CLOSED
+  const meta = getQueueStatusMeta(status, pauseReason)
+  const nextDay = status === QUEUE_STATUS.PAUSED && pauseReason === PAUSE_REASON.NEXT_DAY
 
   return (
     <section className={`${styles.controls} ${styles[meta.tone]}`} aria-label="État de la file">
@@ -23,7 +24,7 @@ export function QueueControls({ status = QUEUE_STATUS.CLOSED, busy, onOpen, onPa
         <div className={styles.text}>
           <div className={styles.titleRow}>
             <h2 className={styles.title}>État de la file</h2>
-            <QueueStatusBadge status={status} />
+            <QueueStatusBadge status={status} pauseReason={pauseReason} />
           </div>
           <p className={styles.description}>{meta.description}</p>
         </div>
@@ -35,8 +36,8 @@ export function QueueControls({ status = QUEUE_STATUS.CLOSED, busy, onOpen, onPa
           </Button>
         )}
         {status === QUEUE_STATUS.PAUSED && (
-          <Button icon={ICONS.play} onClick={onResume} disabled={busy}>
-            Reprendre la file
+          <Button icon={ICONS.play} onClick={onResume} disabled={busy} title={nextDay ? 'Reprend la file avec les numéros conservés' : undefined}>
+            {nextDay ? 'Reprendre la file du jour' : 'Reprendre la file'}
           </Button>
         )}
         {isActive ? (

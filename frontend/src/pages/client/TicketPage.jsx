@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, ConfirmDialog, Icon, IconButton, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
@@ -8,7 +8,7 @@ import { getCancelToken } from '@/hooks/useCurrentTicket'
 import { cancelTicketByClient } from '@/services/ticketService'
 import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { getTicketAlert, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
+import { getTicketAlert, PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { formatTicketNumber, formatTime, plural } from '@/utils/format'
 import { PATHS, to } from '@/constants/routes'
 import { downloadTicket, ticketExportData } from '@/utils/ticketExport'
@@ -51,8 +51,21 @@ export default function TicketPage() {
     navigate(location.pathname, { replace: true, state: null })
   }
 
-  const alert = getTicketAlert(ticket)
   const paused = ticket?.queueStatus === QUEUE_STATUS.PAUSED
+  const nextDay = paused && ticket?.pauseReason === PAUSE_REASON.NEXT_DAY
+  // File reportée : l'en-tête invite à revenir demain (la couleur du ticket suit toujours sa position)
+  const ticketAlert = getTicketAlert(ticket)
+  const alert = useMemo(
+    () =>
+      nextDay
+        ? {
+            ...ticketAlert,
+            title: 'Revenez demain',
+            text: 'L’établissement a fermé pour aujourd’hui. Votre numéro est conservé pour demain.',
+          }
+        : ticketAlert,
+    [nextDay, ticketAlert],
+  )
   const [downloading, setDownloading] = useState(false)
 
   // Le titre de l'onglet reflète l'alerte (visible même si l'utilisateur consulte un autre onglet)
@@ -114,10 +127,18 @@ export default function TicketPage() {
             </span>
           </header>
 
-          {paused && (
-            <InfoNote tone="warning" icon={ICONS.pause} title="File en pause">
-              L&apos;établissement a temporairement suspendu les appels. Votre place est conservée.
+          {nextDay ? (
+            <InfoNote tone="warning" icon={ICONS.calendar} title="File reportée à demain">
+              L&apos;établissement n&apos;a pas pu servir tous les clients aujourd&apos;hui. Revenez demain avec votre ticket{' '}
+              <strong>{formatTicketNumber(ticket.number)}</strong> : la file reprendra là où elle s&apos;est arrêtée, sans changer votre
+              numéro. Gardez cette page, elle se mettra à jour dès la reprise.
             </InfoNote>
+          ) : (
+            paused && (
+              <InfoNote tone="warning" icon={ICONS.pause} title="File en pause">
+                L&apos;établissement a temporairement suspendu les appels. Votre place est conservée.
+              </InfoNote>
+            )
           )}
 
           <div className={styles.layout}>

@@ -1,0 +1,93 @@
+/* Même gabarit que ConfirmDialog, élargi pour présenter les deux options. */
+.dialog {
+  width: min(100% - 2rem, 480px);
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+}
+.dialog[open] { animation: dialog-in var(--duration-base) var(--easing); }
+.dialog::backdrop {
+  background: var(--overlay);
+  backdrop-filter: blur(3px);
+  animation: backdrop-in var(--duration-base) var(--easing);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  text-align: center;
+}
+.iconBox {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--danger-light);
+  color: var(--danger);
+}
+.warn { background: var(--orange-light); color: var(--orange-dark); }
+.title { font-size: var(--fs-h3); font-weight: var(--fw-bold); }
+.text { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; color: var(--text-secondary); }
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.options li {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-small);
+}
+.options li > svg { flex-shrink: 0; margin-top: 2px; color: var(--text-tertiary); }
+.options strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 2px;
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+}
+.recommended { border-color: var(--primary-soft) !important; background: var(--primary-light); }
+.recommended > svg { color: var(--primary) !important; }
+.tag {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  color: var(--white);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+}

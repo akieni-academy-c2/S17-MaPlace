@@ -44,12 +44,14 @@ const updateQueueStatus = async (
   establishmentId,
   allowedStatuses,
   targetStatus,
-  invalidTransitionMessage
+  invalidTransitionMessage,
+  options
 ) => {
   const result = await transitionCurrentStatus(
     establishmentId,
     allowedStatuses,
-    targetStatus
+    targetStatus,
+    options
   );
 
   if (result.outcome === 'establishment_not_found') {
@@ -94,8 +96,31 @@ const closeQueue = async (establishmentId) =>
     'La file est déjà fermée.'
   );
 
+// Fin de journée avec des clients encore en attente : la file passe en pause
+// jusqu'au lendemain. Les tickets en attente gardent leur numéro et la
+// reprise (resume) continue la même numérotation.
+const postponeQueue = async (establishmentId) => {
+  const tickets = await findAllForCurrentQueue(establishmentId);
+
+  if (!tickets.some((ticket) => ticket.status === 'WAITING')) {
+    throw new AppError(
+      'Aucun ticket en attente à reporter. Fermez simplement la file.',
+      409
+    );
+  }
+
+  return updateQueueStatus(
+    establishmentId,
+    ['OPEN', 'PAUSED'],
+    'PAUSED',
+    'Seule une file active peut être reportée au lendemain.',
+    { pauseReason: 'NEXT_DAY' }
+  );
+};
+
 export {
   getCurrentQueue,
+  postponeQueue,
   openQueue,
   pauseQueue,
   resumeQueue,

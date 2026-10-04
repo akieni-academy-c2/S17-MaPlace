@@ -20,6 +20,7 @@ export function useQueueManager() {
   const serving = tickets.find((t) => t.status === TICKET_STATUS.SERVING) ?? null
   const waiting = useMemo(() => tickets.filter((t) => t.status === TICKET_STATUS.WAITING), [tickets])
   const lastNumber = data?.queue?.last_number ?? 0
+  const pauseReason = data?.queue?.pause_reason ?? null
 
   /** Exécute une action API puis recharge la file. */
   const run = async (key, action) => {
@@ -53,6 +54,7 @@ export function useQueueManager() {
     open: () => run('queue', queueService.openQueue),
     pause: () => run('queue', queueService.pauseQueue),
     resume: () => run('queue', queueService.resumeQueue),
+    postpone: () => run('queue', queueService.postponeQueue),
     close: () => run('queue', queueService.closeQueue),
     callNext: () => run('next', queueService.callNext),
     complete: (id) => run(id, () => completeTicket(id)),
@@ -62,6 +64,7 @@ export function useQueueManager() {
 
   return {
     status,
+    pauseReason,
     tickets,
     serving,
     waiting,
