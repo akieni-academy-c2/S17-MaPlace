@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react'
-import { storage, STORAGE_KEYS } from '@/utils/storage'
+import { useCallback, useSyncExternalStore } from 'react'
+import { setAndNotify, storage, STORAGE_KEYS, subscribeStorage } from '@/utils/storage'
 
 const readTokens = () => storage.get(STORAGE_KEYS.cancelTokens) ?? {}
 
@@ -11,12 +11,11 @@ export const getCancelToken = (ticketId) => readTokens()[ticketId] ?? null
  * ainsi que son `cancelToken`, seul moyen pour le client d'annuler son ticket.
  */
 export function useCurrentTicket() {
-  const [ticketId, setTicketId] = useState(() => storage.get(STORAGE_KEYS.currentTicket))
+  const ticketId = useSyncExternalStore(subscribeStorage, () => storage.get(STORAGE_KEYS.currentTicket))
 
   const save = useCallback((id, cancelToken) => {
-    storage.set(STORAGE_KEYS.currentTicket, id)
     if (cancelToken) storage.set(STORAGE_KEYS.cancelTokens, { ...readTokens(), [id]: cancelToken })
-    setTicketId(id)
+    setAndNotify(STORAGE_KEYS.currentTicket, id)
   }, [])
 
   const clear = useCallback(() => {
@@ -25,8 +24,7 @@ export function useCurrentTicket() {
       const { [current]: _removed, ...rest } = readTokens()
       storage.set(STORAGE_KEYS.cancelTokens, rest)
     }
-    storage.remove(STORAGE_KEYS.currentTicket)
-    setTicketId(null)
+    setAndNotify(STORAGE_KEYS.currentTicket, undefined)
   }, [])
 
   return { ticketId, save, clear }

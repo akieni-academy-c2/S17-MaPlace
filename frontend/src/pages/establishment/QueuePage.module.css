@@ -1,20 +1,13 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-  max-width: var(--container-desktop);
-  margin: 0 auto;
-}
-.topbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-md); }
-.titleBlock { display: flex; flex-direction: column; gap: var(--space-xs); }
-.breadcrumb { font: var(--text-label-md); color: var(--color-on-surface-variant); }
-.breadcrumb span { color: var(--color-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
-
+.page { display: flex; flex-direction: column; gap: var(--space-6); max-width: 1320px; }
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
 }
-.toolbar > :first-child { min-width: 0; max-width: 100%; }
+.filters { flex: 1; }
+.callButton { flex-shrink: 0; }
+
+@media (min-width: 768px) {
+  .toolbar { flex-direction: row; align-items: center; justify-content: space-between; }
+}

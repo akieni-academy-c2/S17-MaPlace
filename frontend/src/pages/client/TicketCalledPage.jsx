@@ -1,75 +1,98 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { AppHeader, PageContent } from '@/components/layout'
-import { Button, Card, Icon, InfoNote, Loader, TicketNumber } from '@/components/ui'
+import { PageContent } from '@/components/layout'
+import { Button, Card, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
+import { TicketProgress } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { ICONS } from '@/constants/icons'
+import { to } from '@/constants/routes'
+import { formatTime } from '@/utils/format'
 import styles from './TicketCalledPage.module.css'
 
-/** Client 5/6 — « C'est votre tour ! » (ticket SERVING). */
+/** Signale l'appel même si l'utilisateur regarde un autre onglet (titre) ou a le téléphone en main (vibration). */
+function useCallAlert(active) {
+  useEffect(() => {
+    if (!active) return undefined
+    const previous = document.title
+    document.title = '🔔 C’est votre tour ! — Ma Place'
+    // Le navigateur n'autorise la vibration qu'après une interaction avec la page
+    if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250])
+    return () => {
+      document.title = previous
+    }
+  }, [active])
+}
+
+/** Client — « C'est votre tour ! » (ticket SERVING). */
 export default function TicketCalledPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId)
+  useCallAlert(Boolean(ticket))
 
   return (
-    <>
-      <AppHeader section="Mon ticket" />
-      <PageContent>
-        <div className={styles.liveBar}>
-          <span className={styles.liveStatus}>
-            <span className={styles.liveDot} /> Statut : appel en cours
-          </span>
-          <span className={styles.liveTag}>
-            <Icon name={ICONS.checkCircle} size={20} /> En direct
-          </span>
-        </div>
+    <PageContent className={styles.page}>
+      {loading && <Loader />}
+      {error && (
+        <InfoNote tone="error" icon={ICONS.warning}>
+          {error.message}
+        </InfoNote>
+      )}
 
-        {loading && <Loader />}
-        {error && <InfoNote tone="error" icon={ICONS.warning}>{error.message}</InfoNote>}
+      {ticket && (
+        <>
+          <section className={styles.hero} aria-live="assertive">
+            <span className={styles.bell}>
+              <span className={styles.wave} />
+              <span className={styles.wave} />
+              <Icon name={ICONS.bell} size={36} />
+            </span>
+            <StatusBadge tone="called" icon={ICONS.campaign}>
+              Vous êtes appelé
+            </StatusBadge>
+            <h1 className={styles.title}>C&apos;est votre tour !</h1>
+            <div className={styles.number}>
+              <span>Ticket</span>
+              <TicketNumber number={ticket.number} size="xl" tone="inverse" />
+            </div>
+            {ticket.name && (
+              <span className={styles.name}>
+                <Icon name={ICONS.person} size={16} /> {ticket.name}
+              </span>
+            )}
+            <p className={styles.instruction}>
+              Présentez-vous dès maintenant au guichet de <strong>{ticket.establishment?.name}</strong> et indiquez votre numéro.
+            </p>
+          </section>
 
-        {ticket && (
-          <>
-            <section className={styles.hero} aria-live="assertive">
-              <span className={styles.heroIcon}>
-                <Icon name={ICONS.campaign} size={44} />
-              </span>
-              <span className={styles.heroBadge}>
-                <Icon name={ICONS.bell} size={18} /> Votre passage
-              </span>
-              <h1 className={styles.heroTitle}>C&apos;est votre tour !</h1>
-              <span className={styles.numberBox}>
-                <TicketNumber number={ticket.number} size="lg" tone="inverse" />
-              </span>
-              {ticket.name && (
-                <span className={styles.namePill}>
-                  <Icon name={ICONS.person} size={20} /> {ticket.name}
-                </span>
-              )}
-              <p className={styles.heroText}>Présentez-vous maintenant auprès de votre établissement.</p>
-            </section>
-
-            <Card className="stack">
-              <div className={styles.cardHead}>
-                <span className="text-overline">Détails de l&apos;établissement</span>
-                <Icon name={ICONS.verified} className={styles.verified} />
-              </div>
-              <div className={styles.place}>
-                <span className={styles.placeIcon}>
-                  <Icon name={ICONS.pharmacy} size={32} />
-                </span>
-                <div>
-                  <p className={styles.placeName}>{ticket.establishment?.name}</p>
-                  <p className="text-body-md text-muted">Prise en charge active de votre dossier</p>
-                </div>
-              </div>
-              <InfoNote icon={ICONS.info}>Veuillez préparer vos documents si nécessaire.</InfoNote>
+          <div className={styles.grid}>
+            <Card className={styles.block}>
+              <h2 className="text-h3">Au guichet</h2>
+              <ul className={styles.checklist}>
+                <li>
+                  <Icon name={ICONS.walk} size={18} /> Rendez-vous directement à l’accueil, sans reprendre de ticket.
+                </li>
+                <li>
+                  <Icon name={ICONS.ticket} size={18} /> Annoncez votre numéro et votre nom.
+                </li>
+                <li>
+                  <Icon name={ICONS.list} size={18} /> Préparez vos documents ou ordonnances si nécessaire.
+                </li>
+              </ul>
+              <InfoNote icon={ICONS.info}>
+                Appelé à {formatTime(ticket.updatedAt)}. Cette page passera automatiquement au récapitulatif une fois votre passage terminé.
+              </InfoNote>
+              <Button variant="outline" fullWidth icon={ICONS.store} to={to.establishment(ticket.establishment?.id)}>
+                Voir l’établissement
+              </Button>
             </Card>
 
-            <Button size="lg" fullWidth icon={ICONS.walk}>
-              Je me présente
-            </Button>
-          </>
-        )}
-      </PageContent>
-    </>
+            <Card className={styles.block}>
+              <h2 className="text-h3">Progression</h2>
+              <TicketProgress ticket={ticket} />
+            </Card>
+          </div>
+        </>
+      )}
+    </PageContent>
   )
 }

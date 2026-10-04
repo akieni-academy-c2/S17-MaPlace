@@ -1,17 +1,19 @@
 .card {
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-container-lowest);
+  min-width: 0;
+  border-radius: var(--radius-lg);
+  background: var(--white);
 }
-.default { box-shadow: var(--shadow-card); }
-.elevated { box-shadow: var(--shadow-active); }
-.tinted { background: var(--color-surface-container-low); }
-.outlined { border: 1px solid var(--color-outline-variant); }
+.default { border: 1px solid var(--border); box-shadow: var(--shadow-xs); }
+.elevated { border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+.tinted { background: var(--surface); border: 1px solid var(--border); }
+.outlined { border: 1px solid var(--border); }
 
 .pad-none { padding: 0; }
-.pad-sm { padding: var(--space-md); }
-.pad-md { padding: var(--space-lg); }
-.pad-lg { padding: var(--space-xl) var(--space-lg); }
+.pad-sm { padding: var(--space-4); }
+.pad-md { padding: var(--space-5); }
+.pad-lg { padding: var(--space-6) var(--space-5); }
 
 @media (min-width: 768px) {
-  .pad-lg { padding: var(--space-xl); }
+  .pad-md { padding: var(--space-6); }
+  .pad-lg { padding: var(--space-8); }
 }

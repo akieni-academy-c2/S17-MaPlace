@@ -1,33 +1,105 @@
 .page {
   display: grid;
-  place-items: center;
+  grid-template-columns: minmax(0, 1fr);
   min-height: 100dvh;
-  padding: var(--space-xl) var(--margin-mobile);
-  background: radial-gradient(50% 40% at 50% 10%, var(--color-surface-container-low), transparent 70%), var(--color-surface);
+  background: var(--surface);
 }
-.wrapper { display: flex; flex-direction: column; align-items: center; gap: var(--space-md); width: 100%; max-width: 552px; }
+
+.brandPanel { display: none; }
+
+.formSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--gutter) var(--space-10);
+}
+.topLinks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 460px;
+}
 .card {
   width: 100%;
-  overflow: hidden;
+  max-width: 460px;
+  padding: var(--space-6) var(--space-5);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--color-surface-container-lowest);
-  box-shadow: var(--shadow-active);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
 }
-.form { display: flex; flex-direction: column; gap: var(--space-lg); padding: var(--space-xl) var(--space-lg); }
-@media (min-width: 600px) { .form { padding: var(--space-xl) 3rem; } }
-.brand { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); text-align: center; }
-.logo { position: relative; margin-bottom: var(--space-sm); }
-.eye { display: grid; place-items: center; color: var(--color-on-surface-variant); }
+.form { display: flex; flex-direction: column; gap: var(--space-5); }
+.head { display: flex; flex-direction: column; gap: var(--space-2); }
+.eyebrow {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  background: var(--orange-light);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--orange-dark);
+}
+.eye { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-full); color: var(--text-secondary); }
+.eye:hover { background: var(--surface); color: var(--text-primary); }
 .secure {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background: var(--color-surface-container-low);
-  font: var(--text-label-md);
-  color: var(--color-on-surface);
+  gap: 6px;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  text-align: center;
 }
-.secure :global(.lucide) { color: var(--color-tertiary-container); }
-.after { max-width: 440px; }
-.links { display: flex; gap: var(--space-sm); }
+.secure svg { color: var(--primary); }
+.note { max-width: 460px; font-size: var(--fs-small); color: var(--text-secondary); text-align: center; }
+.note a { font-weight: var(--fw-semibold); color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (min-width: 768px) {
+  .formSide { justify-content: center; }
+  .card { padding: var(--space-10); }
+}
+@media (min-width: 1024px) {
+  .page { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+  .brandPanel {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-10);
+    height: 100dvh;
+    padding: var(--space-10) var(--space-12);
+    overflow: hidden;
+    background:
+      radial-gradient(50% 40% at 100% 100%, rgba(232, 131, 42, 0.25), transparent 70%),
+      linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .brandText { display: flex; flex-direction: column; gap: var(--space-5); max-width: 460px; }
+  .brandTitle { color: var(--white); font-size: var(--fs-h1); font-weight: var(--fw-extrabold); }
+  .benefits { display: flex; flex-direction: column; gap: var(--space-4); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+  .benefits li { display: flex; align-items: center; gap: var(--space-3); }
+  .benefits span {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--orange);
+  }
+  .brandFoot { font-size: var(--fs-caption); color: rgba(255, 255, 255, 0.55); }
+  .mobileLogo { visibility: hidden; }
+  .topLinks { max-width: 520px; }
+  .card, .note { max-width: 520px; }
+}
