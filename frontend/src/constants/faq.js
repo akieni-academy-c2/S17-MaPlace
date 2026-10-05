@@ -20,7 +20,7 @@ export const FAQ = [
   },
   {
     question: 'Comment savoir quand c’est mon tour ?',
-    answer: `La page « Mon ticket » s’actualise automatiquement et change de couleur à mesure que la file avance : jaune « Préparez-vous » à ${NEAR_THRESHOLD} personnes ou moins devant vous, orange « Votre tour approche » à ${APPROACHING_THRESHOLD} ou moins, rouge « Bientôt votre tour » à ${SOON_THRESHOLD} ou moins, puis vert quand personne n’est devant vous et « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
+    answer: `La page « Mon ticket » s’actualise automatiquement et change de couleur à mesure que la file avance : jaune « Préparez-vous » de la ${NEAR_THRESHOLD}e à la ${APPROACHING_THRESHOLD + 1}e place, orange « Votre tour approche » de la ${APPROACHING_THRESHOLD}e à la ${SOON_THRESHOLD + 1}e, rouge « Bientôt votre tour » de la ${SOON_THRESHOLD}e à la 1re place, puis vert « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
   },
   {
     question: 'Que se passe-t-il lorsque la file est en pause ?',

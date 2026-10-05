@@ -1,6 +1,6 @@
 import { Button, EmptyState, Icon, TicketNumber, TicketStatusBadge } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { getAheadAlert, TICKET_STATUS } from '@/constants/status'
+import { getPositionAlert, TICKET_STATUS } from '@/constants/status'
 import { formatPhone, formatTime, plural } from '@/utils/format'
 import styles from './WaitingList.module.css'
 
@@ -25,7 +25,7 @@ export function WaitingList({
   footer,
   waiting = [],
 }) {
-  const ahead = new Map(waiting.map((t, index) => [t.id, index]))
+  const positions = new Map(waiting.map((t, index) => [t.id, index + 1]))
 
   return (
     <section id={id} className={styles.section}>
@@ -57,7 +57,7 @@ export function WaitingList({
                   number={ticket.number}
                   size="sm"
                   boxed
-                  tone={ahead.has(ticket.id) ? getAheadAlert(ahead.get(ticket.id)).key : undefined}
+                  tone={positions.has(ticket.id) ? getPositionAlert(positions.get(ticket.id)).tone : undefined}
                 />
               </span>
               <span role="cell" className={styles.client}>
