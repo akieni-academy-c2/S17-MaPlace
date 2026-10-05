@@ -45,5 +45,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // 🚧 FT-4 — Tâche 4.3 : déclarer la page 404 (toute URL inconnue)
+  { path: '*', element: <NotFoundPage /> },
 ])
