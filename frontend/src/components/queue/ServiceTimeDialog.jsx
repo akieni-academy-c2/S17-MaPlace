@@ -9,8 +9,16 @@ import styles from './ServiceTimeDialog.module.css'
 const PRESETS = [5, 10, 15, 20, 30, 45]
 
 /**
- * Pop-up « Durée moyenne d'un passage » (PATCH /api/establishments/me).
- * Cette durée sert au calcul du temps d'attente estimé affiché aux clients.
+ * Pop-up de réglage de la durée moyenne d'un passage au guichet.
+ * Cette durée sert à calculer l'attente estimée affichée aux clients.
+ *
+ * @param {object} props
+ * @param {boolean} props.open Pop-up visible.
+ * @param {number} props.value Durée enregistrée, en minutes.
+ * @param {number} [props.waitingCount] Clients en attente, pour l'aperçu.
+ * @param {boolean} [props.loading] Enregistrement en cours.
+ * @param {(minutes: number) => Promise<void>} props.onSave Enregistre la nouvelle durée.
+ * @param {() => void} props.onClose Ferme la pop-up.
  */
 export function ServiceTimeDialog({ open, value, waitingCount = 0, loading, onSave, onClose }) {
   return (
@@ -21,12 +29,15 @@ export function ServiceTimeDialog({ open, value, waitingCount = 0, loading, onSa
       onClose={onClose}
       closeDisabled={loading}
     >
-      {/* Monté à chaque ouverture : le formulaire repart de la valeur enregistrée */}
       <ServiceTimeForm value={value} waitingCount={waitingCount} loading={loading} onSave={onSave} onClose={onClose} />
     </Modal>
   )
 }
 
+/**
+ * Formulaire de la pop-up. Il est recréé à chaque ouverture, donc il repart toujours
+ * de la durée enregistrée. `custom` indique si la durée vient du champ libre ou d'un bouton.
+ */
 function ServiceTimeForm({ value, waitingCount, loading, onSave, onClose }) {
   const [draft, setDraft] = useState(String(value))
   const [custom, setCustom] = useState(!PRESETS.includes(value)) // saisie libre plutôt qu'une durée proposée

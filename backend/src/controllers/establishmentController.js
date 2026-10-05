@@ -35,7 +35,7 @@ const getOne = async (req, res, next) => {
   }
 };
 
-// Paramètres de l'établissement connecté (durée moyenne d'un passage).
+// Réglages de l'établissement connecté (durée moyenne d'un passage).
 const updateMe = async (req, res, next) => {
   try {
     const { averageServiceMinutes } = req.body ?? {};

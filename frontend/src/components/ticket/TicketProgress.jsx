@@ -20,8 +20,10 @@ const STEPS = [
 const ALERT_STEPS = ['near', 'approaching', 'soon', 'next', 'called']
 
 /**
- * Étapes « en cours » selon le ticket (seuils : constants/status.js). L'API ne distingue pas
- * l'appel de la prise en charge : un ticket SERVING active donc « C'est votre tour » et « En cours ».
+ * Étape(s) en cours selon le ticket. Un ticket au guichet (SERVING) active à la fois
+ * « C'est votre tour » et « En cours », car l'API ne distingue pas l'appel de la prise en charge.
+ *
+ * @returns {string[]} Clés des étapes en cours ; vide si le ticket est terminé.
  */
 function currentSteps(ticket) {
   switch (ticket.status) {
@@ -36,7 +38,7 @@ function currentSteps(ticket) {
   }
 }
 
-/** Frise verticale du parcours d'un ticket. */
+/** Frise verticale du parcours d'un ticket : étapes franchies, étape en cours (colorée) et à venir. */
 export function TicketProgress({ ticket, className = '' }) {
   const current = currentSteps(ticket)
   const first = current.length ? STEPS.findIndex((step) => step.key === current[0]) : STEPS.length

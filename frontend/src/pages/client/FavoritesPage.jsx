@@ -1,7 +1,7 @@
 import { PageContent, PageTitle } from '@/components/layout'
 import { Button, EmptyState, InfoNote, Loader } from '@/components/ui'
 import { EstablishmentCard } from '@/components/establishment'
-import { listEstablishments } from '@/services/establishmentService'
+import { establishmentApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useFavorites } from '@/hooks/useFavorites'
 import { ICONS } from '@/constants/icons'
@@ -9,10 +9,10 @@ import { PATHS } from '@/constants/routes'
 import { plural } from '@/utils/format'
 import styles from './FavoritesPage.module.css'
 
-/** Client — Mes favoris (enregistrés sur cet appareil). */
+/** Établissements mis en favoris sur cet appareil. */
 export default function FavoritesPage() {
   const { isFavorite, toggle, favorites } = useFavorites()
-  const { data, error, loading } = usePolling((signal) => listEstablishments({ signal }), { interval: 15000 })
+  const { data, error, loading } = usePolling((signal) => establishmentApi.list({ signal }), { interval: 15000 })
   const items = (data?.establishments ?? []).filter((e) => isFavorite(e.id))
 
   return (

@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { PATHS } from '@/constants/routes'
 import { useAuth } from '@/hooks/useAuth'
 
-/** Bloque l'accès aux routes établissement sans JWT. */
+/** Réserve les pages établissement aux utilisateurs connectés ; sinon redirige vers la connexion. */
 export function ProtectedRoute() {
   const { isAuthenticated, logoutReason } = useAuth()
   const location = useLocation()

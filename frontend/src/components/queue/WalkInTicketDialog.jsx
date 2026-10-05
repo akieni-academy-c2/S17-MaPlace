@@ -10,6 +10,7 @@ import styles from './WalkInTicketDialog.module.css'
 /** Téléphone facultatif, mais s'il est saisi : 9 chiffres commençant par 0 (même règle que le client). */
 const PHONE_RE = /^0\d{8}$/
 
+/** Vérifie le formulaire : nom obligatoire, téléphone facultatif mais valide s'il est saisi. */
 const validate = ({ name, phone }) => {
   const errors = {}
   if (name.trim().length < 2) errors.name = 'Indiquez le nom du client (2 caractères minimum).'

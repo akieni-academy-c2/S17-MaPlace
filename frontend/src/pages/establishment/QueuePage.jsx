@@ -37,7 +37,7 @@ const EMPTY = {
   [TICKET_STATUS.CANCELLED]: 'Aucun ticket annulé pour cette session.',
 }
 
-/** Établissement — File d'attente complète de la session en cours (GET /api/queue). */
+/** Liste complète des tickets de la file en cours, filtrable par statut. */
 export default function QueuePage() {
   const { establishment } = useAuth()
   const { status, pauseReason, tickets, waiting, loading, error, pending, actions } = useQueueManager()

@@ -24,6 +24,7 @@ export const AVERAGE_SERVICE_MINUTES = 5
 export const MIN_SERVICE_MINUTES = 1
 export const MAX_SERVICE_MINUTES = 240
 
+/** Texte comparable pour la recherche : sans accents ni majuscules. */
 export const normalizeText = (s = '') =>
   s
     .normalize('NFD')
@@ -38,11 +39,20 @@ export const getCategory = (establishment) => CATEGORIES.find((c) => c.id === es
 export const serviceMinutesOf = (establishment) =>
   establishment?.averageServiceMinutes ?? establishment?.average_service_minutes ?? AVERAGE_SERVICE_MINUTES
 
-/** Estimation de l'attente en minutes (null si personne n'attend). */
+/**
+ * Attente estimée en minutes : personnes devant × durée moyenne d'un passage.
+ *
+ * @param {number | null} peopleAhead Nombre de personnes devant (null si inconnu).
+ * @param {number} [serviceMinutes] Durée moyenne d'un passage dans l'établissement.
+ * @returns {number | null}
+ */
 export const estimateWaitMinutes = (peopleAhead, serviceMinutes = AVERAGE_SERVICE_MINUTES) =>
   peopleAhead > 0 ? Math.round(peopleAhead * serviceMinutes) : peopleAhead === 0 ? 0 : null
 
-/** « ≈ 15 min », « < 5 min », « 1 h 10 » (`serviceMinutes` : durée d'un passage, seuil du « < … min ») */
+/**
+ * Affiche une attente : « < 5 min », « ≈ 15 min » ou « ≈ 1 h 10 ».
+ * En dessous d'un passage, on affiche « < durée d'un passage ».
+ */
 export const formatWait = (minutes, serviceMinutes = AVERAGE_SERVICE_MINUTES) => {
   if (minutes == null) return '—'
   if (minutes < serviceMinutes) return `< ${serviceMinutes} min`
@@ -62,8 +72,11 @@ export const initials = (name = '') =>
     .join('') || name.slice(0, 2).toUpperCase()
 
 /**
- * Vue « présentation » d'un établissement, construite uniquement à partir des données de l'API :
- * catégorie, localisation, horaires et estimation. `description` et `hours` peuvent être null.
+ * Rassemble les informations d'affichage d'un établissement renvoyé par l'API :
+ * catégorie (libellé + icône), localisation, horaires et attente estimée.
+ *
+ * @param {object} establishment Établissement de l'API.
+ * @returns {object | null} `description` et `hours` valent null s'ils ne sont pas renseignés.
  */
 export function describeEstablishment(establishment) {
   if (!establishment) return null

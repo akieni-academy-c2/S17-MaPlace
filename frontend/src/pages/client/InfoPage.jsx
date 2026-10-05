@@ -74,6 +74,7 @@ const TOPICS = {
   },
 }
 
+/** Pages d'information (à propos, conditions, confidentialité), choisies par le paramètre `:topic`. */
 export default function InfoPage() {
   const { topic } = useParams()
   const content = TOPICS[topic]

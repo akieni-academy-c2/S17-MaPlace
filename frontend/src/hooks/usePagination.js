@@ -1,8 +1,12 @@
 import { useState } from 'react'
 
 /**
- * Pagination côté client.
- * `resetKey` : toute valeur dont le changement (filtre, recherche…) ramène à la page 1.
+ * Découpe une liste en pages côté navigateur.
+ *
+ * @param {Array} items Liste complète.
+ * @param {number} pageSize Nombre d'éléments par page.
+ * @param {string} [resetKey] Quand cette valeur change (recherche, filtre…), on revient à la page 1.
+ * @returns {{ page: number, pageCount: number, setPage: (page: number) => void, pageItems: Array, from: number, to: number, total: number }}
  */
 export function usePagination(items, pageSize, resetKey = '') {
   const [state, setState] = useState({ key: resetKey, page: 1 })

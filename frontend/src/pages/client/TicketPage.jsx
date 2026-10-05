@@ -5,7 +5,7 @@ import { Button, Card, ConfirmDialog, Icon, IconButton, InfoNote, Loader, Status
 import { TicketCard, TicketProgress, TicketStats } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { getCancelToken } from '@/hooks/useCurrentTicket'
-import { cancelTicketByClient } from '@/services/ticketService'
+import { ticketApi } from '@/services/api'
 import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getTicketAlert, PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
@@ -14,7 +14,14 @@ import { PATHS, to } from '@/constants/routes'
 import { downloadTicket, ticketExportData } from '@/utils/ticketExport'
 import styles from './TicketPage.module.css'
 
-/** Client — Mon ticket en attente (GET /api/tickets/:id, rafraîchi en continu). */
+/**
+ * Page « Mon ticket » d'un client en attente, rechargée toutes les 5 secondes.
+ *
+ * La couleur et le message changent selon la position dans la file (voir getTicketAlert) :
+ * jaune de la 15e à la 11e place, orange de la 10e à la 6e, rouge de la 5e à la 1re.
+ * Quand le ticket est appelé, useTicketTracking redirige vers « C'est votre tour ».
+ * Le client peut télécharger son ticket ou l'annuler (si le ticket a été pris sur cet appareil).
+ */
 export default function TicketPage() {
   const { ticketId } = useParams()
   const navigate = useNavigate()
@@ -30,7 +37,7 @@ export default function TicketPage() {
     setCancelling(true)
     setCancelError(null)
     try {
-      await cancelTicketByClient(ticketId, cancelToken)
+      await ticketApi.cancelByClient(ticketId, cancelToken)
       navigate(to.ticketEnd(ticketId), { replace: true })
     } catch (err) {
       setConfirmOpen(false)

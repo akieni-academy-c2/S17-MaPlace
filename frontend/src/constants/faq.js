@@ -1,7 +1,7 @@
 import { AVERAGE_SERVICE_MINUTES } from './establishments'
 import { APPROACHING_THRESHOLD, NEAR_THRESHOLD, SOON_THRESHOLD } from './status'
 
-/** Questions fréquentes (accueil). Les réponses décrivent le fonctionnement réel de l'application. */
+/** Questions fréquentes affichées sur l'accueil. */
 export const FAQ = [
   {
     question: 'Comment prendre un ticket ?',

@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom'
 import { ClientLayout, ProLayout, ProtectedRoute } from '@/components/layout'
 import { PATHS } from '@/constants/routes'
 
-// Pages client
 const HomePage = lazy(() => import('@/pages/client/HomePage'))
 const EstablishmentsPage = lazy(() => import('@/pages/client/EstablishmentsPage'))
 const FavoritesPage = lazy(() => import('@/pages/client/FavoritesPage'))
@@ -15,14 +14,13 @@ const TicketPage = lazy(() => import('@/pages/client/TicketPage'))
 const TicketCalledPage = lazy(() => import('@/pages/client/TicketCalledPage'))
 const TicketEndPage = lazy(() => import('@/pages/client/TicketEndPage'))
 
-// Pages établissement
 const LoginPage = lazy(() => import('@/pages/establishment/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/establishment/DashboardPage'))
 const QueuePage = lazy(() => import('@/pages/establishment/QueuePage'))
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
-/** Table de routage de l'application (voir PATHS dans constants/routes.js). */
+/** Pages client dans ClientLayout, pages établissement protégées par ProtectedRoute. */
 export const router = createBrowserRouter([
   {
     element: <ClientLayout />,

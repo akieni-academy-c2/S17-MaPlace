@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getTicket } from '@/services/ticketService'
+import { ticketApi } from '@/services/api'
 import { TICKET_STATUS } from '@/constants/status'
 import { to } from '@/constants/routes'
 import { usePolling } from './usePolling'
@@ -13,12 +13,16 @@ const routeForStatus = {
 }
 
 /**
- * Suit un ticket (GET /api/tickets/:id en polling) et redirige vers la page
- * correspondant à son statut : WAITING → /tickets/:id, SERVING → /appel, COMPLETED|CANCELLED → /fin.
+ * Suit un ticket en direct et affiche toujours la bonne page selon son statut :
+ * en attente → « Mon ticket », appelé → « C'est votre tour », terminé ou annulé → récapitulatif.
+ *
+ * @param {string} ticketId
+ * @param {{ poll?: boolean }} [options] poll = false pour un seul chargement.
+ * @returns {{ ticket: object | null, error: Error | null, loading: boolean }}
  */
 export function useTicketTracking(ticketId, { poll = true } = {}) {
   const navigate = useNavigate()
-  const { data, error, loading } = usePolling((signal) => getTicket(ticketId, { signal }), {
+  const { data, error, loading } = usePolling((signal) => ticketApi.get(ticketId, { signal }), {
     interval: poll ? undefined : 0,
     deps: [ticketId],
   })
