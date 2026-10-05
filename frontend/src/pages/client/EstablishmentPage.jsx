@@ -7,7 +7,7 @@ import { usePolling } from '@/hooks/usePolling'
 import { useFavorites } from '@/hooks/useFavorites'
 import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, QUEUE_STATUS_META } from '@/constants/status'
+import { getQueueStatusMeta, PAUSE_REASON, QUEUE_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatPhone, formatTicketNumber, plural } from '@/utils/format'
 import styles from './EstablishmentPage.module.css'
@@ -37,7 +37,11 @@ export default function EstablishmentPage() {
   const info = describeEstablishment(establishment)
   const isOpen = status === QUEUE_STATUS.OPEN
   const isActive = status !== QUEUE_STATUS.CLOSED
-  const note = STATUS_NOTE[status]
+  const pauseReason = establishment?.pause_reason
+  const note =
+    pauseReason === PAUSE_REASON.NEXT_DAY
+      ? { tone: 'warning', icon: ICONS.calendar, title: 'File reportée à demain' }
+      : STATUS_NOTE[status]
   const waiting = establishment?.waiting_count ?? 0
 
   return (
@@ -66,7 +70,7 @@ export default function EstablishmentPage() {
           {/* En-tête */}
           <section className={styles.header}>
             <EstablishmentVisual establishment={establishment} variant="banner" emblem={false} className={styles.banner}>
-              <QueueStatusBadge status={status} className={styles.bannerBadge} />
+              <QueueStatusBadge status={status} pauseReason={pauseReason} className={styles.bannerBadge} />
             </EstablishmentVisual>
             <div className={styles.identity}>
               <EstablishmentVisual establishment={establishment} size={64} className={styles.avatar} />
@@ -88,14 +92,14 @@ export default function EstablishmentPage() {
             <Card variant="elevated" padding="md" className={styles.cta}>
               <div className={styles.ctaHead}>
                 <h2 className="text-h3">Prendre un ticket</h2>
-                <QueueStatusBadge status={status} short size="sm" />
+                <QueueStatusBadge status={status} pauseReason={pauseReason} short size="sm" />
               </div>
               <InfoNote tone={note.tone} icon={note.icon} title={note.title}>
                 {isOpen
                   ? waiting > 0
                     ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes)}.`
                     : 'Personne n’attend : vous serez le prochain à être servi.'
-                  : QUEUE_STATUS_META[status].description}
+                  : getQueueStatusMeta(status, pauseReason).description}
               </InfoNote>
               <Button size="lg" fullWidth icon={ICONS.ticket} to={to.joinQueue(establishmentId)} disabled={!isOpen}>
                 Prendre un ticket

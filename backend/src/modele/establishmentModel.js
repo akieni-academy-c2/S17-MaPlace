@@ -6,6 +6,7 @@ import pool from '../config/database.js';
 const CURRENT_QUEUE_STATS = `
   LEFT JOIN LATERAL (
     SELECT
+      q.pause_reason,
       (
         SELECT t.number
         FROM tickets t
@@ -35,6 +36,7 @@ const findAll = async () => {
       e.email,
       e.phone,
       e.queue_status,
+      stats.pause_reason,
       stats.current_number,
       COALESCE(stats.waiting_count, 0) AS waiting_count
     FROM establishments e
@@ -54,6 +56,7 @@ const findById = async (id) => {
         e.email,
         e.phone,
         e.queue_status,
+        stats.pause_reason,
         stats.current_number,
         COALESCE(stats.waiting_count, 0) AS waiting_count
       FROM establishments e

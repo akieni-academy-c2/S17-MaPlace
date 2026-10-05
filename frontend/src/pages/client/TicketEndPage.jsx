@@ -5,7 +5,7 @@ import { Button, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/com
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { ICONS } from '@/constants/icons'
-import { TICKET_STATUS } from '@/constants/status'
+import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './TicketEndPage.module.css'
@@ -25,6 +25,14 @@ const CONTENT = {
     text: 'Votre ticket a été annulé et votre place libérée. Vous pouvez reprendre un ticket à tout moment.',
     endLabel: 'Annulé à',
   },
+}
+
+const CLOSED_CONTENT = {
+  ...CONTENT[TICKET_STATUS.CANCELLED],
+  badge: 'File fermée',
+  title: 'La file est fermée',
+  text: 'L’établissement a fermé sa file avant votre passage : votre ticket a été annulé. Reprenez un ticket à la prochaine ouverture.',
+  endLabel: 'Fermée à',
 }
 
 /** « 12 min », « 1 h 05 » */
@@ -47,8 +55,9 @@ export default function TicketEndPage() {
   }, [ticket, currentId, ticketId, clear])
 
   const status = ticket?.status === TICKET_STATUS.CANCELLED ? TICKET_STATUS.CANCELLED : TICKET_STATUS.COMPLETED
-  const content = CONTENT[status]
   const cancelled = status === TICKET_STATUS.CANCELLED
+  // Ticket non traité à la fermeture de la file : annulé automatiquement
+  const content = cancelled && ticket?.queueStatus === QUEUE_STATUS.CLOSED ? CLOSED_CONTENT : CONTENT[status]
 
   return (
     <PageContent width="narrow">

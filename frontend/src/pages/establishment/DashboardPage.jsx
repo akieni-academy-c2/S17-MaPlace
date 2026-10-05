@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Card, ConfirmDialog, EmptyState, InfoNote, Loader, StatCard, TicketNumber, TicketStatusBadge } from '@/components/ui'
-import { CallNextPanel, QueueControls, ServingTicketCard, WaitingList, WalkInTicketDialog } from '@/components/queue'
+import { Button, Card, EmptyState, InfoNote, Loader, StatCard, TicketNumber, TicketStatusBadge } from '@/components/ui'
+import { CallNextPanel, CloseQueueDialog, QueueControls, ServingTicketCard, WaitingList, WalkInTicketDialog } from '@/components/queue'
 import { useAuth } from '@/hooks/useAuth'
 import { useQueueManager } from '@/hooks/useQueueManager'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
+import { PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime, plural } from '@/utils/format'
 import { ProPageHeader } from './ProPageHeader'
@@ -19,7 +19,7 @@ const today = () => new Date().toLocaleDateString('fr-FR', { weekday: 'long', da
 /** Établissement — Tableau de bord de la file (GET /api/queue + actions JWT). */
 export default function DashboardPage() {
   const { establishment } = useAuth()
-  const { status, tickets, serving, waiting, lastNumber, loading, error, pending, actions } = useQueueManager()
+  const { status, pauseReason, tickets, serving, waiting, lastNumber, loading, error, pending, actions } = useQueueManager()
   const [confirmClose, setConfirmClose] = useState(false)
   const [walkInOpen, setWalkInOpen] = useState(false)
 
@@ -33,15 +33,19 @@ export default function DashboardPage() {
     [tickets],
   )
 
-  const handleClose = async () => {
-    await actions.close()
+  const [closing, setClosing] = useState(null) // 'close' | 'postpone'
+
+  /** Fin de journée : fermeture (tickets annulés) ou report au lendemain (numéros conservés). */
+  const handleEndOfDay = async (action) => {
+    setClosing(action)
+    await actions[action]()
+    setClosing(null)
     setConfirmClose(false)
   }
 
   return (
     <div className={styles.page}>
       <ProPageHeader
-        breadcrumb={`Console d’accueil · ${establishment?.name ?? ''}`}
         title="Tableau de bord"
         subtitle={today()}
         actions={
@@ -60,6 +64,7 @@ export default function DashboardPage() {
 
       <QueueControls
         status={status}
+        pauseReason={pauseReason}
         busy={pending === 'queue'}
         onOpen={actions.open}
         onPause={actions.pause}
@@ -90,7 +95,9 @@ export default function DashboardPage() {
             onCallNext={actions.callNext}
             hint={
               status === QUEUE_STATUS.PAUSED
-                ? 'File en pause : reprenez la file pour appeler le client suivant.'
+                ? pauseReason === PAUSE_REASON.NEXT_DAY
+                  ? 'File reportée au lendemain : reprenez-la pour rappeler les clients en attente, dans l’ordre de leurs numéros.'
+                  : 'File en pause : reprenez la file pour appeler le client suivant.'
                 : status === QUEUE_STATUS.CLOSED
                   ? 'Ouvrez la file pour commencer à recevoir des tickets.'
                   : serving
@@ -106,6 +113,7 @@ export default function DashboardPage() {
             </div>
             <WaitingList
               tickets={waiting.slice(0, NEXT_SIZE)}
+              waiting={waiting}
               total={waiting.length}
               title={`${waiting.length > NEXT_SIZE ? `${NEXT_SIZE} prochains` : 'Prochains'} clients en file`}
               countLabel={['en attente', 'en attente']}
@@ -156,19 +164,14 @@ export default function DashboardPage() {
         establishmentName={establishment?.name}
       />
 
-      <ConfirmDialog
+      <CloseQueueDialog
         open={confirmClose}
-        tone="danger"
-        icon={ICONS.power}
-        title="Fermer la file ?"
-        confirmLabel="Fermer la file"
-        confirmIcon={ICONS.power}
-        loading={pending === 'queue'}
-        onConfirm={handleClose}
+        waitingCount={waiting.length}
+        loading={closing}
+        onCloseQueue={() => handleEndOfDay('close')}
+        onPostpone={() => handleEndOfDay('postpone')}
         onCancel={() => setConfirmClose(false)}
-      >
-        La session sera terminée pour aujourd’hui et la numérotation repartira de #1 à la prochaine ouverture.
-      </ConfirmDialog>
+      />
     </div>
   )
 }

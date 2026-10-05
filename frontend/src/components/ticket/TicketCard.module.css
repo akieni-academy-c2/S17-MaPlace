@@ -50,10 +50,30 @@
 }
 
 /* ---------- Alertes de progression ---------- */
-.approaching { border-color: #f6d3ad; box-shadow: 0 8px 24px -10px rgba(232, 131, 42, 0.3); }
-.approaching .header { background: #fff3e4; color: var(--orange-dark); }
-.soon { border: 2px solid var(--orange); box-shadow: 0 0 0 6px var(--orange-light), var(--shadow-md); animation: glow 2.4s ease-in-out infinite; }
-.soon .header { background: var(--orange); color: var(--white); }
+/* --alert : couleur du niveau · --alert-soft : halo · --alert-ink : texte sur le bandeau */
+.near,
+.approaching,
+.soon,
+.next {
+  border: 2px solid var(--alert);
+  box-shadow: 0 0 0 6px var(--alert-soft), var(--shadow-md);
+}
+.near .header,
+.approaching .header,
+.soon .header,
+.next .header { background: var(--alert); color: var(--alert-ink, var(--white)); }
+.near .body > :global(.text-eyebrow),
+.approaching .body > :global(.text-eyebrow),
+.soon .body > :global(.text-eyebrow),
+.next .body > :global(.text-eyebrow) { color: var(--alert-text, var(--alert)); }
+
+.near { --alert: var(--yellow); --alert-soft: var(--yellow-light); --alert-ink: #3d2e00; --alert-text: var(--yellow-dark); }
+.approaching { --alert: var(--orange); --alert-soft: var(--orange-light); --alert-text: var(--orange-dark); }
+.soon { --alert: var(--red); --alert-soft: var(--red-light); --alert-text: var(--red-dark); animation: glow 2.4s ease-in-out infinite; }
+.next { --alert: var(--success); --alert-soft: var(--success-light); animation: glow 2.4s ease-in-out infinite; }
 @keyframes glow {
-  50% { box-shadow: 0 0 0 10px var(--orange-light), var(--shadow-md); }
+  50% { box-shadow: 0 0 0 10px var(--alert-soft), var(--shadow-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soon, .next { animation: none; }
 }

@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useQueueManager } from '@/hooks/useQueueManager'
 import { usePagination } from '@/hooks/usePagination'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
+import { PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { PATHS } from '@/constants/routes'
 import { formatTicketNumber } from '@/utils/format'
 import { ProPageHeader } from './ProPageHeader'
@@ -40,7 +40,7 @@ const EMPTY = {
 /** Établissement — File d'attente complète de la session en cours (GET /api/queue). */
 export default function QueuePage() {
   const { establishment } = useAuth()
-  const { status, tickets, waiting, loading, error, pending, actions } = useQueueManager()
+  const { status, pauseReason, tickets, waiting, loading, error, pending, actions } = useQueueManager()
   const [filter, setFilter] = useState('ALL')
   const [walkInOpen, setWalkInOpen] = useState(false)
 
@@ -61,7 +61,7 @@ export default function QueuePage() {
         subtitle="Tous les tickets émis depuis l’ouverture de la file."
         actions={
           <>
-            <QueueStatusBadge status={status} />
+            <QueueStatusBadge status={status} pauseReason={pauseReason} />
             <Button size="sm" icon={ICONS.ticketPlus} onClick={() => setWalkInOpen(true)} disabled={status !== QUEUE_STATUS.OPEN} title="Pour un client sans smartphone">
               Créer un ticket
             </Button>
@@ -92,11 +92,17 @@ export default function QueuePage() {
 
       {!loading && isActive && (
         <>
-          {status === QUEUE_STATUS.PAUSED && (
-            <InfoNote tone="warning" icon={ICONS.pause} title="File en pause">
-              Les nouveaux tickets et les appels sont suspendus. Les tickets existants sont conservés.
-            </InfoNote>
-          )}
+          {status === QUEUE_STATUS.PAUSED &&
+            (pauseReason === PAUSE_REASON.NEXT_DAY ? (
+              <InfoNote tone="warning" icon={ICONS.calendar} title="File reportée au lendemain">
+                Les clients en attente ont été invités à revenir demain avec leur numéro. Reprenez la file depuis le tableau de bord pour
+                les rappeler dans l’ordre.
+              </InfoNote>
+            ) : (
+              <InfoNote tone="warning" icon={ICONS.pause} title="File en pause">
+                Les nouveaux tickets et les appels sont suspendus. Les tickets existants sont conservés.
+              </InfoNote>
+            ))}
           <div className={styles.toolbar}>
             <FilterChips options={options} value={filter} onChange={setFilter} label="Filtrer par statut du ticket" className={styles.filters} />
             <Button
@@ -116,6 +122,7 @@ export default function QueuePage() {
             title={TITLES[filter]}
             countLabel={['ticket', 'tickets']}
             tickets={pagination.pageItems}
+            waiting={waiting}
             total={visible.length}
             pendingId={pending}
             onCancel={actions.cancel}

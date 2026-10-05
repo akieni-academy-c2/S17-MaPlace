@@ -138,6 +138,7 @@ const findById = async (ticketId) => {
         e.id AS establishment_id,
         e.name AS establishment_name,
         q.status AS queue_status,
+        q.pause_reason,
         COUNT(ahead.id)::INTEGER AS people_ahead,
         (
           SELECT serving.number
@@ -155,7 +156,7 @@ const findById = async (ticketId) => {
         AND ahead.status = 'WAITING'
         AND ahead.number < t.number
       WHERE t.id = $1
-      GROUP BY t.id, e.id, e.name, q.status
+      GROUP BY t.id, e.id, e.name, q.status, q.pause_reason
     `,
     [ticketId]
   );
@@ -181,6 +182,7 @@ const findById = async (ticketId) => {
     position: isWaiting ? peopleAhead + 1 : null,
     peopleAhead,
     queueStatus: row.queue_status,
+    pauseReason: row.pause_reason,
     establishment: {
       id: row.establishment_id,
       name: row.establishment_name,
