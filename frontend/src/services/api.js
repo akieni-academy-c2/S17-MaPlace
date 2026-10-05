@@ -1,11 +1,7 @@
 import { storage, STORAGE_KEYS } from '@/utils/storage'
 
-/**
- * Adresse du backend.
- * En production, remplacez-la par l'URL du serveur qui héberge l'API (sans « / » final),
- * par exemple 'https://api.maplace.cg/api'.
- */
-export const API_URL = 'http://localhost:3000/api'
+
+export const API_URL = 'https://s17-maplace.onrender.com/api'
 
 /** Erreur renvoyée par l'API : `status` contient le code HTTP (0 si le serveur est injoignable). */
 export class ApiError extends Error {
