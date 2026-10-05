@@ -14,7 +14,7 @@ export function SiteFooter() {
           <Logo size={44} subtitle="File d'attente en ligne" />
           <p>
             Moins d&apos;attente, plus de temps pour vous. Ma Place permet de prendre un ticket à distance et de suivre son tour
-            en direct dans les pharmacies, administrations, banques et commerces de Brazzaville.
+            en direct dans les administrations, centres de santé, banques, agences télécoms et salons de Brazzaville.
           </p>
         </div>
 

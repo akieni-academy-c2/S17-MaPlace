@@ -15,7 +15,7 @@
 .ink { color: var(--text-primary); }
 .inverse { color: var(--white); }
 
-/* Niveaux d'alerte : jaune (15–11 devant), orange (10–6), rouge (5–1), vert (0) */
+/* Niveaux d'alerte selon la position : jaune (15–11), orange (10–6), rouge (5–1), vert (appelé) */
 .waiting { color: var(--primary); }
 .near { color: var(--yellow-dark); --number-bg: var(--yellow-light); }
 .approaching { color: var(--orange-dark); --number-bg: var(--orange-light); }

@@ -42,7 +42,6 @@ export function ConfirmDialog({
         if (!loading) onCancel?.()
       }}
       onClick={(e) => {
-        // Clic sur le fond (hors du panneau) = annuler
         if (e.target === e.currentTarget && !loading) onCancel?.()
       }}
     >

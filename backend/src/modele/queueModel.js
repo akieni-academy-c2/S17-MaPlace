@@ -1,11 +1,18 @@
 import pool from '../config/database.js';
 
+/**
+ * File active (ouverte ou en pause) d'un établissement.
+ *
+ * @returns {Promise<object|null>} { queue, queueStatus, averageServiceMinutes } ; queue vaut null
+ *   si aucune file n'est ouverte ; null si l'établissement n'existe pas.
+ */
 const findCurrentByEstablishmentId = async (establishmentId) => {
   const result = await pool.query(
     `
       SELECT
         e.id AS establishment_id,
         e.queue_status AS establishment_queue_status,
+        e.average_service_minutes,
         q.id AS queue_id,
         q.status AS queue_status,
         q.last_number,
@@ -46,6 +53,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
     return {
       queue: null,
       queueStatus: 'CLOSED',
+      averageServiceMinutes: row.average_service_minutes,
     };
   }
 
@@ -61,9 +69,16 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
       updated_at: row.updated_at,
     },
     queueStatus: row.queue_status,
+    averageServiceMinutes: row.average_service_minutes,
   };
 };
 
+/**
+ * Ouvre une nouvelle file, numérotée à partir de #1.
+ * La transaction verrouille l'établissement pour éviter d'ouvrir deux files en même temps.
+ *
+ * @returns {Promise<object>} `outcome` vaut 'opened', 'queue_already_active' ou 'establishment_not_found'.
+ */
 const openForEstablishment = async (establishmentId) => {
   const client = await pool.connect();
 
@@ -129,8 +144,18 @@ const openForEstablishment = async (establishmentId) => {
   }
 };
 
-// `pauseReason` : motif enregistré avec une pause ('NEXT_DAY'), effacé par
-// toute autre transition.
+/**
+ * Change le statut de la file active (pause, reprise, report, fermeture) dans une transaction.
+ *
+ * @param {string} establishmentId
+ * @param {string[]} allowedStatuses Statuts depuis lesquels la transition est permise.
+ * @param {string} targetStatus Nouveau statut : 'OPEN', 'PAUSED' ou 'CLOSED'.
+ * @param {object} [options]
+ * @param {string|null} [options.pauseReason] 'NEXT_DAY' pour un report au lendemain ;
+ *   le motif est effacé par toute autre transition.
+ * @returns {Promise<object>} `outcome` vaut 'transitioned', 'invalid_transition', 'no_active_queue'
+ *   ou 'establishment_not_found'.
+ */
 const transitionCurrentStatus = async (
   establishmentId,
   allowedStatuses,

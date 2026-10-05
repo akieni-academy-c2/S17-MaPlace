@@ -7,10 +7,16 @@ import {
   findById,
 } from '../modele/establishmentModel.js';
 
+/**
+ * Vérifie l'email et le mot de passe, puis crée un jeton JWT valable 1 jour (par défaut).
+ *
+ * @returns {Promise<{ token: string, establishment: object }>}
+ * @throws {AppError} 401 si l'email ou le mot de passe est incorrect.
+ */
 const login = async (email, password) => {
   const establishment = await findByEmail(email);
 
-  // Même erreur pour un email ou un mot de passe incorrect.
+  // Même message dans les deux cas : on ne révèle pas si l'email existe.
   if (!establishment) {
     throw new AppError(
       'Email ou mot de passe incorrect.',
@@ -30,7 +36,6 @@ const login = async (email, password) => {
     );
   }
 
-  // Le JWT identifie l'établissement.
   const token = jwt.sign(
     {
       id: establishment.id,
@@ -50,7 +55,9 @@ const login = async (email, password) => {
       name: establishment.name,
       email: establishment.email,
       phone: establishment.phone,
+      category: establishment.category,
       queueStatus: establishment.queue_status,
+      averageServiceMinutes: establishment.average_service_minutes,
     },
   };
 };

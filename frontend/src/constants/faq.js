@@ -1,7 +1,7 @@
 import { AVERAGE_SERVICE_MINUTES } from './establishments'
 import { APPROACHING_THRESHOLD, NEAR_THRESHOLD, SOON_THRESHOLD } from './status'
 
-/** Questions fréquentes (accueil). Les réponses décrivent le fonctionnement réel de l'application. */
+/** Questions fréquentes affichées sur l'accueil. */
 export const FAQ = [
   {
     question: 'Comment prendre un ticket ?',
@@ -20,7 +20,7 @@ export const FAQ = [
   },
   {
     question: 'Comment savoir quand c’est mon tour ?',
-    answer: `La page « Mon ticket » s’actualise automatiquement et change de couleur à mesure que la file avance : jaune « Préparez-vous » à ${NEAR_THRESHOLD} personnes ou moins devant vous, orange « Votre tour approche » à ${APPROACHING_THRESHOLD} ou moins, rouge « Bientôt votre tour » à ${SOON_THRESHOLD} ou moins, puis vert quand personne n’est devant vous et « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
+    answer: `La page « Mon ticket » s’actualise automatiquement et change de couleur à mesure que la file avance : jaune « Préparez-vous » de la ${NEAR_THRESHOLD}e à la ${APPROACHING_THRESHOLD + 1}e place, orange « Votre tour approche » de la ${APPROACHING_THRESHOLD}e à la ${SOON_THRESHOLD + 1}e, rouge « Bientôt votre tour » de la ${SOON_THRESHOLD}e à la 1re place, puis vert « C’est votre tour ! » quand l’établissement vous appelle. Gardez simplement la page ouverte.`,
   },
   {
     question: 'Que se passe-t-il lorsque la file est en pause ?',
@@ -49,6 +49,6 @@ export const FAQ = [
   },
   {
     question: 'Le temps d’attente affiché est-il exact ?',
-    answer: `C’est une estimation, calculée à partir du nombre de personnes devant vous et d’une durée moyenne d’environ ${AVERAGE_SERVICE_MINUTES} minutes par passage. Le temps réel peut varier selon les demandes traitées au guichet.`,
+    answer: `C’est une estimation, calculée à partir du nombre de personnes devant vous et de la durée moyenne d’un passage indiquée par l’établissement (${AVERAGE_SERVICE_MINUTES} minutes par défaut). Le temps réel peut varier selon les demandes traitées au guichet.`,
   },
 ]

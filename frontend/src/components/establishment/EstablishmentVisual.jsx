@@ -1,5 +1,5 @@
 import { Icon } from '@/components/ui'
-import { inferCategory, initials } from '@/constants/establishments'
+import { getCategory, initials } from '@/constants/establishments'
 import styles from './EstablishmentVisual.module.css'
 
 /**
@@ -8,7 +8,7 @@ import styles from './EstablishmentVisual.module.css'
  * variant : banner (haut de carte / page détail) | avatar (carré). `emblem` : icône sur la bannière.
  */
 export function EstablishmentVisual({ establishment, variant = 'avatar', size = 48, emblem = true, className = '', children }) {
-  const category = inferCategory(establishment)
+  const category = getCategory(establishment)
   const accent = category.accent === 'orange' ? styles.orange : styles.green
   const image = establishment?.image_url
 

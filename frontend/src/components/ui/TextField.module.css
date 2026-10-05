@@ -15,6 +15,10 @@
   font-weight: var(--fw-semibold);
   color: var(--text-primary);
 }
+.required {
+  margin-left: 2px;
+  color: var(--danger);
+}
 .control {
   display: flex;
   align-items: center;

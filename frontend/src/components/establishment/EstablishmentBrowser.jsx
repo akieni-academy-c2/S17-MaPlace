@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Button, EmptyState, FilterChips, Icon, InfoNote, Loader, Pagination, SearchBar } from '@/components/ui'
 import { useFavorites } from '@/hooks/useFavorites'
 import { usePagination } from '@/hooks/usePagination'
-import { CATEGORIES, describeEstablishment, inferCategory, normalizeText } from '@/constants/establishments'
+import { CATEGORIES, describeEstablishment, normalizeText } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS } from '@/constants/status'
 import { plural } from '@/utils/format'
@@ -46,8 +46,8 @@ export function EstablishmentBrowser({ establishments, loading, error, initialQu
         return {
           ...e,
           status: e.queue_status ?? QUEUE_STATUS.CLOSED,
-          categoryId: inferCategory(e).id,
-          haystack: normalizeText([e.name, info.category.label, info.location, info.address].filter(Boolean).join(' ')),
+          categoryId: e.category,
+          haystack: normalizeText([e.name, info.category.label, info.location, info.address, e.description].filter(Boolean).join(' ')),
         }
       }),
     [establishments],

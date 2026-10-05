@@ -6,7 +6,7 @@ const STEPS = [
   {
     icon: ICONS.search,
     title: 'Recherchez un établissement',
-    text: 'Trouvez la pharmacie, l’administration ou le commerce qui vous intéresse et consultez l’affluence en direct.',
+    text: 'Trouvez l’administration, l’hôpital, la banque ou l’agence qui vous intéresse et consultez l’affluence en direct.',
   },
   {
     icon: ICONS.ticket,

@@ -1,6 +1,14 @@
 import pool from '../config/database.js';
 import crypto from 'node:crypto';
 
+/**
+ * Crée un ticket dans la file ouverte d'un établissement et lui attribue le numéro suivant.
+ * Tout se fait dans une transaction qui verrouille la file : deux clients ne peuvent pas
+ * recevoir le même numéro, et un téléphone ne peut avoir qu'un ticket en cours par file.
+ *
+ * @returns {Promise<object>} `outcome` vaut 'created' (avec `ticket` et son `cancelToken`),
+ *   'queue_not_open', 'duplicate_phone' ou 'establishment_not_found'.
+ */
 const createForEstablishment = async (
   establishmentId,
   name,
@@ -124,6 +132,12 @@ const createForEstablishment = async (
   }
 };
 
+/**
+ * Ticket vu par le client : position dans la file, personnes devant, numéro au guichet,
+ * état de la file et établissement (avec sa durée moyenne de passage).
+ *
+ * @returns {Promise<object|null>} null si le ticket n'existe pas.
+ */
 const findById = async (ticketId) => {
   const result = await pool.query(
     `
@@ -137,6 +151,7 @@ const findById = async (ticketId) => {
         t.updated_at,
         e.id AS establishment_id,
         e.name AS establishment_name,
+        e.average_service_minutes,
         q.status AS queue_status,
         q.pause_reason,
         COUNT(ahead.id)::INTEGER AS people_ahead,
@@ -156,7 +171,7 @@ const findById = async (ticketId) => {
         AND ahead.status = 'WAITING'
         AND ahead.number < t.number
       WHERE t.id = $1
-      GROUP BY t.id, e.id, e.name, q.status, q.pause_reason
+      GROUP BY t.id, e.id, e.name, e.average_service_minutes, q.status, q.pause_reason
     `,
     [ticketId]
   );
@@ -186,10 +201,12 @@ const findById = async (ticketId) => {
     establishment: {
       id: row.establishment_id,
       name: row.establishment_name,
+      averageServiceMinutes: row.average_service_minutes,
     },
   };
 };
 
+/** Tous les tickets de la file active d'un établissement, par numéro croissant. */
 const findAllForCurrentQueue = async (establishmentId) => {
   const result = await pool.query(
     `
@@ -222,6 +239,13 @@ const findAllForCurrentQueue = async (establishmentId) => {
   return result.rows;
 };
 
+/**
+ * Appelle le client suivant : le ticket au guichet passe en « terminé » et le premier
+ * ticket en attente passe au guichet (SERVING), dans une même transaction.
+ *
+ * @returns {Promise<object>} `outcome` vaut 'called' (avec `ticket`), 'no_waiting_tickets',
+ *   'queue_not_open' ou 'establishment_not_found'.
+ */
 const callNextForEstablishment = async (establishmentId) => {
   const client = await pool.connect();
 
@@ -316,6 +340,16 @@ const callNextForEstablishment = async (establishmentId) => {
   }
 };
 
+/**
+ * Change le statut d'un ticket appartenant à l'établissement (terminer, annuler).
+ *
+ * @param {string} ticketId
+ * @param {string} establishmentId Seuls les tickets de cet établissement peuvent être modifiés.
+ * @param {string[]} allowedStatuses Statuts actuels autorisés pour ce changement.
+ * @param {string} targetStatus Nouveau statut.
+ * @returns {Promise<object>} `outcome` vaut 'updated', 'invalid_status', 'queue_closed',
+ *   'ticket_not_found' ou 'establishment_not_found'.
+ */
 const updateOwnedTicketStatus = async (
   ticketId,
   establishmentId,
@@ -403,6 +437,12 @@ const updateOwnedTicketStatus = async (
   }
 };
 
+/**
+ * Annulation par le client lui-même. Le cancelToken, remis uniquement à la création
+ * du ticket, prouve que la demande vient bien de la personne qui l'a pris.
+ *
+ * @returns {Promise<object>} `outcome` vaut 'updated', 'invalid_status' ou 'ticket_not_found'.
+ */
 const cancelByClient = async (ticketId, cancelToken) => {
   const client = await pool.connect();
 
