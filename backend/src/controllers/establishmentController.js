@@ -35,7 +35,31 @@ const getOne = async (req, res, next) => {
   }
 };
 
+// Paramètres de l'établissement connecté (durée moyenne d'un passage).
+const updateMe = async (req, res, next) => {
+  try {
+    const { averageServiceMinutes } = req.body ?? {};
+
+    const establishment =
+      await establishmentService.updateServiceTime(
+        req.user.id,
+        averageServiceMinutes
+      );
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Durée moyenne de passage mise à jour.',
+      data: {
+        establishment,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   getAll,
   getOne,
+  updateMe,
 };

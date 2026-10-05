@@ -1,5 +1,5 @@
 import logoUrl from '@/assets/logo.png'
-import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { formatTicketNumber } from './format'
 
 /**
@@ -146,7 +146,7 @@ export async function renderTicketCanvas(t) {
   // Indicateurs
   const boxes = [
     { label: 'Devant vous', value: t.peopleAhead != null ? String(t.peopleAhead) : '—' },
-    { label: 'Attente estimée', value: formatWait(estimateWaitMinutes(t.peopleAhead)) },
+    { label: 'Attente estimée', value: formatWait(estimateWaitMinutes(t.peopleAhead, t.serviceMinutes), t.serviceMinutes) },
   ]
   const boxW = (WIDTH - 80 - 16) / 2
   boxes.forEach((b, i) => {
@@ -233,6 +233,7 @@ export const ticketExportData = (ticket, extra = {}) => ({
   name: ticket.name,
   createdAt: ticket.createdAt,
   peopleAhead: ticket.peopleAhead,
+  serviceMinutes: serviceMinutesOf(ticket.establishment),
   trackingUrl: `${window.location.origin}/tickets/${ticket.id}`,
   ...extra,
 })

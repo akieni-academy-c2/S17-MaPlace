@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import * as queueService from '@/services/queueService'
+import { updateServiceTime } from '@/services/establishmentService'
+import { AVERAGE_SERVICE_MINUTES } from '@/constants/establishments'
 import { cancelTicket, completeTicket } from '@/services/ticketService'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { usePolling } from './usePolling'
@@ -21,6 +23,7 @@ export function useQueueManager() {
   const waiting = useMemo(() => tickets.filter((t) => t.status === TICKET_STATUS.WAITING), [tickets])
   const lastNumber = data?.queue?.last_number ?? 0
   const pauseReason = data?.queue?.pause_reason ?? null
+  const averageServiceMinutes = data?.averageServiceMinutes ?? AVERAGE_SERVICE_MINUTES
 
   /** Exécute une action API puis recharge la file. */
   const run = async (key, action) => {
@@ -50,6 +53,17 @@ export function useQueueManager() {
     }
   }
 
+  /** Durée moyenne d'un passage. Les erreurs sont levées pour le formulaire. */
+  const setServiceTime = async (minutes) => {
+    setPending('serviceTime')
+    try {
+      await updateServiceTime(minutes)
+      await refresh()
+    } finally {
+      setPending(null)
+    }
+  }
+
   const actions = {
     open: () => run('queue', queueService.openQueue),
     pause: () => run('queue', queueService.pauseQueue),
@@ -60,6 +74,7 @@ export function useQueueManager() {
     complete: (id) => run(id, () => completeTicket(id)),
     cancel: (id) => run(id, () => cancelTicket(id)),
     createTicket,
+    setServiceTime,
   }
 
   return {
@@ -69,6 +84,7 @@ export function useQueueManager() {
     serving,
     waiting,
     lastNumber,
+    averageServiceMinutes,
     loading,
     error: actionError ?? error?.message ?? null,
     pending,

@@ -36,6 +36,7 @@ const findAll = async () => {
       e.email,
       e.phone,
       e.queue_status,
+      e.average_service_minutes,
       stats.pause_reason,
       stats.current_number,
       COALESCE(stats.waiting_count, 0) AS waiting_count
@@ -56,6 +57,7 @@ const findById = async (id) => {
         e.email,
         e.phone,
         e.queue_status,
+        e.average_service_minutes,
         stats.pause_reason,
         stats.current_number,
         COALESCE(stats.waiting_count, 0) AS waiting_count
@@ -78,7 +80,8 @@ const findByEmail = async (email) => {
         email,
         password_hash,
         phone,
-        queue_status
+        queue_status,
+        average_service_minutes
       FROM establishments
       WHERE email = $1
     `,
@@ -88,8 +91,23 @@ const findByEmail = async (email) => {
   return result.rows[0] || null;
 };
 
+const updateAverageServiceMinutes = async (id, minutes) => {
+  const result = await pool.query(
+    `
+      UPDATE establishments
+      SET average_service_minutes = $2
+      WHERE id = $1
+      RETURNING id, average_service_minutes
+    `,
+    [id, minutes]
+  );
+
+  return result.rows[0] || null;
+};
+
 export {
   findAll,
   findById,
   findByEmail,
+  updateAverageServiceMinutes,
 };

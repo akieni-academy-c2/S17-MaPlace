@@ -51,6 +51,7 @@ const login = async (email, password) => {
       email: establishment.email,
       phone: establishment.phone,
       queueStatus: establishment.queue_status,
+      averageServiceMinutes: establishment.average_service_minutes,
     },
   };
 };

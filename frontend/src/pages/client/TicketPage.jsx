@@ -6,7 +6,7 @@ import { TicketCard, TicketProgress, TicketStats } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { getCancelToken } from '@/hooks/useCurrentTicket'
 import { cancelTicketByClient } from '@/services/ticketService'
-import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getTicketAlert, PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { formatTicketNumber, formatTime, plural } from '@/utils/format'
@@ -51,6 +51,7 @@ export default function TicketPage() {
     navigate(location.pathname, { replace: true, state: null })
   }
 
+  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
   const paused = ticket?.queueStatus === QUEUE_STATUS.PAUSED
   const nextDay = paused && ticket?.pauseReason === PAUSE_REASON.NEXT_DAY
   // File reportée : l'en-tête invite à revenir demain (la couleur du ticket suit toujours sa position)
@@ -108,7 +109,7 @@ export default function TicketPage() {
                 <p className="text-small">
                   {ticket.establishment?.name} ·{' '}
                   {ticket.peopleAhead > 0
-                    ? `${plural(ticket.peopleAhead, 'personne')} devant vous · attente estimée ${formatWait(estimateWaitMinutes(ticket.peopleAhead))}`
+                    ? `${plural(ticket.peopleAhead, 'personne')} devant vous · attente estimée ${formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}`
                     : 'personne devant vous'}
                 </p>
               </div>
@@ -161,7 +162,7 @@ export default function TicketPage() {
                     </StatusBadge>
                   </>
                 }
-                footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} />}
+                footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} serviceMinutes={serviceMinutes} />}
               >
                 <span className="text-eyebrow">Votre numéro</span>
                 <TicketNumber number={ticket.number} size="xl" tone={alert.key} />
