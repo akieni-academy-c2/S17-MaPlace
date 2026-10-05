@@ -14,7 +14,7 @@ const SWIPE_THRESHOLD = 50
 
 /**
  * Diapositives du carrousel. La première reprend la composition illustrée historique ;
- * les suivantes sont des illustrations plein cadre (arrière-plan en desktop) avec une légende.
+ * les suivantes sont des illustrations cadrées au centre de la scène, avec une légende.
  */
 const SLIDES = [
   { key: 'app', label: 'Votre ticket dans la poche' },
@@ -140,23 +140,6 @@ export function HeroSection() {
         if (!e.currentTarget.contains(e.relatedTarget)) setHeld(false)
       }}
     >
-      {/* Arrière-plans plein cadre (desktop) : fondu enchaîné + léger zoom */}
-      <div className={styles.backdrops} aria-hidden="true">
-        {SLIDES.map((slide, i) =>
-          slide.image ? (
-            <img
-              key={slide.key}
-              src={slide.image}
-              alt=""
-              className={`${styles.backdrop} ${i === index ? styles.backdropActive : ''}`}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-            />
-          ) : null,
-        )}
-        <span className={`${styles.veil} ${SLIDES[index].image ? styles.veilVisible : ''}`} />
-      </div>
-
       <div className={`container ${styles.inner}`}>
         <div className={styles.content}>
           <span className={styles.eyebrow}>
@@ -198,8 +181,8 @@ export function HeroSection() {
                 aria-hidden={i !== index}
               >
                 {slide.image ? (
-                  <>
-                    {/* Mobile et tablette : l'illustration est cadrée dans la scène */}
+                  <div className={styles.frame}>
+                    {/* Illustration entière, centrée dans la scène comme le visuel du téléphone */}
                     <img src={slide.image} alt="" className={styles.slideImage} loading="lazy" decoding="async" />
                     <div className={styles.caption}>
                       <span className={styles.captionIndex}>
@@ -208,7 +191,7 @@ export function HeroSection() {
                       <strong>{slide.label}</strong>
                       <p>{slide.text}</p>
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <HeroVisual />
                 )}

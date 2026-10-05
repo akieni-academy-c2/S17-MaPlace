@@ -49,6 +49,6 @@ export const FAQ = [
   },
   {
     question: 'Le temps d’attente affiché est-il exact ?',
-    answer: `C’est une estimation, calculée à partir du nombre de personnes devant vous et d’une durée moyenne d’environ ${AVERAGE_SERVICE_MINUTES} minutes par passage. Le temps réel peut varier selon les demandes traitées au guichet.`,
+    answer: `C’est une estimation, calculée à partir du nombre de personnes devant vous et de la durée moyenne d’un passage indiquée par l’établissement (${AVERAGE_SERVICE_MINUTES} minutes par défaut). Le temps réel peut varier selon les demandes traitées au guichet.`,
   },
 ]

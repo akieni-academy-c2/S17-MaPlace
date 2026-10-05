@@ -41,8 +41,13 @@ export const CATEGORIES = [
 
 const DEFAULT_CATEGORY = CATEGORIES[CATEGORIES.length - 1]
 
-/** Durée moyenne de passage utilisée pour l'estimation d'attente (en minutes). */
+/**
+ * Durée moyenne d'un passage (en minutes) utilisée par défaut pour l'estimation d'attente.
+ * Chaque établissement peut renseigner la sienne depuis son tableau de bord.
+ */
 export const AVERAGE_SERVICE_MINUTES = 5
+export const MIN_SERVICE_MINUTES = 1
+export const MAX_SERVICE_MINUTES = 240
 
 export const DEFAULT_CITY = 'Brazzaville'
 
@@ -91,14 +96,18 @@ export function inferCategory(establishment) {
   return CATEGORIES.find((c) => c.keywords.some((k) => name.includes(normalizeText(k)))) ?? DEFAULT_CATEGORY
 }
 
-/** Estimation de l'attente en minutes (null si personne n'attend). */
-export const estimateWaitMinutes = (peopleAhead) =>
-  peopleAhead > 0 ? Math.round(peopleAhead * AVERAGE_SERVICE_MINUTES) : peopleAhead === 0 ? 0 : null
+/** Durée moyenne de passage d'un établissement (API), ou la valeur par défaut. */
+export const serviceMinutesOf = (establishment) =>
+  establishment?.averageServiceMinutes ?? establishment?.average_service_minutes ?? AVERAGE_SERVICE_MINUTES
 
-/** « ≈ 15 min », « < 5 min », « 1 h 10 » */
-export const formatWait = (minutes) => {
+/** Estimation de l'attente en minutes (null si personne n'attend). */
+export const estimateWaitMinutes = (peopleAhead, serviceMinutes = AVERAGE_SERVICE_MINUTES) =>
+  peopleAhead > 0 ? Math.round(peopleAhead * serviceMinutes) : peopleAhead === 0 ? 0 : null
+
+/** « ≈ 15 min », « < 5 min », « 1 h 10 » (`serviceMinutes` : durée d'un passage, seuil du « < … min ») */
+export const formatWait = (minutes, serviceMinutes = AVERAGE_SERVICE_MINUTES) => {
   if (minutes == null) return '—'
-  if (minutes < AVERAGE_SERVICE_MINUTES) return `< ${AVERAGE_SERVICE_MINUTES} min`
+  if (minutes < serviceMinutes) return `< ${serviceMinutes} min`
   if (minutes < 60) return `≈ ${minutes} min`
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
@@ -125,6 +134,7 @@ export function describeEstablishment(establishment) {
   const district = establishment.district ?? profile.district ?? null
   const city = establishment.city ?? profile.city ?? DEFAULT_CITY
   const waiting = establishment.waiting_count ?? null
+  const serviceMinutes = serviceMinutesOf(establishment)
 
   return {
     category,
@@ -134,6 +144,7 @@ export function describeEstablishment(establishment) {
     location: [district, city].filter(Boolean).join(', '),
     description: establishment.description ?? profile.description ?? null,
     hours: establishment.opening_hours ?? profile.hours ?? null,
-    waitMinutes: estimateWaitMinutes(waiting),
+    serviceMinutes,
+    waitMinutes: estimateWaitMinutes(waiting, serviceMinutes),
   }
 }

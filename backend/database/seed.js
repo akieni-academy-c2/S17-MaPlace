@@ -8,6 +8,7 @@ const establishments = [
     password: 'password123',
     phone: '0600000001',
     queueStatus: 'OPEN',
+    averageServiceMinutes: 5,
   },
   {
     name: 'Salon Élégance',
@@ -15,6 +16,7 @@ const establishments = [
     password: 'password123',
     phone: '0600000002',
     queueStatus: 'CLOSED',
+    averageServiceMinutes: 30,
   },
   {
     name: 'Centre Administratif',
@@ -22,6 +24,7 @@ const establishments = [
     password: 'password123',
     phone: '0600000003',
     queueStatus: 'CLOSED',
+    averageServiceMinutes: 10,
   },
 ];
 
@@ -50,9 +53,10 @@ const seed = async () => {
             email,
             password_hash,
             phone,
-            queue_status
+            queue_status,
+            average_service_minutes
           )
-          VALUES ($1, $2, $3, $4, $5)
+          VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING id
         `,
         [
@@ -61,6 +65,7 @@ const seed = async () => {
           passwordHash,
           establishment.phone,
           establishment.queueStatus,
+          establishment.averageServiceMinutes,
         ]
       );
 

@@ -6,6 +6,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
       SELECT
         e.id AS establishment_id,
         e.queue_status AS establishment_queue_status,
+        e.average_service_minutes,
         q.id AS queue_id,
         q.status AS queue_status,
         q.last_number,
@@ -46,6 +47,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
     return {
       queue: null,
       queueStatus: 'CLOSED',
+      averageServiceMinutes: row.average_service_minutes,
     };
   }
 
@@ -61,6 +63,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
       updated_at: row.updated_at,
     },
     queueStatus: row.queue_status,
+    averageServiceMinutes: row.average_service_minutes,
   };
 };
 

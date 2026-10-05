@@ -52,7 +52,7 @@ export function EstablishmentCard({ establishment, isFavorite, onToggleFavorite 
           </div>
           <div>
             <dt>Estimation</dt>
-            <dd>{isActive ? formatWait(info.waitMinutes) : '—'}</dd>
+            <dd>{isActive ? formatWait(info.waitMinutes, info.serviceMinutes) : '—'}</dd>
           </div>
         </dl>
 

@@ -1,0 +1,46 @@
+.form { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.presets { margin: 0; padding: 0; border: none; min-width: 0; }
+.legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.preset {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  min-height: 52px;
+  padding: 0 var(--space-3);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+  cursor: pointer;
+  transition: background-color var(--duration-base), border-color var(--duration-base), color var(--duration-base);
+}
+.preset strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+}
+.preset:hover { border-color: var(--primary-500); }
+.active,
+.active:hover {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--white);
+}
+.active strong { color: var(--white); }
+
+.actions { display: flex; justify-content: flex-end; gap: var(--space-2); }

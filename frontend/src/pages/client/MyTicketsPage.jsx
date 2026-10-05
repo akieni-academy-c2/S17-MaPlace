@@ -4,7 +4,7 @@ import { Button, EmptyState, Icon, InfoNote, Loader, StatusBadge, TicketNumber }
 import { getTicket } from '@/services/ticketService'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
-import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getTicketAlert, PAUSE_REASON, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
@@ -30,6 +30,7 @@ export default function MyTicketsPage() {
   const ticket = ticketId ? data?.ticket : null
   const status = ticket && clientStatus(ticket)
   const isWaiting = ticket?.status === TICKET_STATUS.WAITING
+  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
 
   return (
     <PageContent width="narrow">
@@ -61,7 +62,7 @@ export default function MyTicketsPage() {
           <div className={styles.cardBody}>
             <div>
               <span className="text-eyebrow">Numéro</span>
-              <TicketNumber number={ticket.number} size="lg" />
+              <TicketNumber number={ticket.number} size="lg" tone={isWaiting ? status.tone : 'primary'} />
             </div>
             <dl className={styles.facts}>
               {isWaiting && (
@@ -72,7 +73,7 @@ export default function MyTicketsPage() {
                   </div>
                   <div>
                     <dt>Attente estimée</dt>
-                    <dd>{formatWait(estimateWaitMinutes(ticket.peopleAhead))}</dd>
+                    <dd>{formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}</dd>
                   </div>
                 </>
               )}

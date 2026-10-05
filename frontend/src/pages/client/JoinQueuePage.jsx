@@ -114,7 +114,7 @@ export default function JoinQueuePage() {
               </div>
               <div>
                 <dt>Attente estimée</dt>
-                <dd>{info ? formatWait(info.waitMinutes) : '—'}</dd>
+                <dd>{info ? formatWait(info.waitMinutes, info.serviceMinutes) : '—'}</dd>
               </div>
             </dl>
           </Card>
@@ -144,6 +144,7 @@ export default function JoinQueuePage() {
 
             <TextField
               label="Votre nom"
+              required
               icon={ICONS.person}
               placeholder="Ex. Grâce Mabiala"
               autoComplete="name"
@@ -154,6 +155,7 @@ export default function JoinQueuePage() {
             />
             <TextField
               label="Votre numéro de téléphone"
+              required
               icon={ICONS.phone}
               type="tel"
               inputMode="tel"

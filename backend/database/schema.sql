@@ -28,9 +28,16 @@ CREATE TABLE establishments (
     -- Miroir du statut de la file, synchronisé lors des transitions.
     queue_status queue_status NOT NULL DEFAULT 'CLOSED',
 
+    -- Durée moyenne d'un passage au guichet (en minutes), renseignée par
+    -- l'établissement : sert au calcul du temps d'attente estimé.
+    average_service_minutes SMALLINT NOT NULL DEFAULT 5,
+
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT establishments_average_service_minutes_range
+        CHECK (average_service_minutes BETWEEN 1 AND 240)
 );
 
 

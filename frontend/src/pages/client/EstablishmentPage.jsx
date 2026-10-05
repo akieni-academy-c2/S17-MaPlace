@@ -97,7 +97,7 @@ export default function EstablishmentPage() {
               <InfoNote tone={note.tone} icon={note.icon} title={note.title}>
                 {isOpen
                   ? waiting > 0
-                    ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes)}.`
+                    ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes, info.serviceMinutes)}.`
                     : 'Personne n’attend : vous serez le prochain à être servi.'
                   : getQueueStatusMeta(status, pauseReason).description}
               </InfoNote>
@@ -123,7 +123,7 @@ export default function EstablishmentPage() {
             <div className={styles.stats}>
               <StatCard tone="primary" label="Numéro appelé" value={isActive ? formatTicketNumber(establishment.current_number) : '—'} caption="au guichet" icon={ICONS.campaign} />
               <StatCard label="En attente" value={isActive ? waiting : '—'} caption={waiting > 1 ? 'personnes' : 'personne'} icon={ICONS.groups} />
-              <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
+              <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes, info.serviceMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
             </div>
           </section>
 
