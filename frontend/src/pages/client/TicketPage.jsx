@@ -120,7 +120,7 @@ export default function TicketPage() {
           <header className={styles.intro}>
             <div>
               <span className="text-eyebrow">Mon ticket</span>
-              <h1 className={`text-h1 ${styles[`title-${alert.key}`] ?? ''}`}>{alert.title}</h1>
+              <h1 className={`text-h1 ${styles[`title-${alert.tone}`] ?? ''}`}>{alert.title}</h1>
               <p className="text-muted">{alert.text}</p>
             </div>
             <span className={styles.live}>
@@ -145,14 +145,14 @@ export default function TicketPage() {
           <div className={styles.layout}>
             <div className={styles.ticketCol}>
               <TicketCard
-                tone={alert.key}
+                tone={alert.tone}
                 header={
                   <>
                     <span className={styles.place}>
                       <Icon name={ICONS.store} size={16} /> {ticket.establishment?.name}
                     </span>
                     <StatusBadge
-                      tone={alert.key === 'near' ? 'onLight' : 'onDark'}
+                      tone={alert.tone === 'near' ? 'onLight' : 'onDark'}
                       dot
                       pulse={alert.key !== 'waiting'}
                       size="sm"
@@ -165,7 +165,7 @@ export default function TicketPage() {
                 footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} serviceMinutes={serviceMinutes} />}
               >
                 <span className="text-eyebrow">Votre numéro</span>
-                <TicketNumber number={ticket.number} size="xl" tone={alert.key} />
+                <TicketNumber number={ticket.number} size="xl" tone={alert.tone} />
                 {ticket.name && <p className={styles.holder}>{ticket.name}</p>}
                 <p className={styles.service}>
                   <Icon name={ICONS.queue} size={14} /> File d’attente principale · pris à {formatTime(ticket.createdAt)}
