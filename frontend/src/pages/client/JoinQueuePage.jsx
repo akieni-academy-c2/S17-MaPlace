@@ -10,7 +10,7 @@ import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { useTransitionScreen } from '@/hooks/useTransitionScreen'
 import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { QUEUE_STATUS, QUEUE_STATUS_META } from '@/constants/status'
+import { getQueueStatusMeta, QUEUE_STATUS } from '@/constants/status'
 import { to } from '@/constants/routes'
 import { formatPhone, formatTicketNumber, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
@@ -106,7 +106,7 @@ export default function JoinQueuePage() {
               </div>
               <div>
                 <dt>État</dt>
-                <dd>{status ? <QueueStatusBadge status={status} short size="sm" /> : '—'}</dd>
+                <dd>{status ? <QueueStatusBadge status={status} pauseReason={establishment?.pause_reason} short size="sm" /> : '—'}</dd>
               </div>
               <div>
                 <dt>En attente</dt>
@@ -137,8 +137,8 @@ export default function JoinQueuePage() {
             </div>
 
             {notOpen && (
-              <InfoNote tone="warning" icon={ICONS.pause} title={QUEUE_STATUS_META[status].label}>
-                {QUEUE_STATUS_META[status].description}
+              <InfoNote tone="warning" icon={ICONS.pause} title={getQueueStatusMeta(status, establishment.pause_reason).label}>
+                {getQueueStatusMeta(status, establishment.pause_reason).description}
               </InfoNote>
             )}
 

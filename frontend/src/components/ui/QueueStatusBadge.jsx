@@ -1,9 +1,12 @@
-import { QUEUE_STATUS_META, TICKET_STATUS_META } from '@/constants/status'
+import { getQueueStatusMeta, TICKET_STATUS_META } from '@/constants/status'
 import { StatusBadge } from './StatusBadge'
 
-/** Badge d'état d'une file (OPEN / PAUSED / CLOSED). `short` : « Ouverte » au lieu de « File ouverte ». */
-export function QueueStatusBadge({ status, short = false, ...rest }) {
-  const meta = QUEUE_STATUS_META[status] ?? QUEUE_STATUS_META.CLOSED
+/**
+ * Badge d'état d'une file (OPEN / PAUSED / CLOSED). `short` : « Ouverte » au lieu de « File ouverte ».
+ * `pauseReason` : « Reprise demain » pour une file reportée au lendemain.
+ */
+export function QueueStatusBadge({ status, pauseReason, short = false, ...rest }) {
+  const meta = getQueueStatusMeta(status, pauseReason)
   return (
     <StatusBadge tone={meta.tone} dot pulse={status === 'OPEN'} {...rest}>
       {short ? meta.short : meta.label}

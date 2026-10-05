@@ -9,6 +9,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
         q.id AS queue_id,
         q.status AS queue_status,
         q.last_number,
+        q.pause_reason,
         q.opened_at,
         q.closed_at,
         q.created_at,
@@ -19,6 +20,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
           id,
           status,
           last_number,
+          pause_reason,
           opened_at,
           closed_at,
           created_at,
@@ -52,6 +54,7 @@ const findCurrentByEstablishmentId = async (establishmentId) => {
       id: row.queue_id,
       status: row.queue_status,
       last_number: row.last_number,
+      pause_reason: row.pause_reason,
       opened_at: row.opened_at,
       closed_at: row.closed_at,
       created_at: row.created_at,
@@ -126,10 +129,13 @@ const openForEstablishment = async (establishmentId) => {
   }
 };
 
+// `pauseReason` : motif enregistré avec une pause ('NEXT_DAY'), effacé par
+// toute autre transition.
 const transitionCurrentStatus = async (
   establishmentId,
   allowedStatuses,
-  targetStatus
+  targetStatus,
+  { pauseReason = null } = {}
 ) => {
   const client = await pool.connect();
 
@@ -179,6 +185,7 @@ const transitionCurrentStatus = async (
         UPDATE queues
         SET
           status = $2::queue_status,
+          pause_reason = $3,
           closed_at = CASE
             WHEN $2::queue_status = 'CLOSED'::queue_status THEN NOW()
             ELSE NULL
@@ -186,8 +193,39 @@ const transitionCurrentStatus = async (
         WHERE id = $1
         RETURNING *
       `,
-      [queue.id, targetStatus]
+      [queue.id, targetStatus, pauseReason]
     );
+
+    // Report au lendemain : le client au guichet est servi, les tickets en
+    // attente sont conservés avec leur numéro jusqu'à la reprise.
+    if (pauseReason === 'NEXT_DAY') {
+      await client.query(
+        `
+          UPDATE tickets
+          SET status = 'COMPLETED'
+          WHERE queue_id = $1 AND status = 'SERVING'
+        `,
+        [queue.id]
+      );
+    }
+
+    // Fermeture : les tickets non traités sont réinitialisés. Le client au
+    // guichet est considéré comme servi, les tickets en attente sont annulés
+    // (la numérotation repart de #1 à la prochaine ouverture).
+    if (targetStatus === 'CLOSED') {
+      await client.query(
+        `
+          UPDATE tickets
+          SET status = CASE
+            WHEN status = 'SERVING' THEN 'COMPLETED'::ticket_status
+            ELSE 'CANCELLED'::ticket_status
+          END
+          WHERE queue_id = $1
+            AND status IN ('WAITING', 'SERVING')
+        `,
+        [queue.id]
+      );
+    }
 
     await client.query(
       'UPDATE establishments SET queue_status = $1 WHERE id = $2',

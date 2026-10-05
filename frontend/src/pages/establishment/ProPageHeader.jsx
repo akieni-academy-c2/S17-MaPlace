@@ -5,7 +5,7 @@ export function ProPageHeader({ breadcrumb, title, subtitle, actions }) {
   return (
     <header className={styles.header}>
       <div className={styles.text}>
-        <span className={styles.breadcrumb}>{breadcrumb}</span>
+        {breadcrumb && <span className={styles.breadcrumb}>{breadcrumb}</span>}
         <h1 className="text-h1">{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       </div>

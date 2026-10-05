@@ -45,19 +45,21 @@
   color: var(--primary);
   box-shadow: 0 0 0 5px var(--primary-light);
 }
-.approaching .marker {
-  border-color: var(--orange);
-  background: #fff3e4;
-  color: var(--orange-dark);
-  box-shadow: 0 0 0 5px #fff6e8;
-}
+.near .marker,
+.approaching .marker,
 .soon .marker,
+.next .marker,
 .called .marker {
-  border-color: var(--orange);
-  background: var(--orange);
-  color: var(--white);
-  box-shadow: 0 0 0 5px var(--orange-light);
+  border-color: var(--alert);
+  background: var(--alert);
+  color: var(--alert-ink, var(--white));
+  box-shadow: 0 0 0 5px var(--alert-soft);
 }
+.near { --alert: var(--yellow); --alert-soft: var(--yellow-light); --alert-ink: #3d2e00; }
+.approaching { --alert: var(--orange); --alert-soft: var(--orange-light); }
+.soon { --alert: var(--red); --alert-soft: var(--red-light); }
+.next,
+.called { --alert: var(--success); --alert-soft: var(--success-light); }
 
 .text {
   display: flex;

@@ -15,6 +15,14 @@
 .ink { color: var(--text-primary); }
 .inverse { color: var(--white); }
 
+/* Niveaux d'alerte : jaune (15–11 devant), orange (10–6), rouge (5–1), vert (0) */
+.waiting { color: var(--primary); }
+.near { color: var(--yellow-dark); --number-bg: var(--yellow-light); }
+.approaching { color: var(--orange-dark); --number-bg: var(--orange-light); }
+.soon { color: var(--red-dark); --number-bg: var(--red-light); }
+.next,
+.called { color: var(--success); --number-bg: var(--success-light); }
+
 .boxed {
   display: inline-grid;
   place-items: center;
@@ -22,5 +30,5 @@
   min-height: 48px;
   padding: 0 var(--space-2);
   border-radius: var(--radius-sm);
-  background: var(--primary-light);
+  background: var(--number-bg, var(--primary-light));
 }

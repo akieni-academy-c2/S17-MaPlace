@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthProvider'
 import { Loader } from '@/components/ui'
-import { TransitionProvider } from '@/components/feedback'
+import { SplashScreen, TransitionProvider } from '@/components/feedback'
 import { router } from './routes'
 
 export default function App() {
@@ -12,6 +12,7 @@ export default function App() {
         <Suspense fallback={<Loader />}>
           <RouterProvider router={router} />
         </Suspense>
+        <SplashScreen />
       </TransitionProvider>
     </AuthProvider>
   )

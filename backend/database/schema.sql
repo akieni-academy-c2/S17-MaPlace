@@ -44,6 +44,10 @@ CREATE TABLE queues (
     -- Dernier numéro attribué sur cette file.
     last_number INTEGER NOT NULL DEFAULT 0,
 
+    -- Motif d'une pause : NULL (pause ponctuelle) ou 'NEXT_DAY' (file reportée
+    -- au lendemain, les tickets en attente conservent leur numéro).
+    pause_reason VARCHAR(20),
+
     opened_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     closed_at TIMESTAMPTZ,
@@ -59,6 +63,12 @@ CREATE TABLE queues (
 
     CONSTRAINT queues_last_number_positive
         CHECK (last_number >= 0),
+
+    CONSTRAINT queues_pause_reason_valid
+        CHECK (
+            pause_reason IS NULL
+            OR (status = 'PAUSED' AND pause_reason = 'NEXT_DAY')
+        ),
 
     -- La date de fermeture doit correspondre au statut CLOSED.
     CONSTRAINT queues_closed_at_consistent
