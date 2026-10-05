@@ -6,11 +6,12 @@ import { useFavorites } from '@/hooks/useFavorites'
 import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
 import { plural } from '@/utils/format'
-// 🚧 FT-4 — Tâche 4.2 : importer les styles de la page (FavoritesPage.module.css)
+import { EstablishmentCard } from '@/components/establishment'
+import styles from './FavoritesPage.module.css'
 
 /** Établissements mis en favoris sur cet appareil. */
 export default function FavoritesPage() {
-  const { isFavorite, favorites } = useFavorites() // 🚧 FT-4 — Tâche 4.2 : récupérer aussi toggle
+  const { isFavorite, toggle, favorites } = useFavorites()
   const { data, error, loading } = usePolling((signal) => establishmentApi.list({ signal }), { interval: 15000 })
   const items = (data?.establishments ?? []).filter((e) => isFavorite(e.id))
 
@@ -47,7 +48,13 @@ export default function FavoritesPage() {
         </EmptyState>
       )}
 
-      {/* 🚧 FT-4 — Tâche 4.2 : afficher la grille des établissements favoris (voir docs/TACHES_FRONTEND.md) */}
+      {items.length > 0 && (
+<div className={styles.grid}>
+{items.map((e) => (
+<EstablishmentCard key={e.id} establishment={e} isFavorite onToggleFavorite={toggle} />
+))}
+</div>
+)}
 
       <InfoNote icon={ICONS.shield}>Vos favoris sont enregistrés uniquement dans ce navigateur : aucun compte n’est nécessaire.</InfoNote>
     </PageContent>
