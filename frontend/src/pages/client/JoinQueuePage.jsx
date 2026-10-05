@@ -11,23 +11,21 @@ import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getQueueStatusMeta, QUEUE_STATUS } from '@/constants/status'
 import { to } from '@/constants/routes'
-import { formatPhone, formatTicketNumber, normalizePhone } from '@/utils/format'
+import { formatTicketNumber, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
 
-/** 9 chiffres commençant par 0, ex. 06 123 23 23 */
-const PHONE_RE = /^0\d{8}$/
+// 🚧 FT-1 — Tâche 1.2 : remettre la constante PHONE_RE ici
 
 /**
  * Vérifie le formulaire avant l'envoi.
  *
  * @returns {object} Un message par champ invalide, ex. { phone: 'Numéro invalide…' } ; vide si tout est bon.
  */
-const validate = ({ name, phone }) => {
-  const errors = {}
-  if (name.trim().length < 2) errors.name = 'Indiquez votre nom (2 caractères minimum).'
-  if (!PHONE_RE.test(normalizePhone(phone))) errors.phone = 'Numéro invalide. Format attendu : 06 123 23 23.'
-  return errors
-}
+// ============================================================================
+// 🚧 FT-1 — Tâche 1.2 : remettre le corps de la fonction validate
+//    Code à remettre : docs/TACHES_FRONTEND.md
+// ============================================================================
+const validate = () => ({}) // ⚠️ version provisoire : le formulaire n'est pas vérifié
 
 /**
  * Formulaire « Prendre un ticket ».
@@ -55,7 +53,7 @@ export default function JoinQueuePage() {
   const { show } = useTransitionScreen()
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
-  const updatePhone = (e) => setForm((f) => ({ ...f, phone: formatPhone(normalizePhone(e.target.value)) }))
+  // 🚧 FT-1 — Tâche 1.3 : remettre la fonction updatePhone ici
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -163,19 +161,7 @@ export default function JoinQueuePage() {
               error={errors.name}
               hint="Il sera utilisé par l’établissement pour vous appeler."
             />
-            <TextField
-              label="Votre numéro de téléphone"
-              required
-              icon={ICONS.phone}
-              type="tel"
-              inputMode="tel"
-              placeholder="06 123 23 23"
-              maxLength={12}
-              autoComplete="tel"
-              value={form.phone}
-              onChange={updatePhone}
-              error={errors.phone}
-            />
+            {/* 🚧 FT-1 — Tâche 1.3 : remettre le champ « Votre numéro de téléphone » (voir docs/TACHES_FRONTEND.md) */}
 
             <InfoNote icon={ICONS.shield}>Aucun compte requis. Vos informations servent uniquement au suivi de votre passage.</InfoNote>
 

@@ -126,13 +126,12 @@ export const TICKET_ALERTS = {
 }
 
 /** Alerte d'un ticket en attente selon sa position dans la file (1 = prochain). */
-export function getPositionAlert(position) {
-  const rank = position ?? Infinity
-  if (rank <= 1) return TICKET_ALERTS.next
-  if (rank <= SOON_THRESHOLD) return TICKET_ALERTS.soon
-  if (rank <= APPROACHING_THRESHOLD) return TICKET_ALERTS.approaching
-  if (rank <= NEAR_THRESHOLD) return TICKET_ALERTS.near
-  return TICKET_ALERTS.waiting
+// ============================================================================
+// 🚧 FT-2 — Tâche 2.2 : remettre le corps de getPositionAlert (couleurs du ticket)
+//    Code à remettre : docs/TACHES_FRONTEND.md
+// ============================================================================
+export function getPositionAlert() {
+  return TICKET_ALERTS.waiting // ⚠️ version provisoire : le ticket ne change jamais de couleur
 }
 
 /** Alerte correspondant à un ticket (WAITING ou SERVING). Position = personnes devant + 1. */
