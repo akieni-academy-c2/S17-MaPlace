@@ -50,6 +50,7 @@ const login = async (email, password) => {
       name: establishment.name,
       email: establishment.email,
       phone: establishment.phone,
+      category: establishment.category,
       queueStatus: establishment.queue_status,
       averageServiceMinutes: establishment.average_service_minutes,
     },

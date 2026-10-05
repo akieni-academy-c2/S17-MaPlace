@@ -1,45 +1,20 @@
 import { ICONS } from './icons'
 
 /**
- * Catégories d'établissements.
- * L'API n'expose pas (encore) de catégorie : elle est déduite du nom via `keywords`.
- * Pour ajouter une catégorie, il suffit d'ajouter une entrée ici.
+ * Catégories d'établissements : identifiants de l'enum `establishment_category` renvoyés par l'API.
+ * Le frontend ne fait qu'y associer un libellé, une icône et une couleur.
  * `accent` : 'green' | 'orange' — couleur du visuel des cartes (pas d'image requise).
  */
 export const CATEGORIES = [
-  { id: 'pharmacie', label: 'Pharmacie', icon: ICONS.pharmacy, accent: 'green', keywords: ['pharmacie', 'pharma', 'parapharmacie'] },
-  {
-    id: 'sante',
-    label: 'Santé & Bien-être',
-    icon: ICONS.health,
-    accent: 'green',
-    keywords: ['clinique', 'hopital', 'hôpital', 'cabinet', 'medical', 'médical', 'sante', 'santé', 'laboratoire', 'dentiste', 'chu'],
-  },
-  {
-    id: 'administration',
-    label: 'Administration',
-    icon: ICONS.administration,
-    accent: 'green',
-    keywords: ['administratif', 'administration', 'mairie', 'prefecture', 'préfecture', 'ministere', 'ministère', 'impots', 'impôts', 'etat civil', 'état civil', 'cnss'],
-  },
-  {
-    id: 'banque',
-    label: 'Banque',
-    icon: ICONS.bank,
-    accent: 'orange',
-    keywords: ['banque', 'bank', 'credit', 'crédit', 'microfinance', 'mutuelle', 'transfert', 'mobile money'],
-  },
-  {
-    id: 'beaute',
-    label: 'Beauté',
-    icon: ICONS.beauty,
-    accent: 'orange',
-    keywords: ['salon', 'coiffure', 'coiffeur', 'beaute', 'beauté', 'barber', 'esthetique', 'esthétique', 'spa', 'onglerie'],
-  },
-  { id: 'services', label: 'Services', icon: ICONS.services, accent: 'green', keywords: [] },
+  { id: 'ADMINISTRATION', label: 'Administration', icon: ICONS.administration, accent: 'green' },
+  { id: 'SANTE', label: 'Santé', icon: ICONS.health, accent: 'green' },
+  { id: 'BANQUE', label: 'Banque', icon: ICONS.bank, accent: 'orange' },
+  { id: 'TELECOM', label: 'Télécom', icon: ICONS.telecom, accent: 'green' },
+  { id: 'BEAUTE', label: 'Esthétique & Beauté', icon: ICONS.beauty, accent: 'orange' },
 ]
 
-const DEFAULT_CATEGORY = CATEGORIES[CATEGORIES.length - 1]
+/** Affichage de repli si l'API renvoie une catégorie inconnue du frontend. */
+const UNKNOWN_CATEGORY = { id: null, label: 'Établissement', icon: ICONS.services, accent: 'green' }
 
 /**
  * Durée moyenne d'un passage (en minutes) utilisée par défaut pour l'estimation d'attente.
@@ -49,35 +24,6 @@ export const AVERAGE_SERVICE_MINUTES = 5
 export const MIN_SERVICE_MINUTES = 1
 export const MAX_SERVICE_MINUTES = 240
 
-export const DEFAULT_CITY = 'Brazzaville'
-
-/**
- * Contenu de présentation des établissements de démonstration (seed).
- * L'API ne fournit pas encore ces champs : dès qu'elle les expose
- * (category, district, city, address, description, opening_hours), ils sont prioritaires.
- * Clé : nom de l'établissement normalisé (minuscules, sans accents).
- */
-const PROFILES = {
-  'pharmacie centrale': {
-    district: 'Centre-ville',
-    address: 'Avenue Amilcar Cabral',
-    description:
-      "Officine du centre-ville : délivrance d'ordonnances, conseils pharmaceutiques et produits de parapharmacie. Prenez votre ticket avant de vous déplacer.",
-    hours: 'Lun – Sam · 8h00 – 20h00',
-  },
-  'salon elegance': {
-    district: 'Plateau des 15 ans',
-    description: 'Salon de coiffure et de beauté. Coupes, tresses, soins et mise en beauté, sans rendez-vous grâce à la file en ligne.',
-    hours: 'Mar – Sam · 9h00 – 19h00',
-  },
-  'centre administratif': {
-    district: 'Centre-ville',
-    description:
-      'Accueil administratif : retrait et dépôt de dossiers, légalisations et renseignements. Pensez à préparer vos pièces justificatives.',
-    hours: 'Lun – Ven · 8h00 – 15h30',
-  },
-}
-
 export const normalizeText = (s = '') =>
   s
     .normalize('NFD')
@@ -85,16 +31,8 @@ export const normalizeText = (s = '') =>
     .toLowerCase()
     .trim()
 
-export const getCategory = (idOrLabel) =>
-  CATEGORIES.find((c) => c.id === idOrLabel || normalizeText(c.label) === normalizeText(idOrLabel ?? '')) ?? null
-
-/** Catégorie d'un établissement : champ API si présent, sinon déduction depuis le nom. */
-export function inferCategory(establishment) {
-  const fromApi = establishment?.category && getCategory(establishment.category)
-  if (fromApi) return fromApi
-  const name = normalizeText(establishment?.name)
-  return CATEGORIES.find((c) => c.keywords.some((k) => name.includes(normalizeText(k)))) ?? DEFAULT_CATEGORY
-}
+/** Catégorie d'un établissement (champ `category` de l'API). */
+export const getCategory = (establishment) => CATEGORIES.find((c) => c.id === establishment?.category) ?? UNKNOWN_CATEGORY
 
 /** Durée moyenne de passage d'un établissement (API), ou la valeur par défaut. */
 export const serviceMinutesOf = (establishment) =>
@@ -114,7 +52,7 @@ export const formatWait = (minutes, serviceMinutes = AVERAGE_SERVICE_MINUTES) =>
   return `≈ ${h} h${m ? ` ${String(m).padStart(2, '0')}` : ''}`
 }
 
-/** Initiales pour l'avatar (« Pharmacie Centrale » → « PC »). */
+/** Initiales pour l'avatar (« Mairie de Bacongo » → « MB »). */
 export const initials = (name = '') =>
   name
     .split(/\s+/)
@@ -124,27 +62,22 @@ export const initials = (name = '') =>
     .join('') || name.slice(0, 2).toUpperCase()
 
 /**
- * Vue « présentation » d'un établissement : données API + catégorie, localisation,
- * horaires et estimation. Tous les champs optionnels peuvent être null.
+ * Vue « présentation » d'un établissement, construite uniquement à partir des données de l'API :
+ * catégorie, localisation, horaires et estimation. `description` et `hours` peuvent être null.
  */
 export function describeEstablishment(establishment) {
   if (!establishment) return null
-  const profile = PROFILES[normalizeText(establishment.name)] ?? {}
-  const category = inferCategory(establishment)
-  const district = establishment.district ?? profile.district ?? null
-  const city = establishment.city ?? profile.city ?? DEFAULT_CITY
-  const waiting = establishment.waiting_count ?? null
   const serviceMinutes = serviceMinutesOf(establishment)
 
   return {
-    category,
-    district,
-    city,
-    address: establishment.address ?? profile.address ?? null,
-    location: [district, city].filter(Boolean).join(', '),
-    description: establishment.description ?? profile.description ?? null,
-    hours: establishment.opening_hours ?? profile.hours ?? null,
+    category: getCategory(establishment),
+    district: establishment.district ?? null,
+    city: establishment.city ?? null,
+    address: establishment.address ?? null,
+    location: [establishment.district, establishment.city].filter(Boolean).join(', '),
+    description: establishment.description ?? null,
+    hours: establishment.opening_hours ?? null,
     serviceMinutes,
-    waitMinutes: estimateWaitMinutes(waiting, serviceMinutes),
+    waitMinutes: estimateWaitMinutes(establishment.waiting_count ?? null, serviceMinutes),
   }
 }

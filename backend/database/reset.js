@@ -6,7 +6,7 @@ import pool from '../src/config/database.js';
 // Toutes les données sont perdues : à lancer avant `npm run seed`.
 const DROP_OBJECTS = `
   DROP TABLE IF EXISTS tickets, queues, establishments CASCADE;
-  DROP TYPE IF EXISTS ticket_status, queue_status CASCADE;
+  DROP TYPE IF EXISTS ticket_status, queue_status, establishment_category CASCADE;
   DROP FUNCTION IF EXISTS update_updated_at() CASCADE;
 `;
 

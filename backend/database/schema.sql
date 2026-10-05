@@ -6,6 +6,15 @@ CREATE TYPE queue_status AS ENUM (
     'CLOSED'
 );
 
+-- Secteurs d'activité proposés aux clients (filtres, visuels des fiches).
+CREATE TYPE establishment_category AS ENUM (
+    'ADMINISTRATION',
+    'SANTE',
+    'BANQUE',
+    'TELECOM',
+    'BEAUTE'
+);
+
 CREATE TYPE ticket_status AS ENUM (
     'WAITING',
     'SERVING',
@@ -24,6 +33,20 @@ CREATE TABLE establishments (
     password_hash VARCHAR(255) NOT NULL,
 
     phone VARCHAR(30),
+
+    category establishment_category NOT NULL,
+
+    description TEXT,
+
+    -- Localisation : adresse (rue, repère), quartier ou arrondissement, ville.
+    address VARCHAR(255) NOT NULL,
+
+    district VARCHAR(100) NOT NULL,
+
+    city VARCHAR(100) NOT NULL DEFAULT 'Brazzaville',
+
+    -- Horaires affichés tels quels (ex. « Lun – Ven · 7h30 – 15h30 »).
+    opening_hours VARCHAR(150),
 
     -- Miroir du statut de la file, synchronisé lors des transitions.
     queue_status queue_status NOT NULL DEFAULT 'CLOSED',
@@ -110,6 +133,9 @@ CREATE TABLE tickets (
         UNIQUE (queue_id, number)
 );
 
+
+CREATE INDEX idx_establishments_category
+    ON establishments(category);
 
 CREATE INDEX idx_queues_establishment_id
     ON queues(establishment_id);

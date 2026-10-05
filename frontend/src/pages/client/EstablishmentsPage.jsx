@@ -23,7 +23,7 @@ export default function EstablishmentsPage() {
       <PageTitle
         eyebrow="Annuaire"
         title="Établissements"
-        text="Pharmacies, administrations, banques, salons… Consultez l’affluence en direct et prenez votre ticket à distance."
+        text="Administrations, santé, banques, télécoms, beauté… Consultez l’affluence en direct et prenez votre ticket à distance."
       />
       <EstablishmentBrowser
         key={params.get('q') ?? ''}
