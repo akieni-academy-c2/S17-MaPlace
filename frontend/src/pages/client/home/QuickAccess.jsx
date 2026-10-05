@@ -57,7 +57,7 @@ export function QuickAccess() {
             value={query}
             onChange={setQuery}
             onSubmit={(q) => navigate(to.establishments(q.trim()))}
-            placeholder="Pharmacie, banque, mairie…"
+            placeholder="Mairie, hôpital, banque, MTN…"
             label="Rechercher un établissement ou un service"
           />
         </div>

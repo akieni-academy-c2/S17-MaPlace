@@ -92,7 +92,7 @@ export default function LoginPage() {
               icon={ICONS.mail}
               type="email"
               autoComplete="email"
-              placeholder="contact@pharmacie-centrale.cg"
+              placeholder="contact@etablissement.cg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

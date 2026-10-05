@@ -50,10 +50,10 @@ function HeroVisual() {
           </div>
           <div className={styles.screenPlace}>
             <span className={styles.screenAvatar}>
-              <Icon name={ICONS.pharmacy} size={14} />
+              <Icon name={ICONS.telecom} size={14} />
             </span>
             <span>
-              <strong>Pharmacie Centrale</strong>
+              <strong>MTN Congo — Agence centrale</strong>
               <small>Centre-ville, Brazzaville</small>
             </span>
           </div>
@@ -150,7 +150,7 @@ export function HeroSection() {
           </h1>
           <p className={styles.lead}>
             Avec Ma Place, prenez votre ticket en ligne, suivez votre tour en temps réel et ne vous présentez qu’au bon moment.
-            Pharmacies, administrations, banques ou salons : fini les longues heures debout.
+            Administrations, hôpitaux, banques, agences télécoms ou salons : fini les longues heures debout.
           </p>
           <div className={styles.actions}>
             <Button size="lg" icon={ICONS.search} iconRight={ICONS.forward} to={`${PATHS.establishments}#recherche`}>

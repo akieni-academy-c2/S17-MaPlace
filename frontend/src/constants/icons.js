@@ -49,7 +49,7 @@ import {
   Menu,
   Navigation,
   Phone,
-  Pill,
+  RadioTower,
   Play,
   Printer,
   Power,
@@ -168,11 +168,11 @@ export const ICONS = Object.freeze({
   locate: LocateFixed,
 
   // Catégories d'établissements
-  pharmacy: Pill,
   medical: Stethoscope,
   health: HeartPulse,
   administration: Landmark,
   bank: Briefcase,
+  telecom: RadioTower,
   beauty: Scissors,
   services: Wrench,
 })
