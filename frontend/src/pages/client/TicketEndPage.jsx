@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
+import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
@@ -45,9 +47,12 @@ const formatDuration = (from, until) => {
 export default function TicketEndPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId, { poll: false })
-  // 🚧 FT-1 — Tâche 1.6 : récupérer le ticket suivi avec useCurrentTicket()
+  const { ticketId: currentId, clear } = useCurrentTicket()
 
-  // 🚧 FT-1 — Tâche 1.6 : remettre l'effet qui libère « Mon ticket » à la fin du parcours
+  // Le parcours est fini : on libère le « Mon ticket » de la navigation
+  useEffect(() => {
+    if (ticket && currentId === ticketId) clear()
+  }, [ticket, currentId, ticketId, clear]) 
 
   const status = ticket?.status === TICKET_STATUS.CANCELLED ? TICKET_STATUS.CANCELLED : TICKET_STATUS.COMPLETED
   const cancelled = status === TICKET_STATUS.CANCELLED
