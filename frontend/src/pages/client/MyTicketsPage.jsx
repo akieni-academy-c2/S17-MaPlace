@@ -5,7 +5,7 @@ import { ticketApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { ICONS } from '@/constants/icons'
-import { TICKET_STATUS } from '@/constants/status'
+import { TICKET_STATUS, PAUSE_REASON, getTicketAlert } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './MyTicketsPage.module.css'
@@ -18,7 +18,22 @@ import styles from './MyTicketsPage.module.css'
 // 🚧 FT-3 — Tâche 3.2 : remettre le corps de la fonction clientStatus
 //    Code à remettre : docs/TACHES_FRONTEND.md
 // ============================================================================
-const clientStatus = () => ({ tone: 'waiting', label: 'En cours', link: to.ticket }) // ⚠️ version provisoire
+const clientStatus = (ticket) => {
+  if (ticket.status === TICKET_STATUS.COMPLETED)
+    return { tone: 'completed', label: 'Terminé', link: to.ticketEnd }
+  if (ticket.status === TICKET_STATUS.CANCELLED)
+    return { tone: 'cancelled', label: 'Annulé', link: to.ticketEnd }
+
+  const alert = getTicketAlert(ticket)
+  const label =
+    ticket.pauseReason === PAUSE_REASON.NEXT_DAY ? 'Reprise demain' : alert.label
+
+  return {
+    tone: alert.tone,
+    label,
+    link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket,
+  }
+}
 
 /** Ticket suivi depuis cet appareil, rechargé en continu. Les clients n'ont pas de compte. */
 export default function MyTicketsPage() {
