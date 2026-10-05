@@ -6,7 +6,9 @@ import { PATHS } from '@/constants/routes'
 const HomePage = lazy(() => import('@/pages/client/HomePage'))
 // 🚧 FT-4 — Tâche 4.1 : importer FavoritesPage et NotFoundPage
 const EstablishmentsPage = lazy(() => import('@/pages/client/EstablishmentsPage'))
-// 🚧 FT-3 — Tâche 3.1 : importer MyTicketsPage
+
+const MyTicketsPage = lazy(() => import('@/pages/client/MyTicketsPage'))
+
 const InfoPage = lazy(() => import('@/pages/client/InfoPage'))
 // 🚧 FT-1 — Tâche 1.1 : importer JoinQueuePage et TicketEndPage
 const EstablishmentPage = lazy(() => import('@/pages/client/EstablishmentPage'))
@@ -24,7 +26,7 @@ export const router = createBrowserRouter([
       { path: PATHS.home, element: <HomePage /> },
       // 🚧 FT-4 — Tâche 4.1 : déclarer la route des favoris
       { path: PATHS.establishments, element: <EstablishmentsPage /> },
-      // 🚧 FT-3 — Tâche 3.1 : déclarer la route « Mes tickets »
+      { path: PATHS.myTickets, element: <MyTicketsPage /> },
       { path: PATHS.info, element: <InfoPage /> },
       // 🚧 FT-1 — Tâche 1.1 : déclarer les routes « Prendre un ticket » et « Ticket terminé »
       { path: PATHS.establishment, element: <EstablishmentPage /> },
