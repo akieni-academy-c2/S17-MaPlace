@@ -14,18 +14,20 @@ import { to } from '@/constants/routes'
 import { formatTicketNumber, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
 
-// 🚧 FT-1 — Tâche 1.2 : remettre la constante PHONE_RE ici
+/** 9 chiffres commençant par 0, ex. 06 123 23 23 */
+const PHONE_RE = /^0\d{8}$/
 
 /**
  * Vérifie le formulaire avant l'envoi.
  *
  * @returns {object} Un message par champ invalide, ex. { phone: 'Numéro invalide…' } ; vide si tout est bon.
  */
-// ============================================================================
-// 🚧 FT-1 — Tâche 1.2 : remettre le corps de la fonction validate
-//    Code à remettre : docs/TACHES_FRONTEND.md
-// ============================================================================
-const validate = () => ({}) // ⚠️ version provisoire : le formulaire n'est pas vérifié
+const validate = ({ name, phone }) => {
+  const errors = {}
+  if (name.trim().length < 2) errors.name = 'Indiquez votre nom (2 caractères minimum).'
+  if (!PHONE_RE.test(normalizePhone(phone))) errors.phone = 'Numéro invalide. Format attendu : 06 123 23 23.'
+  return errors
+}
 
 /**
  * Formulaire « Prendre un ticket ».
