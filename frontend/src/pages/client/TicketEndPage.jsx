@@ -34,11 +34,12 @@ const CLOSED_CONTENT = {
 }
 
 /** Durée entre deux dates : « 12 min », « 1 h 05 ». */
-// ============================================================================
-// 🚧 FT-1 — Tâche 1.4 : remettre le corps de la fonction formatDuration
-//    Code à remettre : docs/TACHES_FRONTEND.md
-// ============================================================================
-const formatDuration = () => '—' // ⚠️ version provisoire
+const formatDuration = (from, until) => {
+  if (!from || !until) return '—'
+  const minutes = Math.max(0, Math.round((new Date(until) - new Date(from)) / 60000))
+  if (minutes < 60) return `${minutes} min`
+  return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`
+}
 
 /** Récapitulatif d'un ticket terminé ou annulé ; le ticket n'est plus suivi sur l'appareil. */
 export default function TicketEndPage() {
