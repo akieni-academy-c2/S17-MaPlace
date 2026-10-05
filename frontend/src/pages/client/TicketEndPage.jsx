@@ -1,12 +1,10 @@
-import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
-import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
-import { PATHS, to } from '@/constants/routes'
+import { PATHS } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './TicketEndPage.module.css'
 
@@ -36,23 +34,19 @@ const CLOSED_CONTENT = {
 }
 
 /** Durée entre deux dates : « 12 min », « 1 h 05 ». */
-const formatDuration = (from, until) => {
-  if (!from || !until) return '—'
-  const minutes = Math.max(0, Math.round((new Date(until) - new Date(from)) / 60000))
-  if (minutes < 60) return `${minutes} min`
-  return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`
-}
+// ============================================================================
+// 🚧 FT-1 — Tâche 1.4 : remettre le corps de la fonction formatDuration
+//    Code à remettre : docs/TACHES_FRONTEND.md
+// ============================================================================
+const formatDuration = () => '—' // ⚠️ version provisoire
 
 /** Récapitulatif d'un ticket terminé ou annulé ; le ticket n'est plus suivi sur l'appareil. */
 export default function TicketEndPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId, { poll: false })
-  const { ticketId: currentId, clear } = useCurrentTicket()
+  // 🚧 FT-1 — Tâche 1.6 : récupérer le ticket suivi avec useCurrentTicket()
 
-  // Le parcours est fini : on libère le « Mon ticket » de la navigation
-  useEffect(() => {
-    if (ticket && currentId === ticketId) clear()
-  }, [ticket, currentId, ticketId, clear])
+  // 🚧 FT-1 — Tâche 1.6 : remettre l'effet qui libère « Mon ticket » à la fin du parcours
 
   const status = ticket?.status === TICKET_STATUS.CANCELLED ? TICKET_STATUS.CANCELLED : TICKET_STATUS.COMPLETED
   const cancelled = status === TICKET_STATUS.CANCELLED
@@ -124,11 +118,7 @@ export default function TicketEndPage() {
             <Button variant="outline" size="lg" fullWidth icon={ICONS.search} to={PATHS.establishments}>
               Trouver un autre établissement
             </Button>
-            {cancelled && ticket.establishment?.id && (
-              <Button variant="secondary" size="lg" fullWidth icon={ICONS.ticket} to={to.establishment(ticket.establishment.id)}>
-                Reprendre un ticket ici
-              </Button>
-            )}
+            {/* 🚧 FT-1 — Tâche 1.5 : remettre le bouton « Reprendre un ticket ici » (voir docs/TACHES_FRONTEND.md) */}
           </div>
 
           <InfoNote icon={ICONS.shield}>Ce ticket n’est plus suivi sur cet appareil. Merci de votre confiance !</InfoNote>

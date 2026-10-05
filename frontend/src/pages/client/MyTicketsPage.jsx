@@ -4,9 +4,8 @@ import { Button, EmptyState, Icon, InfoNote, Loader, StatusBadge, TicketNumber }
 import { ticketApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
-import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
-import { getTicketAlert, PAUSE_REASON, TICKET_STATUS } from '@/constants/status'
+import { TICKET_STATUS } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './MyTicketsPage.module.css'
@@ -15,13 +14,11 @@ import styles from './MyTicketsPage.module.css'
  * Libellé, couleur et lien de la carte selon l'état du ticket :
  * terminé, annulé, ou niveau d'alerte s'il est encore en cours.
  */
-const clientStatus = (ticket) => {
-  if (ticket.status === TICKET_STATUS.COMPLETED) return { tone: 'completed', label: 'Terminé', link: to.ticketEnd }
-  if (ticket.status === TICKET_STATUS.CANCELLED) return { tone: 'cancelled', label: 'Annulé', link: to.ticketEnd }
-  const alert = getTicketAlert(ticket)
-  const label = ticket.pauseReason === PAUSE_REASON.NEXT_DAY ? 'Reprise demain' : alert.label
-  return { tone: alert.tone, label, link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket }
-}
+// ============================================================================
+// 🚧 FT-3 — Tâche 3.2 : remettre le corps de la fonction clientStatus
+//    Code à remettre : docs/TACHES_FRONTEND.md
+// ============================================================================
+const clientStatus = () => ({ tone: 'waiting', label: 'En cours', link: to.ticket }) // ⚠️ version provisoire
 
 /** Ticket suivi depuis cet appareil, rechargé en continu. Les clients n'ont pas de compte. */
 export default function MyTicketsPage() {
@@ -33,7 +30,7 @@ export default function MyTicketsPage() {
   const ticket = ticketId ? data?.ticket : null
   const status = ticket && clientStatus(ticket)
   const isWaiting = ticket?.status === TICKET_STATUS.WAITING
-  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
+  // 🚧 FT-3 — Tâche 3.3 : calculer serviceMinutes ici
 
   return (
     <PageContent width="narrow">
@@ -68,18 +65,7 @@ export default function MyTicketsPage() {
               <TicketNumber number={ticket.number} size="lg" tone={isWaiting ? status.tone : 'primary'} />
             </div>
             <dl className={styles.facts}>
-              {isWaiting && (
-                <>
-                  <div>
-                    <dt>Devant vous</dt>
-                    <dd>{ticket.peopleAhead}</dd>
-                  </div>
-                  <div>
-                    <dt>Attente estimée</dt>
-                    <dd>{formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}</dd>
-                  </div>
-                </>
-              )}
+              {/* 🚧 FT-3 — Tâche 3.3 : remettre « Devant vous » et « Attente estimée » (voir docs/TACHES_FRONTEND.md) */}
               <div>
                 <dt>Numéro appelé</dt>
                 <dd>{formatTicketNumber(ticket.currentNumber)}</dd>
