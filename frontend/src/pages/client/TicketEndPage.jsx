@@ -35,7 +35,7 @@ const CLOSED_CONTENT = {
   endLabel: 'Fermée à',
 }
 
-/** « 12 min », « 1 h 05 » */
+/** Durée entre deux dates : « 12 min », « 1 h 05 ». */
 const formatDuration = (from, until) => {
   if (!from || !until) return '—'
   const minutes = Math.max(0, Math.round((new Date(until) - new Date(from)) / 60000))
@@ -43,7 +43,7 @@ const formatDuration = (from, until) => {
   return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}`
 }
 
-/** Client — Ticket terminé ou annulé. */
+/** Récapitulatif d'un ticket terminé ou annulé ; le ticket n'est plus suivi sur l'appareil. */
 export default function TicketEndPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId, { poll: false })

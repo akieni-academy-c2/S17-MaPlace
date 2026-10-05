@@ -1,20 +1,28 @@
 import { useMemo, useState } from 'react'
-import * as queueService from '@/services/queueService'
-import { updateServiceTime } from '@/services/establishmentService'
+import { establishmentApi, queueApi, ticketApi } from '@/services/api'
 import { AVERAGE_SERVICE_MINUTES } from '@/constants/establishments'
-import { cancelTicket, completeTicket } from '@/services/ticketService'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { usePolling } from './usePolling'
 
 const byNumber = (a, b) => a.number - b.number
 
 /**
- * État de la file de l'établissement connecté (GET /api/queue en polling) + actions JWT.
- * Partagé par le tableau de bord et l'onglet « File d'attente ».
+ * File d'attente de l'établissement connecté, rechargée en continu, et toutes les actions
+ * du gestionnaire (ouvrir, mettre en pause, appeler le suivant…). Utilisé par le tableau
+ * de bord et par la page « File d'attente ».
+ *
+ * `pending` indique l'action en cours pour afficher un chargement sur le bon bouton :
+ * 'queue', 'next', 'create', 'serviceTime' ou l'id du ticket concerné.
+ *
+ * @returns {{
+ *   status: string, pauseReason: string | null, tickets: object[], serving: object | null,
+ *   waiting: object[], lastNumber: number, averageServiceMinutes: number, loading: boolean,
+ *   error: string | null, pending: string | null, actions: object
+ * }}
  */
 export function useQueueManager() {
-  const { data, error, loading, refresh } = usePolling((signal) => queueService.getQueue({ signal }))
-  const [pending, setPending] = useState(null) // action en cours : 'queue' | 'next' | ticketId
+  const { data, error, loading, refresh } = usePolling((signal) => queueApi.get({ signal }))
+  const [pending, setPending] = useState(null)
   const [actionError, setActionError] = useState(null)
 
   const status = data?.queueStatus ?? data?.queue?.status ?? QUEUE_STATUS.CLOSED
@@ -25,7 +33,7 @@ export function useQueueManager() {
   const pauseReason = data?.queue?.pause_reason ?? null
   const averageServiceMinutes = data?.averageServiceMinutes ?? AVERAGE_SERVICE_MINUTES
 
-  /** Exécute une action API puis recharge la file. */
+  // Exécute une action puis recharge la file ; l'erreur éventuelle est affichée sur la page.
   const run = async (key, action) => {
     setPending(key)
     setActionError(null)
@@ -41,11 +49,11 @@ export function useQueueManager() {
     }
   }
 
-  /** Ticket créé au guichet (client sans smartphone). Renvoie le ticket ; les erreurs sont levées pour le formulaire. */
+  // Les deux actions suivantes laissent remonter l'erreur : elle s'affiche dans leur formulaire.
   const createTicket = async (payload) => {
     setPending('create')
     try {
-      const { ticket } = await queueService.createTicket(payload)
+      const { ticket } = await queueApi.createWalkInTicket(payload)
       await refresh()
       return ticket
     } finally {
@@ -53,11 +61,10 @@ export function useQueueManager() {
     }
   }
 
-  /** Durée moyenne d'un passage. Les erreurs sont levées pour le formulaire. */
   const setServiceTime = async (minutes) => {
     setPending('serviceTime')
     try {
-      await updateServiceTime(minutes)
+      await establishmentApi.updateServiceTime(minutes)
       await refresh()
     } finally {
       setPending(null)
@@ -65,14 +72,14 @@ export function useQueueManager() {
   }
 
   const actions = {
-    open: () => run('queue', queueService.openQueue),
-    pause: () => run('queue', queueService.pauseQueue),
-    resume: () => run('queue', queueService.resumeQueue),
-    postpone: () => run('queue', queueService.postponeQueue),
-    close: () => run('queue', queueService.closeQueue),
-    callNext: () => run('next', queueService.callNext),
-    complete: (id) => run(id, () => completeTicket(id)),
-    cancel: (id) => run(id, () => cancelTicket(id)),
+    open: () => run('queue', queueApi.open),
+    pause: () => run('queue', queueApi.pause),
+    resume: () => run('queue', queueApi.resume),
+    postpone: () => run('queue', queueApi.postpone),
+    close: () => run('queue', queueApi.close),
+    callNext: () => run('next', queueApi.callNext),
+    complete: (id) => run(id, () => ticketApi.complete(id)),
+    cancel: (id) => run(id, () => ticketApi.cancel(id)),
     createTicket,
     setServiceTime,
   }

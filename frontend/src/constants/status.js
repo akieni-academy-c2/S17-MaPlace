@@ -1,19 +1,16 @@
-/** Statuts renvoyés par l'API (cf. doc backend §2 et §11). */
+/** Statuts d'une file, identiques à ceux de l'API. */
 export const QUEUE_STATUS = Object.freeze({
   OPEN: 'OPEN',
   PAUSED: 'PAUSED',
   CLOSED: 'CLOSED',
 })
 
-/** Motif d'une pause (queues.pause_reason) : NEXT_DAY = file reportée au lendemain. */
+/** Motif d'une pause : NEXT_DAY = file reportée au lendemain. */
 export const PAUSE_REASON = Object.freeze({
   NEXT_DAY: 'NEXT_DAY',
 })
 
-/**
- * Seuil à partir duquel le report au lendemain est recommandé au lieu de la fermeture
- * (nombre de tickets encore en attente en fin de journée).
- */
+/** À partir de ce nombre de clients en attente, la fin de journée propose le report plutôt que la fermeture. */
 export const POSTPONE_THRESHOLD = 5
 
 export const TICKET_STATUS = Object.freeze({
@@ -23,7 +20,7 @@ export const TICKET_STATUS = Object.freeze({
   CANCELLED: 'CANCELLED',
 })
 
-/** Libellés + variante visuelle du composant <StatusBadge>. */
+/** Libellés et couleur (tone de <StatusBadge>) de chaque statut de file. */
 export const QUEUE_STATUS_META = {
   OPEN: {
     label: 'File ouverte',
@@ -54,16 +51,13 @@ export const NEXT_DAY_META = {
     'L’établissement a fermé pour aujourd’hui. Les clients déjà en attente conservent leur numéro : la file reprendra demain là où elle s’est arrêtée.',
 }
 
-/** Métadonnées d'affichage d'une file, en tenant compte du report au lendemain. */
+/** Libellés d'une file, en tenant compte du report au lendemain. */
 export function getQueueStatusMeta(status, pauseReason) {
   if (status === QUEUE_STATUS.PAUSED && pauseReason === PAUSE_REASON.NEXT_DAY) return NEXT_DAY_META
   return QUEUE_STATUS_META[status] ?? QUEUE_STATUS_META.CLOSED
 }
 
-/**
- * Statuts de ticket côté gestionnaire. « Appelé » (tone `called`) est l'affichage
- * client d'un ticket SERVING : l'API ne distingue pas l'appel de la prise en charge.
- */
+/** Libellés et couleur de chaque statut de ticket, côté établissement. */
 export const TICKET_STATUS_META = {
   WAITING: { label: 'En attente', tone: 'waiting' },
   SERVING: { label: 'En cours', tone: 'serving' },

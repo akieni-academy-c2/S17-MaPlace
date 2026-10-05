@@ -11,6 +11,7 @@ import {
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+/** Refuse (400) un identifiant qui n'est pas un UUID, avant toute requête SQL. */
 const validateId = (id, label) => {
   if (!UUID_PATTERN.test(id)) {
     throw new AppError(`${label} invalide.`, 400);
@@ -26,6 +27,7 @@ const validateName = (name) => {
   }
 };
 
+/** Téléphone : 30 caractères maximum ; facultatif pour un ticket créé au guichet. */
 const validatePhone = (phone, { required }) => {
   if (!required && (phone === undefined || phone === null || phone === '')) {
     return;
@@ -41,7 +43,10 @@ const validatePhone = (phone, { required }) => {
   }
 };
 
-// Création commune aux deux parcours (client en ligne, guichet).
+/**
+ * Création d'un ticket, commune aux tickets pris en ligne et au guichet.
+ * Traduit chaque refus du modèle en erreur HTTP compréhensible (404, 409).
+ */
 const createInQueue = async (establishmentId, name, phone) => {
   const result = await createForEstablishment(establishmentId, name, phone);
 
@@ -76,9 +81,10 @@ const createTicket = async ({ establishmentId, name, phone }) => {
   return createInQueue(establishmentId, name.trim(), phone.trim());
 };
 
-// Ticket créé au guichet pour un client sans smartphone. Le téléphone est
-// facultatif (chaîne vide en base, la colonne étant NOT NULL). Renvoie la vue
-// complète du ticket (position, personnes devant…) pour l'impression.
+/**
+ * Ticket créé au guichet pour un client sans smartphone. Le téléphone est facultatif
+ * (enregistré vide). Renvoie le ticket complet (position, personnes devant…) pour l'impression.
+ */
 const createWalkInTicket = async (establishmentId, { name, phone } = {}) => {
   validateName(name);
   validatePhone(phone, { required: false });
@@ -127,6 +133,7 @@ const callNextTicket = async (establishmentId) => {
   return result.ticket;
 };
 
+/** Change le statut d'un ticket de l'établissement et traduit chaque refus en erreur HTTP. */
 const updateTicketStatus = async (
   ticketId,
   establishmentId,

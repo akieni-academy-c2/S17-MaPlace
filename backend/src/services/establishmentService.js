@@ -26,6 +26,7 @@ const getEstablishmentById = async (id) => {
   return establishment;
 };
 
+/** Durée moyenne d'un passage : nombre entier de minutes entre 1 et 240, sinon erreur 400. */
 const updateServiceTime = async (id, minutes) => {
   if (
     !Number.isInteger(minutes)

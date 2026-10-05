@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PageContent, PageTitle } from '@/components/layout'
 import { Button, EmptyState, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
-import { getTicket } from '@/services/ticketService'
+import { ticketApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
@@ -11,7 +11,10 @@ import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './MyTicketsPage.module.css'
 
-/** Statut affiché côté client : alerte de progression (en attente, approche, bientôt, appelé) ou fin. */
+/**
+ * Libellé, couleur et lien de la carte selon l'état du ticket :
+ * terminé, annulé, ou niveau d'alerte s'il est encore en cours.
+ */
 const clientStatus = (ticket) => {
   if (ticket.status === TICKET_STATUS.COMPLETED) return { tone: 'completed', label: 'Terminé', link: to.ticketEnd }
   if (ticket.status === TICKET_STATUS.CANCELLED) return { tone: 'cancelled', label: 'Annulé', link: to.ticketEnd }
@@ -20,10 +23,10 @@ const clientStatus = (ticket) => {
   return { tone: alert.tone, label, link: ticket.status === TICKET_STATUS.SERVING ? to.ticketCalled : to.ticket }
 }
 
-/** Client — Mes tickets : ticket suivi depuis cet appareil (pas de compte client). */
+/** Ticket suivi depuis cet appareil, rechargé en continu. Les clients n'ont pas de compte. */
 export default function MyTicketsPage() {
   const { ticketId, clear } = useCurrentTicket()
-  const { data, error, loading } = usePolling((signal) => getTicket(ticketId, { signal }), {
+  const { data, error, loading } = usePolling((signal) => ticketApi.get(ticketId, { signal }), {
     enabled: Boolean(ticketId),
     deps: [ticketId],
   })

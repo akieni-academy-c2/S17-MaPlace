@@ -40,6 +40,7 @@ const openQueue = async (establishmentId) => {
   return result.queue;
 };
 
+/** Applique une transition de file et traduit chaque refus en erreur HTTP (404, 409). */
 const updateQueueStatus = async (
   establishmentId,
   allowedStatuses,
@@ -96,9 +97,11 @@ const closeQueue = async (establishmentId) =>
     'La file est déjà fermée.'
   );
 
-// Fin de journée avec des clients encore en attente : la file passe en pause
-// jusqu'au lendemain. Les tickets en attente gardent leur numéro et la
-// reprise (resume) continue la même numérotation.
+/**
+ * Fin de journée avec des clients encore en attente : la file passe en pause jusqu'au
+ * lendemain. Les tickets en attente gardent leur numéro et la reprise continue la même
+ * numérotation. Refusé (409) s'il n'y a personne en attente : il suffit alors de fermer.
+ */
 const postponeQueue = async (establishmentId) => {
   const tickets = await findAllForCurrentQueue(establishmentId);
 

@@ -16,7 +16,11 @@ const HISTORY_SIZE = 5
 const NEXT_SIZE = 5
 const today = () => new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 
-/** Établissement — Tableau de bord de la file (GET /api/queue + actions JWT). */
+/**
+ * Tableau de bord de l'établissement connecté : état de la file, chiffres du jour,
+ * appel du client suivant, client au guichet, prochains clients et historique récent.
+ * Toute la logique (chargement et actions) vient de useQueueManager.
+ */
 export default function DashboardPage() {
   const { establishment } = useAuth()
   const { status, pauseReason, tickets, serving, waiting, lastNumber, averageServiceMinutes, loading, error, pending, actions } = useQueueManager()

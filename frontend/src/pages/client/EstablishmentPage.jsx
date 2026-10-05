@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, EmptyState, FavoriteButton, Icon, InfoNote, Loader, QueueStatusBadge, StatCard } from '@/components/ui'
 import { EstablishmentVisual } from '@/components/establishment'
-import { getEstablishment } from '@/services/establishmentService'
+import { establishmentApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useFavorites } from '@/hooks/useFavorites'
 import { describeEstablishment, formatWait } from '@/constants/establishments'
@@ -25,11 +25,15 @@ const VISIT_STEPS = [
   { icon: ICONS.walk, text: 'Présentez-vous au guichet quand c’est votre tour.' },
 ]
 
-/** Client — Fiche d'un établissement (GET /api/establishments/:id, rafraîchie en continu). */
+/**
+ * Page publique d'un établissement : état de la file, numéro appelé, nombre de personnes
+ * en attente, attente estimée, horaires et adresse. Les chiffres se rechargent toutes les
+ * 5 secondes ; le bouton « Prendre un ticket » n'est actif que si la file est ouverte.
+ */
 export default function EstablishmentPage() {
   const { establishmentId } = useParams()
   const { isFavorite, toggle } = useFavorites()
-  const { data, error, loading } = usePolling((signal) => getEstablishment(establishmentId, { signal }), {
+  const { data, error, loading } = usePolling((signal) => establishmentApi.get(establishmentId, { signal }), {
     deps: [establishmentId],
   })
   const establishment = data?.establishment
@@ -67,7 +71,6 @@ export default function EstablishmentPage() {
 
       {establishment && (
         <div className={styles.layout}>
-          {/* En-tête */}
           <section className={styles.header}>
             <EstablishmentVisual establishment={establishment} variant="banner" emblem={false} className={styles.banner}>
               <QueueStatusBadge status={status} pauseReason={pauseReason} className={styles.bannerBadge} />
@@ -87,7 +90,6 @@ export default function EstablishmentPage() {
             </div>
           </section>
 
-          {/* Action principale */}
           <aside className={styles.aside}>
             <Card variant="elevated" padding="md" className={styles.cta}>
               <div className={styles.ctaHead}>
@@ -110,7 +112,6 @@ export default function EstablishmentPage() {
             </Card>
           </aside>
 
-          {/* État de la file : affiché avant l'action, y compris sur mobile */}
           <section className={`${styles.block} ${styles.state}`} aria-labelledby="etat-file">
             <div className={styles.blockHead}>
               <h2 id="etat-file" className="text-h3">
@@ -127,7 +128,6 @@ export default function EstablishmentPage() {
             </div>
           </section>
 
-          {/* Détails */}
           <div className={styles.details}>
             <Card className={styles.block}>
               <h2 className="text-h3">À propos</h2>

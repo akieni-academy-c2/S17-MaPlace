@@ -23,7 +23,7 @@ function useCallAlert(active) {
   }, [active])
 }
 
-/** Client — « C'est votre tour ! » (ticket SERVING). */
+/** Écran « C'est votre tour ! » affiché quand l'établissement appelle le ticket. */
 export default function TicketCalledPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId)

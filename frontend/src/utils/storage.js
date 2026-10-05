@@ -1,4 +1,4 @@
-/** Accès localStorage tolérant aux erreurs (navigation privée, stockage bloqué). */
+// localStorage peut lever une erreur (navigation privée, stockage bloqué) : on l'ignore.
 const safe = (fn, fallback = null) => {
   try {
     return fn()
@@ -7,6 +7,7 @@ const safe = (fn, fallback = null) => {
   }
 }
 
+/** Lecture / écriture JSON dans le localStorage, sans jamais planter. */
 export const storage = {
   get: (key) => safe(() => JSON.parse(localStorage.getItem(key))),
   set: (key, value) => safe(() => localStorage.setItem(key, JSON.stringify(value))),
@@ -21,16 +22,19 @@ export const STORAGE_KEYS = {
   favorites: 'ma-place:favorites',
 }
 
-/* ---------- Abonnement aux changements (synchronise les composants et les onglets) ---------- */
 const listeners = new Set()
 
-/** Écrit une valeur puis prévient les composants abonnés (useSyncExternalStore). */
+/**
+ * Écrit une valeur (ou la supprime si `undefined`) puis prévient les composants abonnés,
+ * pour que tous les écrans affichent la même donnée (ticket suivi, favoris).
+ */
 export const setAndNotify = (key, value) => {
   if (value === undefined) storage.remove(key)
   else storage.set(key, value)
   listeners.forEach((listener) => listener())
 }
 
+/** Abonne un composant aux changements, y compris ceux faits dans un autre onglet. */
 export const subscribeStorage = (listener) => {
   listeners.add(listener)
   window.addEventListener('storage', listener)
@@ -40,7 +44,7 @@ export const subscribeStorage = (listener) => {
   }
 }
 
-/** Lecture brute (chaîne) : identité stable pour useSyncExternalStore. */
+/** Valeur brute (texte) : useSyncExternalStore a besoin d'une valeur comparable avec ===. */
 export const readRaw = (key) => {
   try {
     return localStorage.getItem(key)

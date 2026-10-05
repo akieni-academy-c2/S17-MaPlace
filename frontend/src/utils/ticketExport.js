@@ -2,12 +2,7 @@ import logoUrl from '@/assets/logo.png'
 import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { formatTicketNumber } from './format'
 
-/**
- * Export d'un ticket en image PNG (téléchargement) ou impression, sans dépendance :
- * le ticket est dessiné avec l'API Canvas 2D du navigateur, puis
- *  - téléchargé via canvas.toBlob() + lien <a download>
- *  - imprimé via une <iframe> masquée contenant l'image (format ticket de caisse 80 mm).
- */
+// Le ticket est dessiné dans un <canvas>, puis téléchargé en PNG ou imprimé, sans librairie.
 
 const COLORS = {
   primary: '#134e4a',
@@ -32,7 +27,7 @@ const loadImage = (src) =>
     img.src = src
   })
 
-/** Logo recoloré en blanc (le PNG d'origine est bleu) : on le dessine puis on remplit en « source-in ». */
+/** Logo recoloré en blanc pour le bandeau vert (le PNG d'origine est en couleur). */
 async function whiteLogo(height) {
   const img = await loadImage(logoUrl)
   const crop = { x: 298, y: 218, w: 1392, h: 496 }
@@ -67,10 +62,12 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 /**
- * Dessine le ticket.
- * @param {object} t { number, establishmentName, name, createdAt, peopleAhead, trackingUrl, issuedBy }
+ * Dessine le ticket dans un canvas (600 px de large, rendu en double résolution).
+ *
+ * @param {object} t Données préparées par `ticketExportData`.
+ * @returns {Promise<HTMLCanvasElement>}
  */
-export async function renderTicketCanvas(t) {
+async function renderTicketCanvas(t) {
   await Promise.all([document.fonts.load(`800 40px ${DISPLAY}`), document.fonts.load(`400 16px ${BODY}`)]).catch(() => {})
 
   const H = 860
@@ -81,11 +78,9 @@ export async function renderTicketCanvas(t) {
   ctx.scale(SCALE, SCALE)
   ctx.textBaseline = 'alphabetic'
 
-  // Fond
   ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, WIDTH, H)
 
-  // Bandeau vert
   const bandH = 150
   ctx.fillStyle = COLORS.primary
   ctx.fillRect(0, 0, WIDTH, bandH)
@@ -99,13 +94,11 @@ export async function renderTicketCanvas(t) {
   ctx.font = `600 15px ${BODY}`
   ctx.fillText('Ticket de file d’attente', 40, 116)
 
-  // Établissement
   ctx.textAlign = 'center'
   ctx.fillStyle = COLORS.text
   const place = fitText(ctx, t.establishmentName ?? '', { weight: 700, size: 30, family: DISPLAY, maxWidth: WIDTH - 80 })
   ctx.fillText(place, WIDTH / 2, 212)
 
-  // Numéro
   ctx.fillStyle = COLORS.muted
   ctx.font = `700 14px ${BODY}`
   ctx.fillText('VOTRE NUMÉRO', WIDTH / 2, 262)
@@ -113,7 +106,6 @@ export async function renderTicketCanvas(t) {
   ctx.font = `800 150px ${DISPLAY}`
   ctx.fillText(formatTicketNumber(t.number), WIDTH / 2, 410)
 
-  // Nom + date
   ctx.fillStyle = COLORS.text
   const name = fitText(ctx, t.name ?? '', { weight: 700, size: 26, family: DISPLAY, maxWidth: WIDTH - 80 })
   ctx.fillText(name, WIDTH / 2, 462)
@@ -126,7 +118,7 @@ export async function renderTicketCanvas(t) {
     494,
   )
 
-  // Perforation
+  // Ligne pointillée et encoches du ticket détachable
   const perfY = 536
   ctx.strokeStyle = COLORS.border
   ctx.lineWidth = 2
@@ -143,7 +135,6 @@ export async function renderTicketCanvas(t) {
     ctx.fill()
   })
 
-  // Indicateurs
   const boxes = [
     { label: 'Devant vous', value: t.peopleAhead != null ? String(t.peopleAhead) : '—' },
     { label: 'Attente estimée', value: formatWait(estimateWaitMinutes(t.peopleAhead, t.serviceMinutes), t.serviceMinutes) },
@@ -163,7 +154,6 @@ export async function renderTicketCanvas(t) {
     ctx.fillText(b.value, x + 20, 650)
   })
 
-  // Consignes
   ctx.textAlign = 'center'
   ctx.fillStyle = COLORS.text
   ctx.font = `600 16px ${BODY}`
@@ -205,7 +195,10 @@ export async function downloadTicket(t) {
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
-/** Imprime le ticket (format ticket de caisse 80 mm, compatible imprimante A4). */
+/**
+ * Imprime le ticket au format ticket de caisse (80 mm). L'image est placée dans une
+ * <iframe> invisible pour n'imprimer que le ticket, pas toute la page.
+ */
 export async function printTicket(t) {
   const canvas = await renderTicketCanvas(t)
   const dataUrl = canvas.toDataURL('image/png')
@@ -226,7 +219,12 @@ export async function printTicket(t) {
   setTimeout(() => frame.remove(), 1000)
 }
 
-/** Données d'export à partir d'un ticket de l'API (GET /api/tickets/:id). */
+/**
+ * Prépare les données à dessiner à partir d'un ticket renvoyé par l'API.
+ *
+ * @param {object} ticket Ticket de l'API.
+ * @param {object} [extra] Valeurs à remplacer, ex. `issuedBy` pour un ticket remis au guichet.
+ */
 export const ticketExportData = (ticket, extra = {}) => ({
   number: ticket.number,
   establishmentName: ticket.establishment?.name,

@@ -182,7 +182,6 @@ export function HeroSection() {
               >
                 {slide.image ? (
                   <div className={styles.frame}>
-                    {/* Illustration entière, centrée dans la scène comme le visuel du téléphone */}
                     <img src={slide.image} alt="" className={styles.slideImage} loading="lazy" decoding="async" />
                     <div className={styles.caption}>
                       <span className={styles.captionIndex}>
