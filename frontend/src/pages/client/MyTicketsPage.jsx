@@ -28,7 +28,7 @@ import { getTicketAlert, PAUSE_REASON, TICKET_STATUS } from '@/constants/status'
 }
 
 // ============================================================================
-//const clientStatus = () => ({ tone: 'waiting', label: 'En cours', link: to.ticket }) // ⚠️ version provisoire
+
 
 /** Ticket suivi depuis cet appareil, rechargé en continu. Les clients n'ont pas de compte. */
 export default function MyTicketsPage() {
