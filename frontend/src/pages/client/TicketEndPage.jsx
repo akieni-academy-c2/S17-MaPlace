@@ -4,7 +4,7 @@ import { Button, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/com
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { ICONS } from '@/constants/icons'
 import { QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
-import { PATHS } from '@/constants/routes'
+import { PATHS, to } from '@/constants/routes'
 import { formatTicketNumber, formatTime } from '@/utils/format'
 import styles from './TicketEndPage.module.css'
 
@@ -119,7 +119,11 @@ export default function TicketEndPage() {
             <Button variant="outline" size="lg" fullWidth icon={ICONS.search} to={PATHS.establishments}>
               Trouver un autre établissement
             </Button>
-            {/* 🚧 FT-1 — Tâche 1.5 : remettre le bouton « Reprendre un ticket ici » (voir docs/TACHES_FRONTEND.md) */}
+            {cancelled && ticket.establishment?.id && (
+              <Button variant="secondary" size="lg" fullWidth icon={ICONS.ticket} to={to.establishment(ticket.establishment.id)}>
+                Reprendre un ticket ici
+              </Button>
+            )}
           </div>
 
           <InfoNote icon={ICONS.shield}>Ce ticket n’est plus suivi sur cet appareil. Merci de votre confiance !</InfoNote>
