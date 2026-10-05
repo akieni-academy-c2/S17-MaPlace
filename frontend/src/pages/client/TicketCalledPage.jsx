@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, Icon, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
+import { TicketProgress } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { ICONS } from '@/constants/icons'
 import { to } from '@/constants/routes'
@@ -8,11 +10,17 @@ import { formatTime } from '@/utils/format'
 import styles from './TicketCalledPage.module.css'
 
 /** Signale l'appel même si l'utilisateur regarde un autre onglet (titre) ou a le téléphone en main (vibration). */
-// ============================================================================
-// 🚧 FT-2 — Tâche 2.4 : remettre le corps du hook useCallAlert (titre de l’onglet + vibration)
-//    Code à remettre : docs/TACHES_FRONTEND.md
-// ============================================================================
-function useCallAlert() {} // ⚠️ version provisoire : aucune alerte
+function useCallAlert(active) {
+  useEffect(() => {
+    if (!active) return undefined
+    const previous = document.title
+    document.title = '🔔 C’est votre tour ! — Ma Place'
+    if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250])
+    return () => {
+      document.title = previous
+    }
+  }, [active])
+}
 
 /** Écran « C'est votre tour ! » affiché quand l'établissement appelle le ticket. */
 export default function TicketCalledPage() {
@@ -77,7 +85,10 @@ export default function TicketCalledPage() {
               </Button>
             </Card>
 
-            {/* 🚧 FT-2 — Tâche 2.5 : remettre la carte « Progression » (voir docs/TACHES_FRONTEND.md) */}
+             <Card className={styles.block}>
+              <h2 className="text-h3">Progression</h2>
+              <TicketProgress ticket={ticket} />
+            </Card>
           </div>
         </>
       )}

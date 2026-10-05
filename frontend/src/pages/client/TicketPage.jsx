@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, ConfirmDialog, Icon, IconButton, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
-import { TicketCard, TicketStats } from '@/components/ticket'
+import { TicketCard, TicketProgress, TicketStats } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { getCancelToken } from '@/hooks/useCurrentTicket'
 import { ticketApi } from '@/services/api'
@@ -181,7 +181,10 @@ export default function TicketPage() {
             </div>
 
             <div className={styles.sideCol}>
-              {/* 🚧 FT-2 — Tâche 2.3 : remettre la carte « Progression » (voir docs/TACHES_FRONTEND.md) */}
+                 <Card className={styles.progressCard}>
+                  <h2 className="text-h3">Progression</h2>
+                  <TicketProgress ticket={ticket} />
+                </Card>
 
               <InfoNote icon={ICONS.sync} title="Gardez cette page ouverte">
                 Votre position s’actualise automatiquement. Quand ce sera votre tour, l’écran passera en vert.
