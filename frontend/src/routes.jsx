@@ -4,7 +4,8 @@ import { ClientLayout, ProLayout, ProtectedRoute } from '@/components/layout'
 import { PATHS } from '@/constants/routes'
 
 const HomePage = lazy(() => import('@/pages/client/HomePage'))
-// 🚧 FT-4 — Tâche 4.1 : importer FavoritesPage et NotFoundPage
+const FavoritesPage = lazy(() => import('@/pages/client/FavoritesPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const EstablishmentsPage = lazy(() => import('@/pages/client/EstablishmentsPage'))
 // 🚧 FT-3 — Tâche 3.1 : importer MyTicketsPage
 const InfoPage = lazy(() => import('@/pages/client/InfoPage'))
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
     element: <ClientLayout />,
     children: [
       { path: PATHS.home, element: <HomePage /> },
-      // 🚧 FT-4 — Tâche 4.1 : déclarer la route des favoris
+      { path: PATHS.favorites, element: <FavoritesPage /> },
       { path: PATHS.establishments, element: <EstablishmentsPage /> },
       // 🚧 FT-3 — Tâche 3.1 : déclarer la route « Mes tickets »
       { path: PATHS.info, element: <InfoPage /> },
@@ -44,5 +45,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // 🚧 FT-4 — Tâche 4.3 : déclarer la page 404 (toute URL inconnue)
+  { path: '*', element: <NotFoundPage /> },
 ])
