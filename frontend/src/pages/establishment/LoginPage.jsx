@@ -14,7 +14,7 @@ const BENEFITS = [
   { icon: ICONS.activity, text: 'Suivez l’affluence et l’historique de la journée en direct.' },
 ]
 
-/** Établissement — Connexion gestionnaire (POST /api/auth/login). */
+/** Connexion de l'établissement ; un établissement déjà connecté est envoyé vers son tableau de bord. */
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth()
   const navigate = useNavigate()
@@ -45,7 +45,6 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      {/* Panneau de marque (desktop) */}
       <aside className={styles.brandPanel}>
         <Link to={PATHS.home} aria-label="Ma Place — accueil">
           <Logo size={48} subtitle="Espace établissement" tone="white" />
@@ -92,7 +91,7 @@ export default function LoginPage() {
               icon={ICONS.mail}
               type="email"
               autoComplete="email"
-              placeholder="contact@pharmacie-centrale.cg"
+              placeholder="contact@etablissement.cg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Icon, InfoNote, Modal, TextField, TicketNumber } from '@/components/ui'
 import { useTransitionScreen } from '@/hooks/useTransitionScreen'
-import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { formatPhone, formatTicketNumber, normalizePhone, plural } from '@/utils/format'
 import { downloadTicket, printTicket, ticketExportData } from '@/utils/ticketExport'
@@ -10,6 +10,7 @@ import styles from './WalkInTicketDialog.module.css'
 /** Téléphone facultatif, mais s'il est saisi : 9 chiffres commençant par 0 (même règle que le client). */
 const PHONE_RE = /^0\d{8}$/
 
+/** Vérifie le formulaire : nom obligatoire, téléphone facultatif mais valide s'il est saisi. */
 const validate = ({ name, phone }) => {
   const errors = {}
   if (name.trim().length < 2) errors.name = 'Indiquez le nom du client (2 caractères minimum).'
@@ -29,6 +30,7 @@ export function WalkInTicketDialog({ open, onClose, onCreate, establishmentName 
   const [submitting, setSubmitting] = useState(false)
   const [ticket, setTicket] = useState(null)
   const [exporting, setExporting] = useState(null)
+  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
 
   const reset = () => {
     setForm({ name: '', phone: '' })
@@ -92,7 +94,7 @@ export function WalkInTicketDialog({ open, onClose, onCreate, establishmentName 
             <TicketNumber number={ticket.number} size="xl" />
             <p className={styles.name}>{ticket.name}</p>
             <p className={styles.meta}>
-              {ticket.peopleAhead > 0 ? `${plural(ticket.peopleAhead, 'personne')} devant · attente ${formatWait(estimateWaitMinutes(ticket.peopleAhead))}` : 'Prochain à être appelé'}
+              {ticket.peopleAhead > 0 ? `${plural(ticket.peopleAhead, 'personne')} devant · attente ${formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}` : 'Prochain à être appelé'}
             </p>
           </div>
           <div className={styles.actions}>
@@ -116,6 +118,7 @@ export function WalkInTicketDialog({ open, onClose, onCreate, establishmentName 
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
           <TextField
             label="Nom du client"
+            required
             icon={ICONS.person}
             placeholder="Ex. Joseph Malonga"
             value={form.name}

@@ -1,12 +1,12 @@
 import { Icon } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
-import { getAheadAlert, NEAR_THRESHOLD, TICKET_STATUS } from '@/constants/status'
+import { getTicketAlert, NEAR_THRESHOLD, TICKET_STATUS } from '@/constants/status'
 import { formatTime } from '@/utils/format'
 import styles from './TicketProgress.module.css'
 
 const STEPS = [
   { key: 'created', label: 'Ticket créé', text: 'Votre place est réservée.', icon: ICONS.ticketCheck },
-  { key: 'waiting', label: 'En attente', text: `Plus de ${NEAR_THRESHOLD} personnes devant vous.`, icon: ICONS.hourglass },
+  { key: 'waiting', label: 'En attente', text: `Au-delà de la ${NEAR_THRESHOLD}e place dans la file.`, icon: ICONS.hourglass },
   { key: 'near', label: 'Préparez-vous', text: 'Prévoyez votre trajet vers l’établissement.', icon: ICONS.schedule },
   { key: 'approaching', label: 'Votre tour approche', text: 'Commencez à vous rapprocher de l’établissement.', icon: ICONS.navigation },
   { key: 'soon', label: 'Bientôt votre tour', text: 'Présentez-vous à proximité du guichet.', icon: ICONS.walk },
@@ -20,13 +20,15 @@ const STEPS = [
 const ALERT_STEPS = ['near', 'approaching', 'soon', 'next', 'called']
 
 /**
- * Étapes « en cours » selon le ticket (seuils : constants/status.js). L'API ne distingue pas
- * l'appel de la prise en charge : un ticket SERVING active donc « C'est votre tour » et « En cours ».
+ * Étape(s) en cours selon le ticket. Un ticket au guichet (SERVING) active à la fois
+ * « C'est votre tour » et « En cours », car l'API ne distingue pas l'appel de la prise en charge.
+ *
+ * @returns {string[]} Clés des étapes en cours ; vide si le ticket est terminé.
  */
 function currentSteps(ticket) {
   switch (ticket.status) {
     case TICKET_STATUS.WAITING:
-      return [getAheadAlert(ticket.peopleAhead).key]
+      return [getTicketAlert(ticket).key]
     case TICKET_STATUS.SERVING:
       return ['called', 'serving']
     case TICKET_STATUS.COMPLETED:
@@ -36,7 +38,7 @@ function currentSteps(ticket) {
   }
 }
 
-/** Frise verticale du parcours d'un ticket. */
+/** Frise verticale du parcours d'un ticket : étapes franchies, étape en cours (colorée) et à venir. */
 export function TicketProgress({ ticket, className = '' }) {
   const current = currentSteps(ticket)
   const first = current.length ? STEPS.findIndex((step) => step.key === current[0]) : STEPS.length
@@ -45,8 +47,8 @@ export function TicketProgress({ ticket, className = '' }) {
     <ol className={`${styles.steps} ${className}`} aria-label="Progression de votre ticket">
       {STEPS.map((step, index) => {
         const state = current.includes(step.key) ? 'current' : index < first ? 'done' : 'upcoming'
-        // Couleur d'alerte de l'étape en cours
-        const alert = state === 'current' && ALERT_STEPS.includes(step.key) ? styles[step.key] : ''
+        // Couleur d'alerte de l'étape en cours (celle du ticket)
+        const alert = state === 'current' && ALERT_STEPS.includes(step.key) ? styles[getTicketAlert(ticket).tone] : ''
         return (
           <li key={step.key} className={`${styles.step} ${styles[state]} ${alert}`} aria-current={state === 'current' ? 'step' : undefined}>
             <span className={styles.marker}>

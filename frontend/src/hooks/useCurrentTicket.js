@@ -3,12 +3,14 @@ import { setAndNotify, storage, STORAGE_KEYS, subscribeStorage } from '@/utils/s
 
 const readTokens = () => storage.get(STORAGE_KEYS.cancelTokens) ?? {}
 
-/** Jeton d'annulation d'un ticket pris depuis ce navigateur (null sinon). */
+/** Jeton d'annulation d'un ticket pris depuis ce navigateur, ou null. */
 export const getCancelToken = (ticketId) => readTokens()[ticketId] ?? null
 
 /**
- * Ticket actif du visiteur (pas de compte client : on le garde dans le navigateur),
- * ainsi que son `cancelToken`, seul moyen pour le client d'annuler son ticket.
+ * Ticket suivi depuis ce navigateur. Les clients n'ont pas de compte : l'identifiant du ticket
+ * et son jeton d'annulation sont gardés dans le localStorage.
+ *
+ * @returns {{ ticketId: string | null, save: (id: string, cancelToken?: string) => void, clear: () => void }}
  */
 export function useCurrentTicket() {
   const ticketId = useSyncExternalStore(subscribeStorage, () => storage.get(STORAGE_KEYS.currentTicket))

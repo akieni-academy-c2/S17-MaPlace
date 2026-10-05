@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, ConfirmDialog, Icon, IconButton, InfoNote, Loader, StatusBadge, TicketNumber } from '@/components/ui'
-import { TicketCard, TicketProgress, TicketStats } from '@/components/ticket'
+import { TicketCard, TicketStats } from '@/components/ticket'
 import { useTicketTracking } from '@/hooks/useTicketTracking'
 import { getCancelToken } from '@/hooks/useCurrentTicket'
-import { cancelTicketByClient } from '@/services/ticketService'
-import { estimateWaitMinutes, formatWait } from '@/constants/establishments'
+import { ticketApi } from '@/services/api'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getTicketAlert, PAUSE_REASON, QUEUE_STATUS, TICKET_STATUS } from '@/constants/status'
 import { formatTicketNumber, formatTime, plural } from '@/utils/format'
@@ -14,7 +14,14 @@ import { PATHS, to } from '@/constants/routes'
 import { downloadTicket, ticketExportData } from '@/utils/ticketExport'
 import styles from './TicketPage.module.css'
 
-/** Client — Mon ticket en attente (GET /api/tickets/:id, rafraîchi en continu). */
+/**
+ * Page « Mon ticket » d'un client en attente, rechargée toutes les 5 secondes.
+ *
+ * La couleur et le message changent selon la position dans la file (voir getTicketAlert) :
+ * jaune de la 15e à la 11e place, orange de la 10e à la 6e, rouge de la 5e à la 1re.
+ * Quand le ticket est appelé, useTicketTracking redirige vers « C'est votre tour ».
+ * Le client peut télécharger son ticket ou l'annuler (si le ticket a été pris sur cet appareil).
+ */
 export default function TicketPage() {
   const { ticketId } = useParams()
   const navigate = useNavigate()
@@ -30,7 +37,7 @@ export default function TicketPage() {
     setCancelling(true)
     setCancelError(null)
     try {
-      await cancelTicketByClient(ticketId, cancelToken)
+      await ticketApi.cancelByClient(ticketId, cancelToken)
       navigate(to.ticketEnd(ticketId), { replace: true })
     } catch (err) {
       setConfirmOpen(false)
@@ -51,6 +58,7 @@ export default function TicketPage() {
     navigate(location.pathname, { replace: true, state: null })
   }
 
+  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
   const paused = ticket?.queueStatus === QUEUE_STATUS.PAUSED
   const nextDay = paused && ticket?.pauseReason === PAUSE_REASON.NEXT_DAY
   // File reportée : l'en-tête invite à revenir demain (la couleur du ticket suit toujours sa position)
@@ -108,7 +116,7 @@ export default function TicketPage() {
                 <p className="text-small">
                   {ticket.establishment?.name} ·{' '}
                   {ticket.peopleAhead > 0
-                    ? `${plural(ticket.peopleAhead, 'personne')} devant vous · attente estimée ${formatWait(estimateWaitMinutes(ticket.peopleAhead))}`
+                    ? `${plural(ticket.peopleAhead, 'personne')} devant vous · attente estimée ${formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}`
                     : 'personne devant vous'}
                 </p>
               </div>
@@ -119,7 +127,7 @@ export default function TicketPage() {
           <header className={styles.intro}>
             <div>
               <span className="text-eyebrow">Mon ticket</span>
-              <h1 className={`text-h1 ${styles[`title-${alert.key}`] ?? ''}`}>{alert.title}</h1>
+              <h1 className={`text-h1 ${styles[`title-${alert.tone}`] ?? ''}`}>{alert.title}</h1>
               <p className="text-muted">{alert.text}</p>
             </div>
             <span className={styles.live}>
@@ -144,14 +152,14 @@ export default function TicketPage() {
           <div className={styles.layout}>
             <div className={styles.ticketCol}>
               <TicketCard
-                tone={alert.key}
+                tone={alert.tone}
                 header={
                   <>
                     <span className={styles.place}>
                       <Icon name={ICONS.store} size={16} /> {ticket.establishment?.name}
                     </span>
                     <StatusBadge
-                      tone={alert.key === 'near' ? 'onLight' : 'onDark'}
+                      tone={alert.tone === 'near' ? 'onLight' : 'onDark'}
                       dot
                       pulse={alert.key !== 'waiting'}
                       size="sm"
@@ -161,10 +169,10 @@ export default function TicketPage() {
                     </StatusBadge>
                   </>
                 }
-                footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} />}
+                footer={<TicketStats currentNumber={ticket.currentNumber} peopleAhead={ticket.peopleAhead} position={ticket.position} serviceMinutes={serviceMinutes} />}
               >
                 <span className="text-eyebrow">Votre numéro</span>
-                <TicketNumber number={ticket.number} size="xl" tone={alert.key} />
+                <TicketNumber number={ticket.number} size="xl" tone={alert.tone} />
                 {ticket.name && <p className={styles.holder}>{ticket.name}</p>}
                 <p className={styles.service}>
                   <Icon name={ICONS.queue} size={14} /> File d’attente principale · pris à {formatTime(ticket.createdAt)}
@@ -173,10 +181,7 @@ export default function TicketPage() {
             </div>
 
             <div className={styles.sideCol}>
-              <Card className={styles.progressCard}>
-                <h2 className="text-h3">Progression</h2>
-                <TicketProgress ticket={ticket} />
-              </Card>
+              {/* 🚧 FT-2 — Tâche 2.3 : remettre la carte « Progression » (voir docs/TACHES_FRONTEND.md) */}
 
               <InfoNote icon={ICONS.sync} title="Gardez cette page ouverte">
                 Votre position s’actualise automatiquement. Quand ce sera votre tour, l’écran passera en vert.

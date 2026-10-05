@@ -1,10 +1,7 @@
 import { ICONS } from './icons'
 import { PATHS, to } from './routes'
 
-/**
- * Coordonnées affichées dans le pied de page.
- * ⚠️ Valeurs de présentation : à remplacer par les coordonnées officielles du projet.
- */
+/** Coordonnées affichées sur le site (à remplacer par les coordonnées officielles). */
 export const CONTACT = {
   email: 'contact@maplace.cg',
   city: 'Brazzaville, République du Congo',
@@ -18,7 +15,7 @@ export const CLIENT_NAV = [
   { key: 'favorites', to: PATHS.favorites, label: 'Favoris', icon: ICONS.heart, isActive: (p) => p === PATHS.favorites },
 ]
 
-/** Liens d'information (pied de page). */
+/** Liens du pied de page. */
 export const INFO_LINKS = [
   { to: '/#comment-ca-marche', label: 'Comment ça marche' },
   { to: '/#faq', label: 'Questions fréquentes' },

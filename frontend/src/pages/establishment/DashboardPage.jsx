@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, EmptyState, InfoNote, Loader, StatCard, TicketNumber, TicketStatusBadge } from '@/components/ui'
-import { CallNextPanel, CloseQueueDialog, QueueControls, ServingTicketCard, WaitingList, WalkInTicketDialog } from '@/components/queue'
+import { CallNextPanel, CloseQueueDialog, QueueControls, ServiceTimeDialog, ServingTicketCard, WaitingList, WalkInTicketDialog } from '@/components/queue'
 import { useAuth } from '@/hooks/useAuth'
 import { useQueueManager } from '@/hooks/useQueueManager'
 import { ICONS } from '@/constants/icons'
@@ -16,12 +16,17 @@ const HISTORY_SIZE = 5
 const NEXT_SIZE = 5
 const today = () => new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 
-/** Établissement — Tableau de bord de la file (GET /api/queue + actions JWT). */
+/**
+ * Tableau de bord de l'établissement connecté : état de la file, chiffres du jour,
+ * appel du client suivant, client au guichet, prochains clients et historique récent.
+ * Toute la logique (chargement et actions) vient de useQueueManager.
+ */
 export default function DashboardPage() {
   const { establishment } = useAuth()
-  const { status, pauseReason, tickets, serving, waiting, lastNumber, loading, error, pending, actions } = useQueueManager()
+  const { status, pauseReason, tickets, serving, waiting, lastNumber, averageServiceMinutes, loading, error, pending, actions } = useQueueManager()
   const [confirmClose, setConfirmClose] = useState(false)
   const [walkInOpen, setWalkInOpen] = useState(false)
+  const [serviceTimeOpen, setServiceTimeOpen] = useState(false)
 
   const completed = tickets.filter((t) => t.status === TICKET_STATUS.COMPLETED)
   const history = useMemo(
@@ -55,6 +60,9 @@ export default function DashboardPage() {
                 Page publique
               </Button>
             )}
+            <Button variant="outline" size="sm" icon={ICONS.timer} onClick={() => setServiceTimeOpen(true)} title="Durée moyenne d’un passage au guichet">
+              Passage : {averageServiceMinutes} min
+            </Button>
             <Button size="sm" icon={ICONS.ticketPlus} onClick={() => setWalkInOpen(true)} disabled={status !== QUEUE_STATUS.OPEN} title="Pour un client sans smartphone">
               Créer un ticket
             </Button>
@@ -162,6 +170,15 @@ export default function DashboardPage() {
         onClose={() => setWalkInOpen(false)}
         onCreate={actions.createTicket}
         establishmentName={establishment?.name}
+      />
+
+      <ServiceTimeDialog
+        open={serviceTimeOpen}
+        value={averageServiceMinutes}
+        waitingCount={waiting.length}
+        loading={pending === 'serviceTime'}
+        onSave={actions.setServiceTime}
+        onClose={() => setServiceTimeOpen(false)}
       />
 
       <CloseQueueDialog

@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, EmptyState, FavoriteButton, Icon, InfoNote, Loader, QueueStatusBadge, StatCard } from '@/components/ui'
 import { EstablishmentVisual } from '@/components/establishment'
-import { getEstablishment } from '@/services/establishmentService'
+import { establishmentApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useFavorites } from '@/hooks/useFavorites'
 import { describeEstablishment, formatWait } from '@/constants/establishments'
@@ -25,11 +25,15 @@ const VISIT_STEPS = [
   { icon: ICONS.walk, text: 'Présentez-vous au guichet quand c’est votre tour.' },
 ]
 
-/** Client — Fiche d'un établissement (GET /api/establishments/:id, rafraîchie en continu). */
+/**
+ * Page publique d'un établissement : état de la file, numéro appelé, nombre de personnes
+ * en attente, attente estimée, horaires et adresse. Les chiffres se rechargent toutes les
+ * 5 secondes ; le bouton « Prendre un ticket » n'est actif que si la file est ouverte.
+ */
 export default function EstablishmentPage() {
   const { establishmentId } = useParams()
   const { isFavorite, toggle } = useFavorites()
-  const { data, error, loading } = usePolling((signal) => getEstablishment(establishmentId, { signal }), {
+  const { data, error, loading } = usePolling((signal) => establishmentApi.get(establishmentId, { signal }), {
     deps: [establishmentId],
   })
   const establishment = data?.establishment
@@ -67,7 +71,6 @@ export default function EstablishmentPage() {
 
       {establishment && (
         <div className={styles.layout}>
-          {/* En-tête */}
           <section className={styles.header}>
             <EstablishmentVisual establishment={establishment} variant="banner" emblem={false} className={styles.banner}>
               <QueueStatusBadge status={status} pauseReason={pauseReason} className={styles.bannerBadge} />
@@ -87,7 +90,6 @@ export default function EstablishmentPage() {
             </div>
           </section>
 
-          {/* Action principale */}
           <aside className={styles.aside}>
             <Card variant="elevated" padding="md" className={styles.cta}>
               <div className={styles.ctaHead}>
@@ -97,7 +99,7 @@ export default function EstablishmentPage() {
               <InfoNote tone={note.tone} icon={note.icon} title={note.title}>
                 {isOpen
                   ? waiting > 0
-                    ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes)}.`
+                    ? `${plural(waiting, 'personne')} ${waiting > 1 ? 'attendent' : 'attend'} actuellement. Attente estimée : ${formatWait(info.waitMinutes, info.serviceMinutes)}.`
                     : 'Personne n’attend : vous serez le prochain à être servi.'
                   : getQueueStatusMeta(status, pauseReason).description}
               </InfoNote>
@@ -110,7 +112,6 @@ export default function EstablishmentPage() {
             </Card>
           </aside>
 
-          {/* État de la file : affiché avant l'action, y compris sur mobile */}
           <section className={`${styles.block} ${styles.state}`} aria-labelledby="etat-file">
             <div className={styles.blockHead}>
               <h2 id="etat-file" className="text-h3">
@@ -123,11 +124,10 @@ export default function EstablishmentPage() {
             <div className={styles.stats}>
               <StatCard tone="primary" label="Numéro appelé" value={isActive ? formatTicketNumber(establishment.current_number) : '—'} caption="au guichet" icon={ICONS.campaign} />
               <StatCard label="En attente" value={isActive ? waiting : '—'} caption={waiting > 1 ? 'personnes' : 'personne'} icon={ICONS.groups} />
-              <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
+              <StatCard tone="accent" label="Temps estimé" value={isActive ? formatWait(info.waitMinutes, info.serviceMinutes) : '—'} caption="pour un nouveau ticket" icon={ICONS.timer} />
             </div>
           </section>
 
-          {/* Détails */}
           <div className={styles.details}>
             <Card className={styles.block}>
               <h2 className="text-h3">À propos</h2>

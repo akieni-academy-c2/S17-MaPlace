@@ -3,8 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { PageContent } from '@/components/layout'
 import { Button, Card, Icon, InfoNote, QueueStatusBadge, TextField } from '@/components/ui'
 import { EstablishmentVisual } from '@/components/establishment'
-import { getEstablishment } from '@/services/establishmentService'
-import { createTicket } from '@/services/ticketService'
+import { establishmentApi, ticketApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
 import { useTransitionScreen } from '@/hooks/useTransitionScreen'
@@ -12,25 +11,36 @@ import { describeEstablishment, formatWait } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { getQueueStatusMeta, QUEUE_STATUS } from '@/constants/status'
 import { to } from '@/constants/routes'
-import { formatPhone, formatTicketNumber, normalizePhone } from '@/utils/format'
+import { formatTicketNumber, normalizePhone } from '@/utils/format'
 import styles from './JoinQueuePage.module.css'
 
-/** 9 chiffres commençant par 0, ex. 06 123 23 23 */
-const PHONE_RE = /^0\d{8}$/
+// 🚧 FT-1 — Tâche 1.2 : remettre la constante PHONE_RE ici
 
-const validate = ({ name, phone }) => {
-  const errors = {}
-  if (name.trim().length < 2) errors.name = 'Indiquez votre nom (2 caractères minimum).'
-  if (!PHONE_RE.test(normalizePhone(phone))) errors.phone = 'Numéro invalide. Format attendu : 06 123 23 23.'
-  return errors
-}
+/**
+ * Vérifie le formulaire avant l'envoi.
+ *
+ * @returns {object} Un message par champ invalide, ex. { phone: 'Numéro invalide…' } ; vide si tout est bon.
+ */
+// ============================================================================
+// 🚧 FT-1 — Tâche 1.2 : remettre le corps de la fonction validate
+//    Code à remettre : docs/TACHES_FRONTEND.md
+// ============================================================================
+const validate = () => ({}) // ⚠️ version provisoire : le formulaire n'est pas vérifié
 
-/** Client — Formulaire « Prendre un ticket » (POST /api/tickets). */
+/**
+ * Formulaire « Prendre un ticket ».
+ *
+ * 1. Le client saisit son nom et son téléphone (formaté pendant la saisie).
+ * 2. À l'envoi, le ticket est créé ; son id et son jeton d'annulation sont gardés dans le navigateur.
+ * 3. Un écran de confirmation s'affiche, puis le client arrive sur la page de suivi du ticket.
+ *
+ * Si la file n'est pas ouverte, le bouton d'envoi est désactivé.
+ */
 export default function JoinQueuePage() {
   const { establishmentId } = useParams()
   const navigate = useNavigate()
   const { save } = useCurrentTicket()
-  const { data } = usePolling((signal) => getEstablishment(establishmentId, { signal }), { interval: 0, deps: [establishmentId] })
+  const { data } = usePolling((signal) => establishmentApi.get(establishmentId, { signal }), { interval: 0, deps: [establishmentId] })
   const establishment = data?.establishment
   const info = describeEstablishment(establishment)
   const status = establishment?.queue_status
@@ -43,7 +53,7 @@ export default function JoinQueuePage() {
   const { show } = useTransitionScreen()
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
-  const updatePhone = (e) => setForm((f) => ({ ...f, phone: formatPhone(normalizePhone(e.target.value)) }))
+  // 🚧 FT-1 — Tâche 1.3 : remettre la fonction updatePhone ici
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -54,7 +64,7 @@ export default function JoinQueuePage() {
     setSubmitting(true)
     setSubmitError(null)
     try {
-      const { ticket } = await createTicket({
+      const { ticket } = await ticketApi.create({
         establishmentId,
         name: form.name.trim(),
         phone: normalizePhone(form.phone),
@@ -84,7 +94,6 @@ export default function JoinQueuePage() {
       </Link>
 
       <div className={styles.layout}>
-        {/* Récapitulatif de la file */}
         <aside className={styles.summary}>
           <Card variant="tinted" className={styles.summaryCard}>
             <span className="text-eyebrow">Vous rejoignez</span>
@@ -114,7 +123,7 @@ export default function JoinQueuePage() {
               </div>
               <div>
                 <dt>Attente estimée</dt>
-                <dd>{info ? formatWait(info.waitMinutes) : '—'}</dd>
+                <dd>{info ? formatWait(info.waitMinutes, info.serviceMinutes) : '—'}</dd>
               </div>
             </dl>
           </Card>
@@ -128,7 +137,6 @@ export default function JoinQueuePage() {
           </ol>
         </aside>
 
-        {/* Formulaire */}
         <Card padding="lg" className={styles.formCard}>
           <form className={styles.form} onSubmit={handleSubmit} noValidate>
             <div className={styles.formHead}>
@@ -144,6 +152,7 @@ export default function JoinQueuePage() {
 
             <TextField
               label="Votre nom"
+              required
               icon={ICONS.person}
               placeholder="Ex. Grâce Mabiala"
               autoComplete="name"
@@ -152,18 +161,7 @@ export default function JoinQueuePage() {
               error={errors.name}
               hint="Il sera utilisé par l’établissement pour vous appeler."
             />
-            <TextField
-              label="Votre numéro de téléphone"
-              icon={ICONS.phone}
-              type="tel"
-              inputMode="tel"
-              placeholder="06 123 23 23"
-              maxLength={12}
-              autoComplete="tel"
-              value={form.phone}
-              onChange={updatePhone}
-              error={errors.phone}
-            />
+            {/* 🚧 FT-1 — Tâche 1.3 : remettre le champ « Votre numéro de téléphone » (voir docs/TACHES_FRONTEND.md) */}
 
             <InfoNote icon={ICONS.shield}>Aucun compte requis. Vos informations servent uniquement au suivi de votre passage.</InfoNote>
 

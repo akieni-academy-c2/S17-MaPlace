@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import * as authService from '@/services/authService'
+import { authApi } from '@/services/api'
 import { storage, STORAGE_KEYS } from '@/utils/storage'
 import { AuthContext } from './authContext'
 
+/**
+ * Garde la session de l'établissement connecté (jeton + infos) dans le navigateur
+ * et la partage avec toute l'application via `useAuth()`.
+ *
+ * `logoutReason` vaut 'user' après une déconnexion volontaire et 'expired' quand l'API
+ * a refusé le jeton : la page de connexion affiche alors « session expirée ».
+ */
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => storage.get(STORAGE_KEYS.token))
   const [establishment, setEstablishment] = useState(() => storage.get(STORAGE_KEYS.establishment))
-  // Motif de la dernière déconnexion : 'user' (volontaire) | 'expired' (401) — oriente la redirection
   const [logoutReason, setLogoutReason] = useState(null)
 
   const logout = useCallback((reason = 'user') => {
@@ -18,7 +24,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = useCallback(async (email, password) => {
-    const data = await authService.login(email, password)
+    const data = await authApi.login(email, password)
     storage.set(STORAGE_KEYS.token, data.token)
     storage.set(STORAGE_KEYS.establishment, data.establishment)
     setToken(data.token)
@@ -27,7 +33,7 @@ export function AuthProvider({ children }) {
     return data
   }, [])
 
-  // Un 401 sur une route protégée déconnecte le gestionnaire
+  // Événement émis par services/api.js quand l'API répond 401.
   useEffect(() => {
     const onUnauthorized = () => logout('expired')
     window.addEventListener('ma-place:unauthorized', onUnauthorized)
@@ -35,7 +41,7 @@ export function AuthProvider({ children }) {
   }, [logout])
 
   const value = useMemo(
-    () => ({ token, establishment, isAuthenticated: Boolean(token), logoutReason, login, logout }),
+    () => ({ establishment, isAuthenticated: Boolean(token), logoutReason, login, logout }),
     [token, establishment, logoutReason, login, logout],
   )
 

@@ -14,7 +14,7 @@ const TOPICS = {
     sections: [
       {
         title: 'Notre mission',
-        text: 'Dans les pharmacies, administrations, banques ou salons, l’attente fait partie du quotidien. Ma Place permet de prendre un ticket à distance et de suivre son tour en direct, pour ne se présenter qu’au bon moment.',
+        text: 'Dans les administrations, hôpitaux, banques, agences télécoms ou salons, l’attente fait partie du quotidien. Ma Place permet de prendre un ticket à distance et de suivre son tour en direct, pour ne se présenter qu’au bon moment.',
       },
       {
         title: 'Pour les usagers',
@@ -74,6 +74,7 @@ const TOPICS = {
   },
 }
 
+/** Pages d'information (à propos, conditions, confidentialité), choisies par le paramètre `:topic`. */
 export default function InfoPage() {
   const { topic } = useParams()
   const content = TOPICS[topic]

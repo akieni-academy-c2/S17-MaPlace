@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Button, SectionHeader } from '@/components/ui'
 import { EstablishmentBrowser } from '@/components/establishment'
-import { listEstablishments } from '@/services/establishmentService'
+import { establishmentApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { ICONS } from '@/constants/icons'
 import { PATHS } from '@/constants/routes'
@@ -16,9 +16,9 @@ import styles from './HomePage.module.css'
 /** Nombre d'établissements affichés sur l'accueil, après filtres (la liste complète est sur /etablissements). */
 const HOME_LIMIT = 4
 
-/** Client — Accueil (GET /api/establishments). */
+/** Page d'accueil : présentation, établissements, fonctionnement et FAQ. */
 export default function HomePage() {
-  const { data, error, loading } = usePolling((signal) => listEstablishments({ signal }), { interval: 15000 })
+  const { data, error, loading } = usePolling((signal) => establishmentApi.list({ signal }), { interval: 15000 })
   const establishments = useMemo(() => data?.establishments ?? [], [data])
 
   return (
