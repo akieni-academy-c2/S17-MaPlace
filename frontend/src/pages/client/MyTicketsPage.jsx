@@ -4,6 +4,7 @@ import { Button, EmptyState, Icon, InfoNote, Loader, StatusBadge, TicketNumber }
 import { ticketApi } from '@/services/api'
 import { usePolling } from '@/hooks/usePolling'
 import { useCurrentTicket } from '@/hooks/useCurrentTicket'
+import { estimateWaitMinutes, formatWait, serviceMinutesOf } from '@/constants/establishments'
 import { ICONS } from '@/constants/icons'
 import { TICKET_STATUS, PAUSE_REASON, getTicketAlert } from '@/constants/status'
 import { PATHS, to } from '@/constants/routes'
@@ -46,6 +47,7 @@ export default function MyTicketsPage() {
   const status = ticket && clientStatus(ticket)
   const isWaiting = ticket?.status === TICKET_STATUS.WAITING
   // 🚧 FT-3 — Tâche 3.3 : calculer serviceMinutes ici
+  const serviceMinutes = serviceMinutesOf(ticket?.establishment)
 
   return (
     <PageContent width="narrow">
@@ -80,7 +82,20 @@ export default function MyTicketsPage() {
               <TicketNumber number={ticket.number} size="lg" tone={isWaiting ? status.tone : 'primary'} />
             </div>
             <dl className={styles.facts}>
-              {/* 🚧 FT-3 — Tâche 3.3 : remettre « Devant vous » et « Attente estimée » (voir docs/TACHES_FRONTEND.md) */}
+              {isWaiting && (
+                <>
+                   <li>
+                       <span>Devant vous</span>
+                       <strong>{ticket.peopleAhead}</strong>
+                   </li>
+                    <li>
+                      <span>Attente estimée</span>
+                      <strong>
+                         {formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}
+                      </strong>
+                    </li>
+                </>
+              )}
               <div>
                 <dt>Numéro appelé</dt>
                 <dd>{formatTicketNumber(ticket.currentNumber)}</dd>
