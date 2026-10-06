@@ -46,7 +46,7 @@ export default function MyTicketsPage() {
   const ticket = ticketId ? data?.ticket : null
   const status = ticket && clientStatus(ticket)
   const isWaiting = ticket?.status === TICKET_STATUS.WAITING
-  // 🚧 FT-3 — Tâche 3.3 : calculer serviceMinutes ici
+ 
   const serviceMinutes = serviceMinutesOf(ticket?.establishment)
 
   return (
@@ -54,7 +54,6 @@ export default function MyTicketsPage() {
       <PageTitle eyebrow="Suivi" title="Mes tickets" text="Le ticket pris depuis cet appareil est suivi ici en temps réel." />
 
       {ticketId && loading && <Loader label="Récupération de votre ticket…" />}
-
       {ticketId && error && (
         <InfoNote tone="error" icon={ICONS.warning} title={error.status === 404 ? 'Ticket introuvable' : 'Impossible de charger le ticket'}>
           {error.status === 404 ? 'Ce ticket n’existe plus. ' : `${error.message} `}
@@ -84,18 +83,18 @@ export default function MyTicketsPage() {
             <dl className={styles.facts}>
               {isWaiting && (
                 <>
-                   <li>
-                       <span>Devant vous</span>
-                       <strong>{ticket.peopleAhead}</strong>
-                   </li>
-                    <li>
-                      <span>Attente estimée</span>
-                      <strong>
-                         {formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}
-                      </strong>
-                    </li>
-                </>
-              )}
+                 <div>
+                    <dt>Devant vous</dt>
+                    <dd>{ticket.peopleAhead}</dd>
+                 </div>
+                <div>
+                   <dt>Attente estimée</dt>
+                   <dd>
+                     {formatWait(estimateWaitMinutes(ticket.peopleAhead, serviceMinutes), serviceMinutes)}
+                 </dd>
+              </div>
+            </>
+          )}
               <div>
                 <dt>Numéro appelé</dt>
                 <dd>{formatTicketNumber(ticket.currentNumber)}</dd>
