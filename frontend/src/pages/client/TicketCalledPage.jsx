@@ -15,7 +15,6 @@ function useCallAlert(active) {
     if (!active) return undefined
     const previous = document.title
     document.title = 'C’est votre tour ! — Ma Place'
-    // Le navigateur n'autorise la vibration qu'après une interaction avec la page
     if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250])
     return () => {
       document.title = previous
@@ -86,7 +85,7 @@ export default function TicketCalledPage() {
               </Button>
             </Card>
 
-            <Card className={styles.block}>
+             <Card className={styles.block}>
               <h2 className="text-h3">Progression</h2>
               <TicketProgress ticket={ticket} />
             </Card>

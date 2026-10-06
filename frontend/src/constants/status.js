@@ -125,6 +125,7 @@ export function getPositionAlert(position) {
   return TICKET_ALERTS.waiting
 }
 
+
 /** Alerte correspondant à un ticket (WAITING ou SERVING). Position = personnes devant + 1. */
 export function getTicketAlert(ticket) {
   if (ticket?.status === TICKET_STATUS.SERVING) return TICKET_ALERTS.called

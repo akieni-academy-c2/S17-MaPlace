@@ -174,10 +174,10 @@ export default function TicketPage() {
             </div>
 
             <div className={styles.sideCol}>
-              <Card className={styles.progressCard}>
-                <h2 className="text-h3">Progression</h2>
-                <TicketProgress ticket={ticket} />
-              </Card>
+                 <Card className={styles.progressCard}>
+                  <h2 className="text-h3">Progression</h2>
+                  <TicketProgress ticket={ticket} />
+                </Card>
 
               <InfoNote icon={ICONS.sync} title="Gardez cette page ouverte">
                 Votre position s’actualise automatiquement. Quand ce sera votre tour, l’écran passera en vert.

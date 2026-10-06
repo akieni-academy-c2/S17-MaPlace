@@ -48,7 +48,6 @@ export default function JoinQueuePage() {
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
   const updatePhone = (e) => setForm((f) => ({ ...f, phone: formatPhone(normalizePhone(e.target.value)) }))
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     const nextErrors = validate(form)

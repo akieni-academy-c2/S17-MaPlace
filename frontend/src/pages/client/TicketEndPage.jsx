@@ -52,7 +52,7 @@ export default function TicketEndPage() {
   // Le parcours est fini : on libère le "Mon ticket" de la navigation
   useEffect(() => {
     if (ticket && currentId === ticketId) clear()
-  }, [ticket, currentId, ticketId, clear])
+  }, [ticket, currentId, ticketId, clear]) 
 
   const status = ticket?.status === TICKET_STATUS.CANCELLED ? TICKET_STATUS.CANCELLED : TICKET_STATUS.COMPLETED
   const cancelled = status === TICKET_STATUS.CANCELLED
