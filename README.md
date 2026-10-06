@@ -222,8 +222,8 @@ Authorization: Bearer <token>
 
 | Membre | Rôle |
 |---|---|
-| `<à compléter>` | Lead développeur |
-| `<à compléter>` | Administrateur du dépôt et développeur |
+| Giovani MOUKOKO | Lead développeur |
+| Chrislain MOUYOCKOLO  | Administrateur du dépôt et développeur |
 
 ### Équipe frontend — répartition des tâches
 
@@ -231,12 +231,21 @@ Chaque développeur a repris une ou deux pages, de la route dans `routes.jsx` ju
 
 | Identifiant | Auteur | Page(s) | Tâches |
 |---|---|---|---|
-| FT-1 | `<à compléter>` | Prendre un ticket + Ticket terminé | routes, vérification du formulaire, champ téléphone, durée du passage, « Reprendre un ticket ici », fin du suivi |
-| FT-2 | `<à compléter>` | Mon ticket + C'est votre tour | routes, couleur selon la position, cartes « Progression », alerte d'appel |
-| FT-3 | `<à compléter>` | Mes tickets | route, statut et couleur du ticket suivi, attente estimée |
-| FT-4 | `<à compléter>` | Favoris + page 404 | routes, grille des favoris |
+| FT-1 | Nice Tiphaine ASSOURA  | Prendre un ticket + Ticket terminé | routes, vérification du formulaire, champ téléphone, durée du passage, « Reprendre un ticket ici », fin du suivi |
+| FT-2 | Messi Soleil ELENGA  | Mon ticket + C'est votre tour | routes, couleur selon la position, cartes « Progression », alerte d'appel |
+| FT-3 | Gael YANGU GABRI  | Mes tickets | route, statut et couleur du ticket suivi, attente estimée |
+| FT-4 | Nsangou DJENNA | Favoris + page 404 | routes, grille des favoris |
+| FT-5 | Giovani MOUKOKO | Dashborad + file d'sttente | routes, dashbord et setup du frontend |
+| FT-6 | Chrislain MOUYOCKOLO | accueil et connexion | routes, accueil et connexion |
 
 > Les identifiants FT-1 à FT-4 servent à répartir les tâches dans la documentation du projet.
+
+### Équipe frontend — répartition des tâches
+
+| Auteur | Taches |
+|---|---|
+| Nsangou DJENNA | queue + ticket |
+| Chrislain Mouyockolo | authentification + etablissement |
 
 ## État du projet
 
