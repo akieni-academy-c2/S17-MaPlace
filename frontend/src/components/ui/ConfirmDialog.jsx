@@ -5,7 +5,7 @@ import styles from './ConfirmDialog.module.css'
 
 /**
  * Modale de confirmation (élément natif <dialog> : focus piégé, Échap, fond assombri).
- * tone : primary | danger — couleur de l'icône et du bouton de confirmation.
+ * tone : primary | danger - couleur de l'icône et du bouton de confirmation.
  */
 export function ConfirmDialog({
   open,

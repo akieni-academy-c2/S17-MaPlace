@@ -4,11 +4,8 @@ import { Icon } from './Icon'
 import styles from './Button.module.css'
 
 /**
- * Bouton du design system.
- * variant : primary (vert, action principale) | secondary (orange, action secondaire / attention)
- *           | outline | ghost | danger | soft (vert pâle) | danger-soft | inverse (blanc sur fond vert)
- * size    : sm | md | lg
- * `to` → rendu en <Link>, `href` → <a>. Un lien `disabled` est rendu comme un bouton désactivé.
+ * variant : primary | secondary | outline | ghost | danger | soft | danger-soft | inverse
+ * size : sm | md | lg. Avec `to`, rendu en <Link> ; avec `href`, en <a>.
  */
 export function Button({
   variant = 'primary',

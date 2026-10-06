@@ -15,7 +15,7 @@
   animation: splash-out var(--splash-exit, 450ms) var(--easing) both;
 }
 
-/* Halo orange discret qui « respire » derrière le logo */
+/* Halo orange discret qui "respire" derrière le logo */
 .glow {
   position: absolute;
   top: 40%;

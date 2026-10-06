@@ -3,7 +3,7 @@ import { ICONS } from '@/constants/icons'
 import { Icon } from './Icon'
 import styles from './Accordion.module.css'
 
-/** Accordéon (FAQ). items = [{ question, answer }] — un seul panneau ouvert à la fois. */
+/** Accordéon (FAQ). items = [{ question, answer }] - un seul panneau ouvert à la fois. */
 export function Accordion({ items, defaultOpen = 0 }) {
   const [open, setOpen] = useState(defaultOpen)
   const baseId = useId()

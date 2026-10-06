@@ -2,11 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import AppError from '../error/AppError.js';
 
-/**
- * Protège une route : exige l'en-tête « Authorization: Bearer <jeton> ».
- * Si le jeton est valide, l'établissement connecté est disponible dans `req.user` ({ id, type }) ;
- * sinon la requête est refusée avec une erreur 401.
- */
+/** Exige un jeton JWT valide ; l'établissement connecté est placé dans `req.user`. */
 const authMiddleware = (req, res, next) => {
   try {
     const authorization =

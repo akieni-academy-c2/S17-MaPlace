@@ -1,5 +1,5 @@
 /* =========================================================================
-   Ma Place — Design tokens
+   Ma Place - Design tokens
    Identité : vert canard (marque) · orange (accent) · blanc (fond dominant)
 
    Breakpoints (mobile first, à utiliser tels quels dans les CSS Modules) :
@@ -27,10 +27,10 @@
   --on-orange: #ffffff;
 
   /* ---------- Niveaux d'alerte du ticket (position dans la file) ---------- */
-  --yellow: #f2c230;       /* 15 – 11 */
+  --yellow: #f2c230;       /* 15 - 11 */
   --yellow-dark: #8a6500;  /* texte jaune lisible sur blanc */
   --yellow-light: #fff8dc;
-  --red: #d64545;          /* 5 – 1 */
+  --red: #d64545;          /* 5 - 1 */
   --red-dark: #b02f2f;
   --red-light: #fdeceb;
 
@@ -63,7 +63,7 @@
   --font-display: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
 
-  /* Échelle fluide : mobile → desktop sans saut */
+  /* Échelle fluide : mobile -> desktop sans saut */
   --fs-display: clamp(2rem, 1.35rem + 2.8vw, 3.5rem);   /* Hero */
   --fs-h1: clamp(1.625rem, 1.3rem + 1.4vw, 2.375rem);
   --fs-h2: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);

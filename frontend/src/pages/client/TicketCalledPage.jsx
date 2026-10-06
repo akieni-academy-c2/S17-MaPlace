@@ -14,7 +14,7 @@ function useCallAlert(active) {
   useEffect(() => {
     if (!active) return undefined
     const previous = document.title
-    document.title = '🔔 C’est votre tour ! — Ma Place'
+    document.title = 'C’est votre tour ! — Ma Place'
     if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([250, 120, 250])
     return () => {
       document.title = previous
@@ -22,7 +22,7 @@ function useCallAlert(active) {
   }, [active])
 }
 
-/** Écran « C'est votre tour ! » affiché quand l'établissement appelle le ticket. */
+/** Écran "C'est votre tour !" affiché quand l'établissement appelle le ticket. */
 export default function TicketCalledPage() {
   const { ticketId } = useParams()
   const { ticket, error, loading } = useTicketTracking(ticketId)

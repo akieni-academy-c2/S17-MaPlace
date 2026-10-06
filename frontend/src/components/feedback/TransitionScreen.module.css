@@ -93,7 +93,7 @@
 }
 .accent .iconBadge { color: var(--orange); }
 
-/* Grande valeur mise en avant (numéro de ticket…) */
+/* Grande valeur mise en avant (numéro de ticket...) */
 .highlight {
   margin: var(--space-1) 0;
   padding: var(--space-2) var(--space-6);

@@ -6,20 +6,7 @@ import { usePolling } from './usePolling'
 
 const byNumber = (a, b) => a.number - b.number
 
-/**
- * File d'attente de l'établissement connecté, rechargée en continu, et toutes les actions
- * du gestionnaire (ouvrir, mettre en pause, appeler le suivant…). Utilisé par le tableau
- * de bord et par la page « File d'attente ».
- *
- * `pending` indique l'action en cours pour afficher un chargement sur le bon bouton :
- * 'queue', 'next', 'create', 'serviceTime' ou l'id du ticket concerné.
- *
- * @returns {{
- *   status: string, pauseReason: string | null, tickets: object[], serving: object | null,
- *   waiting: object[], lastNumber: number, averageServiceMinutes: number, loading: boolean,
- *   error: string | null, pending: string | null, actions: object
- * }}
- */
+/** File de l'établissement connecté, rechargée en continu, et actions du gestionnaire. */
 export function useQueueManager() {
   const { data, error, loading, refresh } = usePolling((signal) => queueApi.get({ signal }))
   const [pending, setPending] = useState(null)

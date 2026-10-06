@@ -97,11 +97,7 @@ const closeQueue = async (establishmentId) =>
     'La file est déjà fermée.'
   );
 
-/**
- * Fin de journée avec des clients encore en attente : la file passe en pause jusqu'au
- * lendemain. Les tickets en attente gardent leur numéro et la reprise continue la même
- * numérotation. Refusé (409) s'il n'y a personne en attente : il suffit alors de fermer.
- */
+/** Reporte la file au lendemain : les tickets en attente gardent leur numéro. */
 const postponeQueue = async (establishmentId) => {
   const tickets = await findAllForCurrentQueue(establishmentId);
 

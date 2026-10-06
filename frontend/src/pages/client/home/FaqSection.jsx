@@ -4,7 +4,6 @@ import { FAQ } from '@/constants/faq'
 import { ICONS } from '@/constants/icons'
 import styles from './FaqSection.module.css'
 
-/** Questions fréquentes (accordéon). */
 export function FaqSection() {
   return (
     <section id="faq" className={`container ${styles.section}`} aria-labelledby="faq-titre">

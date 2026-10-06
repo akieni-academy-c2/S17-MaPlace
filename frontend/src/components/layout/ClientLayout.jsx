@@ -5,7 +5,7 @@ import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
 import styles from './ClientLayout.module.css'
 
-/** Fait défiler jusqu'à l'ancre (#faq, #comment-ca-marche…) après la navigation. */
+/** Fait défiler jusqu'à l'ancre (#faq, #comment-ca-marche...) après la navigation. */
 function useHashScroll() {
   const { hash, pathname } = useLocation()
   useEffect(() => {

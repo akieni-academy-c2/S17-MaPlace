@@ -2,16 +2,7 @@ import { createPortal } from 'react-dom'
 import { Icon, Logo } from '@/components/ui'
 import styles from './TransitionScreen.module.css'
 
-/**
- * Écran plein de transition affiché après une action (connexion, déconnexion, prise de ticket…).
- * - icon      : icône Lucide dans une pastille ; sans icône, le logo Ma Place est animé
- * - title     : message principal (« Au revoir », « Ticket confirmé ! »)
- * - name      : ligne secondaire (nom de l'établissement…)
- * - highlight : grande valeur mise en avant (numéro de ticket)
- * - text      : phrase d'accompagnement
- * - tone      : brand | accent (pastille orange)
- * Animations : CSS pur (@keyframes), rendu dans <body> via un portail React.
- */
+/** Écran plein affiché après une action (connexion, déconnexion, prise de ticket). */
 export function TransitionScreen({ icon, title, name, highlight, text, tone = 'brand', duration, leaving }) {
   return createPortal(
     <div

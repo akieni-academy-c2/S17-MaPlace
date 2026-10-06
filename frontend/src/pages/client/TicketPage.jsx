@@ -14,14 +14,7 @@ import { PATHS, to } from '@/constants/routes'
 import { downloadTicket, ticketExportData } from '@/utils/ticketExport'
 import styles from './TicketPage.module.css'
 
-/**
- * Page « Mon ticket » d'un client en attente, rechargée toutes les 5 secondes.
- *
- * La couleur et le message changent selon la position dans la file (voir getTicketAlert) :
- * jaune de la 15e à la 11e place, orange de la 10e à la 6e, rouge de la 5e à la 1re.
- * Quand le ticket est appelé, useTicketTracking redirige vers « C'est votre tour ».
- * Le client peut télécharger son ticket ou l'annuler (si le ticket a été pris sur cet appareil).
- */
+/** Page "Mon ticket" : suivi en direct, couleur selon la position, téléchargement et annulation. */
 export default function TicketPage() {
   const { ticketId } = useParams()
   const navigate = useNavigate()

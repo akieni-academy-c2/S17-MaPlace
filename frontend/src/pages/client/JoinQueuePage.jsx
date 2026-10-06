@@ -20,7 +20,7 @@ const PHONE_RE = /^0\d{8}$/
 /**
  * Vérifie le formulaire avant l'envoi.
  *
- * @returns {object} Un message par champ invalide, ex. { phone: 'Numéro invalide…' } ; vide si tout est bon.
+ * @returns {object} Un message par champ invalide, ex. { phone: 'Numéro invalide...' } ; vide si tout est bon.
  */
 const validate = ({ name, phone }) => {
   const errors = {}
@@ -29,15 +29,7 @@ const validate = ({ name, phone }) => {
   return errors
 }
 
-/**
- * Formulaire « Prendre un ticket ».
- *
- * 1. Le client saisit son nom et son téléphone (formaté pendant la saisie).
- * 2. À l'envoi, le ticket est créé ; son id et son jeton d'annulation sont gardés dans le navigateur.
- * 3. Un écran de confirmation s'affiche, puis le client arrive sur la page de suivi du ticket.
- *
- * Si la file n'est pas ouverte, le bouton d'envoi est désactivé.
- */
+/** Formulaire "Prendre un ticket" : création du ticket puis redirection vers son suivi. */
 export default function JoinQueuePage() {
   const { establishmentId } = useParams()
   const navigate = useNavigate()

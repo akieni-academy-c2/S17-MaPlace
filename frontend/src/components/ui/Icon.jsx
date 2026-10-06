@@ -1,13 +1,7 @@
 import { ICONS } from '@/constants/icons'
 import styles from './Icon.module.css'
 
-/**
- * Icône Lucide (SVG, tree-shaké).
- * @param {import('react').ComponentType|string} name  composant Lucide (ICONS.*) ou clé de ICONS
- * @param {number}  size    taille en px (défaut 24)
- * @param {boolean} filled  remplit la forme (étoile favorite, onglet actif…)
- * @param {number}  weight  graisse 100–700, convertie en épaisseur de trait
- */
+/** Icône Lucide. `name` : composant de ICONS, `filled` remplit la forme, `weight` épaissit le trait. */
 export function Icon({ name, size = 24, filled = false, weight = 400, className = '', label, ...rest }) {
   const Component = typeof name === 'string' ? ICONS[name] : name
   if (!Component) return null
