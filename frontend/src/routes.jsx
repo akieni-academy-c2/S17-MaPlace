@@ -19,6 +19,8 @@ const TicketCalledPage = lazy(() => import('@/pages/client/TicketCalledPage'))
 const LoginPage = lazy(() => import('@/pages/establishment/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/establishment/DashboardPage'))
 const QueuePage = lazy(() => import('@/pages/establishment/QueuePage'))
+const MyTicketsPage = lazy(() => import('@/pages/client/MyTicketsPage'))
+
 
 /** Pages client dans ClientLayout, pages établissement protégées par ProtectedRoute. */
 export const router = createBrowserRouter([
@@ -36,6 +38,9 @@ export const router = createBrowserRouter([
 
        { path: PATHS.ticket, element: <TicketPage /> },
       { path: PATHS.ticketCalled, element: <TicketCalledPage /> },
+
+      // 🚧 FT-2 — Tâche 2.1 : déclarer les routes « Mon ticket » et « C'est votre tour »
+      { path: PATHS.myTickets, element: <MyTicketsPage /> },
     ],
   },
   { path: PATHS.proLogin, element: <LoginPage /> },
