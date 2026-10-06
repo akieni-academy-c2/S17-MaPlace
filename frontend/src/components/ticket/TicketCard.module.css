@@ -1,0 +1,79 @@
+.ticket {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--primary);
+  color: var(--white);
+}
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-5) var(--space-6);
+  text-align: center;
+}
+.perforation {
+  position: relative;
+  height: 24px;
+}
+.perforation::before {
+  content: '';
+  position: absolute;
+  left: var(--space-6);
+  right: var(--space-6);
+  top: 50%;
+  border-top: 2px dashed var(--border-strong);
+}
+.perforation::after {
+  content: '';
+  position: absolute;
+  inset: 0 -1px;
+  background:
+    radial-gradient(circle at 0 50%, var(--notch-bg, var(--background)) 11px, var(--border) 11px 12px, transparent 12.5px),
+    radial-gradient(circle at 100% 50%, var(--notch-bg, var(--background)) 11px, var(--border) 11px 12px, transparent 12.5px);
+}
+.footer {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+/* ---------- Alertes de progression ---------- */
+/* --alert : couleur du niveau · --alert-soft : halo · --alert-ink : texte sur le bandeau */
+.near,
+.approaching,
+.soon,
+.next {
+  border: 2px solid var(--alert);
+  box-shadow: 0 0 0 6px var(--alert-soft), var(--shadow-md);
+}
+.near .header,
+.approaching .header,
+.soon .header,
+.next .header { background: var(--alert); color: var(--alert-ink, var(--white)); }
+.near .body > :global(.text-eyebrow),
+.approaching .body > :global(.text-eyebrow),
+.soon .body > :global(.text-eyebrow),
+.next .body > :global(.text-eyebrow) { color: var(--alert-text, var(--alert)); }
+
+.near { --alert: var(--yellow); --alert-soft: var(--yellow-light); --alert-ink: #3d2e00; --alert-text: var(--yellow-dark); }
+.approaching { --alert: var(--orange); --alert-soft: var(--orange-light); --alert-text: var(--orange-dark); }
+.soon { --alert: var(--red); --alert-soft: var(--red-light); --alert-text: var(--red-dark); animation: glow 2.4s ease-in-out infinite; }
+.next { --alert: var(--success); --alert-soft: var(--success-light); animation: glow 2.4s ease-in-out infinite; }
+@keyframes glow {
+  50% { box-shadow: 0 0 0 10px var(--alert-soft), var(--shadow-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soon, .next { animation: none; }
+}

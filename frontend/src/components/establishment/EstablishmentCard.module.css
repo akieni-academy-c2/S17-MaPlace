@@ -1,0 +1,113 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  transition: box-shadow var(--duration-base) var(--easing), transform var(--duration-base) var(--easing), border-color var(--duration-base);
+}
+.card:hover {
+  border-color: var(--primary-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.status {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 2;
+  box-shadow: var(--shadow-xs);
+}
+.favorite {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 2;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.name {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  margin-bottom: 2px;
+}
+/* Lien étiré : toute la carte mène à la fiche, les boutons restent cliquables au-dessus */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.link:focus-visible { outline: none; }
+.card:has(.link:focus-visible) { box-shadow: var(--shadow-focus); }
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+.meta svg { color: var(--primary-500); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: var(--space-3) 0;
+  border-block: 1px solid var(--border);
+}
+.stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-inline: var(--space-2);
+}
+.stats > div:first-child { padding-left: 0; }
+.stats > div + div { border-left: 1px solid var(--border); }
+.stats dt {
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.stats small {
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+}
+.current { color: var(--primary) !important; }
+
+.actions {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
