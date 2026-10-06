@@ -24,7 +24,7 @@ export function ProLayout() {
 
   const handleLogout = () => {
     setConfirmLogout(false)
-    // L'écran « Au revoir » couvre la redirection vers l'accueil (ProtectedRoute après une déconnexion volontaire)
+    // L'écran "Au revoir" couvre la redirection vers l'accueil (ProtectedRoute après une déconnexion volontaire)
     show({ title: `Au revoir${establishment?.name ? ',' : ''}`, name: establishment?.name, text: 'À très bientôt sur Ma Place.' })
     logout('user')
   }

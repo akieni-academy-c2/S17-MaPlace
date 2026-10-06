@@ -14,7 +14,7 @@ export function BottomNav() {
     <nav className={styles.nav} aria-label="Navigation rapide">
       {CLIENT_NAV.map((item) => {
         const active = item.isActive(pathname)
-        // « Ticket » mène directement au ticket suivi s'il existe
+        // "Ticket" mène directement au ticket suivi s'il existe
         const target = item.key === 'tickets' && ticketId ? to.ticket(ticketId) : item.to
         return (
           <NavLink key={item.key} to={target} aria-current={active ? 'page' : undefined} className={`${styles.link} ${active ? styles.active : ''}`}>

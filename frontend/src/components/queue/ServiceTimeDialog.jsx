@@ -8,18 +8,7 @@ import styles from './ServiceTimeDialog.module.css'
 /** Durées proposées par défaut (minutes). */
 const PRESETS = [5, 10, 15, 20, 30, 45]
 
-/**
- * Pop-up de réglage de la durée moyenne d'un passage au guichet.
- * Cette durée sert à calculer l'attente estimée affichée aux clients.
- *
- * @param {object} props
- * @param {boolean} props.open Pop-up visible.
- * @param {number} props.value Durée enregistrée, en minutes.
- * @param {number} [props.waitingCount] Clients en attente, pour l'aperçu.
- * @param {boolean} [props.loading] Enregistrement en cours.
- * @param {(minutes: number) => Promise<void>} props.onSave Enregistre la nouvelle durée.
- * @param {() => void} props.onClose Ferme la pop-up.
- */
+/** Pop-up de réglage de la durée moyenne d'un passage (sert à estimer l'attente). */
 export function ServiceTimeDialog({ open, value, waitingCount = 0, loading, onSave, onClose }) {
   return (
     <Modal
@@ -34,10 +23,7 @@ export function ServiceTimeDialog({ open, value, waitingCount = 0, loading, onSa
   )
 }
 
-/**
- * Formulaire de la pop-up. Il est recréé à chaque ouverture, donc il repart toujours
- * de la durée enregistrée. `custom` indique si la durée vient du champ libre ou d'un bouton.
- */
+/** Formulaire recréé à chaque ouverture : il repart toujours de la durée enregistrée. */
 function ServiceTimeForm({ value, waitingCount, loading, onSave, onClose }) {
   const [draft, setDraft] = useState(String(value))
   const [custom, setCustom] = useState(!PRESETS.includes(value)) // saisie libre plutôt qu'une durée proposée

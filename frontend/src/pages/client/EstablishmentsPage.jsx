@@ -13,7 +13,7 @@ export default function EstablishmentsPage() {
   const { hash } = useLocation()
   const { data, error, loading } = usePolling((signal) => establishmentApi.list({ signal }), { interval: 15000 })
 
-  // Depuis l'icône « recherche » du header : focus direct sur le champ
+  // Depuis l'icône "recherche" du header : focus direct sur le champ
   useEffect(() => {
     if (hash === '#recherche') document.getElementById('recherche')?.focus({ preventScroll: true })
   }, [hash])

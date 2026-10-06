@@ -45,7 +45,7 @@ CREATE TABLE establishments (
 
     city VARCHAR(100) NOT NULL DEFAULT 'Brazzaville',
 
-    -- Horaires affichés tels quels (ex. « Lun – Ven · 7h30 – 15h30 »).
+    -- Horaires affichés tels quels (ex. "Lun - Ven · 7h30 - 15h30").
     opening_hours VARCHAR(150),
 
     -- Miroir du statut de la file, synchronisé lors des transitions.

@@ -13,18 +13,7 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Envoie une requête au backend et renvoie le champ `data` de la réponse.
- *
- * @param {string} path Chemin de la route, par exemple '/tickets/42'.
- * @param {object} [options]
- * @param {string} [options.method='GET'] Méthode HTTP.
- * @param {object} [options.body] Données envoyées en JSON.
- * @param {boolean} [options.auth=false] Ajoute le jeton de l'établissement connecté.
- * @param {AbortSignal} [options.signal] Permet d'annuler la requête.
- * @returns {Promise<any>} Les données renvoyées par l'API.
- * @throws {ApiError} Si le serveur est injoignable ou répond avec une erreur.
- */
+/** Appelle l'API et renvoie `data` ; lève une ApiError en cas d'échec. `auth` ajoute le jeton. */
 async function request(path, { method = 'GET', body, auth = false, signal } = {}) {
   const headers = { Accept: 'application/json' }
   if (body !== undefined) headers['Content-Type'] = 'application/json'
@@ -62,28 +51,28 @@ async function request(path, { method = 'GET', body, auth = false, signal } = {}
 const withAuth = { auth: true }
 
 export const authApi = {
-  /** Connexion d'un établissement → { token, establishment } */
+  /** Connexion d'un établissement -> { token, establishment } */
   login: (email, password) => request('/auth/login', { method: 'POST', body: { email, password } }),
 }
 
 export const establishmentApi = {
-  /** Liste publique → { establishments } */
+  /** Liste publique -> { establishments } */
   list: (options) => request('/establishments', options),
 
-  /** Fiche publique → { establishment } */
+  /** Fiche publique -> { establishment } */
   get: (id, options) => request(`/establishments/${id}`, options),
 
-  /** Durée moyenne d'un passage de l'établissement connecté (1 à 240 min) → { establishment } */
+  /** Durée moyenne d'un passage de l'établissement connecté (1 à 240 min) -> { establishment } */
   updateServiceTime: (averageServiceMinutes) =>
     request('/establishments/me', { method: 'PATCH', body: { averageServiceMinutes }, ...withAuth }),
 }
 
 export const ticketApi = {
-  /** Prise de ticket par un client → { ticket } (avec cancelToken) */
+  /** Prise de ticket par un client -> { ticket } (avec cancelToken) */
   create: ({ establishmentId, name, phone }) =>
     request('/tickets', { method: 'POST', body: { establishmentId, name, phone } }),
 
-  /** Suivi d'un ticket → { ticket } (position, personnes devant, état de la file) */
+  /** Suivi d'un ticket -> { ticket } (position, personnes devant, état de la file) */
   get: (id, options) => request(`/tickets/${id}`, options),
 
   /** Fin de passage au guichet (établissement) */
@@ -98,7 +87,7 @@ export const ticketApi = {
 }
 
 export const queueApi = {
-  /** File en cours de l'établissement connecté → { queue, queueStatus, averageServiceMinutes, tickets } */
+  /** File en cours de l'établissement connecté -> { queue, queueStatus, averageServiceMinutes, tickets } */
   get: (options) => request('/queue', { ...options, ...withAuth }),
 
   open: () => request('/queue/open', { method: 'POST', ...withAuth }),
@@ -110,10 +99,10 @@ export const queueApi = {
 
   close: () => request('/queue/close', { method: 'POST', ...withAuth }),
 
-  /** Appelle le client suivant (le client au guichet est terminé automatiquement) → { ticket } */
+  /** Appelle le client suivant (le client au guichet est terminé automatiquement) -> { ticket } */
   callNext: () => request('/queue/next', { method: 'POST', ...withAuth }),
 
-  /** Ticket créé au guichet pour un client sans smartphone (téléphone facultatif) → { ticket } */
+  /** Ticket créé au guichet pour un client sans smartphone (téléphone facultatif) -> { ticket } */
   createWalkInTicket: ({ name, phone }) =>
     request('/queue/tickets', { method: 'POST', body: { name, phone }, ...withAuth }),
 }

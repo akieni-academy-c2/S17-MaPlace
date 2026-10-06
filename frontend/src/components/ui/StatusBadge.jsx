@@ -1,13 +1,7 @@
 import { Icon } from './Icon'
 import styles from './StatusBadge.module.css'
 
-/**
- * Pastille de statut.
- * tone : open | paused | closed (file)
- *        waiting | near | approaching | soon | next | called | serving | completed | cancelled (ticket)
- *        brand | accent | neutral
- * size : sm | md
- */
+/** Pastille de statut (file, ticket ou neutre). size : sm | md. */
 export function StatusBadge({ tone = 'neutral', icon, dot = false, pulse = false, size = 'md', children, className = '' }) {
   return (
     <span className={`${styles.badge} ${styles[tone]} ${styles[size]} ${className}`}>

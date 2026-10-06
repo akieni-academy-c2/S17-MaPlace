@@ -8,7 +8,7 @@ export function ProtectedRoute() {
   const location = useLocation()
 
   if (!isAuthenticated) {
-    // Déconnexion volontaire (après l'écran « Au revoir ») → accueil ; sinon → connexion
+    // Déconnexion volontaire (après l'écran "Au revoir") -> accueil ; sinon -> connexion
     if (logoutReason === 'user') return <Navigate to={PATHS.home} replace />
     return <Navigate to={PATHS.proLogin} replace state={{ from: location }} />
   }

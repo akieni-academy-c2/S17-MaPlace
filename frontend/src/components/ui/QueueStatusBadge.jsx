@@ -2,8 +2,8 @@ import { getQueueStatusMeta, TICKET_STATUS_META } from '@/constants/status'
 import { StatusBadge } from './StatusBadge'
 
 /**
- * Badge d'état d'une file (OPEN / PAUSED / CLOSED). `short` : « Ouverte » au lieu de « File ouverte ».
- * `pauseReason` : « Reprise demain » pour une file reportée au lendemain.
+ * Badge d'état d'une file (OPEN / PAUSED / CLOSED). `short` : "Ouverte" au lieu de "File ouverte".
+ * `pauseReason` : "Reprise demain" pour une file reportée au lendemain.
  */
 export function QueueStatusBadge({ status, pauseReason, short = false, ...rest }) {
   const meta = getQueueStatusMeta(status, pauseReason)

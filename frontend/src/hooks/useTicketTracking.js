@@ -12,14 +12,7 @@ const routeForStatus = {
   [TICKET_STATUS.CANCELLED]: to.ticketEnd,
 }
 
-/**
- * Suit un ticket en direct et affiche toujours la bonne page selon son statut :
- * en attente → « Mon ticket », appelé → « C'est votre tour », terminé ou annulé → récapitulatif.
- *
- * @param {string} ticketId
- * @param {{ poll?: boolean }} [options] poll = false pour un seul chargement.
- * @returns {{ ticket: object | null, error: Error | null, loading: boolean }}
- */
+/** Suit un ticket en direct et redirige vers la page qui correspond à son statut. */
 export function useTicketTracking(ticketId, { poll = true } = {}) {
   const navigate = useNavigate()
   const { data, error, loading } = usePolling((signal) => ticketApi.get(ticketId, { signal }), {

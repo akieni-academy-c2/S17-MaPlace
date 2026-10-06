@@ -5,7 +5,6 @@ import { Loader } from '@/components/ui'
 import { SplashScreen, TransitionProvider } from '@/components/feedback'
 import { router } from './routes'
 
-/** Racine de l'application : session, écrans de transition, routeur et écran d'ouverture. */
 export default function App() {
   return (
     <AuthProvider>

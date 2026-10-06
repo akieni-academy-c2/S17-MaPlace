@@ -3,7 +3,7 @@ import { ICONS } from '@/constants/icons'
 import { formatTicketNumber } from '@/utils/format'
 import styles from './CallNextPanel.module.css'
 
-/** Bloc d'action principal « Appeler le prochain ticket » (POST /api/queue/next). */
+/** Bloc d'action principal "Appeler le prochain ticket" (POST /api/queue/next). */
 export function CallNextPanel({ nextTicket, disabled, loading, onCallNext, hint }) {
   return (
     <section className={styles.panel} aria-labelledby="call-next-title">

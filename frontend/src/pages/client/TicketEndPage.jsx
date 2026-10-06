@@ -35,7 +35,7 @@ const CLOSED_CONTENT = {
   endLabel: 'Fermée à',
 }
 
-/** Durée entre deux dates : « 12 min », « 1 h 05 ». */
+/** Durée entre deux dates : "12 min", "1 h 05". */
 const formatDuration = (from, until) => {
   if (!from || !until) return '—'
   const minutes = Math.max(0, Math.round((new Date(until) - new Date(from)) / 60000))
@@ -49,7 +49,7 @@ export default function TicketEndPage() {
   const { ticket, error, loading } = useTicketTracking(ticketId, { poll: false })
   const { ticketId: currentId, clear } = useCurrentTicket()
 
-  // Le parcours est fini : on libère le « Mon ticket » de la navigation
+  // Le parcours est fini : on libère le "Mon ticket" de la navigation
   useEffect(() => {
     if (ticket && currentId === ticketId) clear()
   }, [ticket, currentId, ticketId, clear])

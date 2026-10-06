@@ -3,7 +3,7 @@ import { ICONS } from './icons'
 /**
  * Catégories d'établissements : identifiants de l'enum `establishment_category` renvoyés par l'API.
  * Le frontend ne fait qu'y associer un libellé, une icône et une couleur.
- * `accent` : 'green' | 'orange' — couleur du visuel des cartes (pas d'image requise).
+ * `accent` : 'green' | 'orange' - couleur du visuel des cartes (pas d'image requise).
  */
 export const CATEGORIES = [
   { id: 'ADMINISTRATION', label: 'Administration', icon: ICONS.administration, accent: 'green' },
@@ -39,19 +39,13 @@ export const getCategory = (establishment) => CATEGORIES.find((c) => c.id === es
 export const serviceMinutesOf = (establishment) =>
   establishment?.averageServiceMinutes ?? establishment?.average_service_minutes ?? AVERAGE_SERVICE_MINUTES
 
-/**
- * Attente estimée en minutes : personnes devant × durée moyenne d'un passage.
- *
- * @param {number | null} peopleAhead Nombre de personnes devant (null si inconnu).
- * @param {number} [serviceMinutes] Durée moyenne d'un passage dans l'établissement.
- * @returns {number | null}
- */
+/** Attente estimée en minutes : personnes devant x durée d'un passage. */
 export const estimateWaitMinutes = (peopleAhead, serviceMinutes = AVERAGE_SERVICE_MINUTES) =>
   peopleAhead > 0 ? Math.round(peopleAhead * serviceMinutes) : peopleAhead === 0 ? 0 : null
 
 /**
- * Affiche une attente : « < 5 min », « ≈ 15 min » ou « ≈ 1 h 10 ».
- * En dessous d'un passage, on affiche « < durée d'un passage ».
+ * Affiche une attente : "< 5 min", "~ 15 min" ou "~ 1 h 10".
+ * En dessous d'un passage, on affiche "< durée d'un passage".
  */
 export const formatWait = (minutes, serviceMinutes = AVERAGE_SERVICE_MINUTES) => {
   if (minutes == null) return '—'
@@ -62,7 +56,7 @@ export const formatWait = (minutes, serviceMinutes = AVERAGE_SERVICE_MINUTES) =>
   return `≈ ${h} h${m ? ` ${String(m).padStart(2, '0')}` : ''}`
 }
 
-/** Initiales pour l'avatar (« Mairie de Bacongo » → « MB »). */
+/** Initiales pour l'avatar ("Mairie de Bacongo" -> "MB"). */
 export const initials = (name = '') =>
   name
     .split(/\s+/)
@@ -71,13 +65,7 @@ export const initials = (name = '') =>
     .map((w) => w[0]?.toUpperCase())
     .join('') || name.slice(0, 2).toUpperCase()
 
-/**
- * Rassemble les informations d'affichage d'un établissement renvoyé par l'API :
- * catégorie (libellé + icône), localisation, horaires et attente estimée.
- *
- * @param {object} establishment Établissement de l'API.
- * @returns {object | null} `description` et `hours` valent null s'ils ne sont pas renseignés.
- */
+/** Informations d'affichage d'un établissement : catégorie, localisation, horaires, attente. */
 export function describeEstablishment(establishment) {
   if (!establishment) return null
   const serviceMinutes = serviceMinutesOf(establishment)

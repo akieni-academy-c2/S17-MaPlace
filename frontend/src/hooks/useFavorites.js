@@ -3,12 +3,7 @@ import { readRaw, setAndNotify, storage, STORAGE_KEYS, subscribeStorage } from '
 
 const read = () => storage.get(STORAGE_KEYS.favorites) ?? []
 
-/**
- * Établissements favoris, gardés dans le navigateur et partagés entre tous les composants
- * (ajouter un favori sur une carte met à jour la page Favoris).
- *
- * @returns {{ favorites: string[], toggle: (id: string) => void, isFavorite: (id: string) => boolean }}
- */
+/** Favoris enregistrés dans le navigateur, synchronisés entre les composants. */
 export function useFavorites() {
   const raw = useSyncExternalStore(subscribeStorage, () => readRaw(STORAGE_KEYS.favorites))
   // eslint-disable-next-line react-hooks/exhaustive-deps

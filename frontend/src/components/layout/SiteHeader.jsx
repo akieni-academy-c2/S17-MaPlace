@@ -8,7 +8,7 @@ import { PATHS } from '@/constants/routes'
 import { CLIENT_NAV } from '@/constants/site'
 import styles from './SiteHeader.module.css'
 
-/** Accès gestionnaire : « Espace pro » (connexion) ou « Mon espace » si déjà connecté. Visible sur toutes les tailles. */
+/** Accès gestionnaire : "Espace pro" (connexion) ou "Mon espace" si déjà connecté. Visible sur toutes les tailles. */
 function ProAccess() {
   const { isAuthenticated, establishment } = useAuth()
   return isAuthenticated ? (

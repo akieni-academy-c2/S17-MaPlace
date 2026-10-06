@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui'
 import { ICONS } from '@/constants/icons'
 import styles from './TicketCycle.module.css'
 
-/** Bandeau illustrant l'évolution d'un ticket (« Le cycle de votre ticket »). */
+/** Bandeau illustrant l'évolution d'un ticket ("Le cycle de votre ticket"). */
 export function TicketCycle() {
   return (
     <section className="container" aria-labelledby="cycle-titre">

@@ -69,7 +69,7 @@ import {
 } from 'lucide-react'
 
 /**
- * Registre centralisé des icônes (Lucide — https://lucide.dev/icons).
+ * Registre centralisé des icônes (Lucide - https://lucide.dev/icons).
  * Toujours passer par ces clés : <Icon name={ICONS.ticket} />
  */
 export const ICONS = Object.freeze({

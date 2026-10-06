@@ -65,17 +65,7 @@ export const TICKET_STATUS_META = {
   CANCELLED: { label: 'Annulé', tone: 'cancelled' },
 }
 
-/**
- * Alertes de progression d'un ticket en attente, selon sa position dans la file
- * (1 = prochain appelé, telle qu'affichée au client dans « Ma position ») :
- *   > 15     waiting      brand   « En attente »
- *   15 – 11  near         jaune   « Préparez-vous »
- *   10 – 6   approaching  orange  « Votre tour approche »
- *   5 – 2    soon         rouge   « Bientôt votre tour »
- *   1        next         rouge   « Vous êtes le prochain »
- * Un ticket SERVING passe à l'écran vert « C'est votre tour ! ».
- * `key` désigne le message et l'étape de progression, `tone` la couleur.
- */
+/** Alertes selon la position : jaune 15 à 11, orange 10 à 6, rouge 5 à 1, vert quand appelé. */
 export const NEAR_THRESHOLD = 15
 export const APPROACHING_THRESHOLD = 10
 export const SOON_THRESHOLD = 5

@@ -2,16 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const POLL_INTERVAL = 5000
 
-/**
- * Charge des données puis les recharge à intervalle régulier (« temps réel » sans WebSocket).
- *
- * @param {(signal: AbortSignal) => Promise<any>} fetcher Fonction qui appelle l'API.
- * @param {object} [options]
- * @param {number} [options.interval=5000] Délai entre deux chargements en ms ; 0 = un seul chargement.
- * @param {boolean} [options.enabled=true] false = ne rien charger.
- * @param {Array} [options.deps] Valeurs qui relancent le chargement quand elles changent (ex. un id).
- * @returns {{ data: any, error: Error | null, loading: boolean, refresh: () => Promise<void> }}
- */
+/** Appelle `fetcher` puis le relance toutes les `interval` ms (0 = un seul appel). */
 export function usePolling(fetcher, { interval = POLL_INTERVAL, enabled = true, deps = [] } = {}) {
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)

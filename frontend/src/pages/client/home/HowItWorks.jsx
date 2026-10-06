@@ -20,7 +20,6 @@ const STEPS = [
   },
 ]
 
-/** Section pédagogique « Comment ça marche ? ». */
 export function HowItWorks() {
   return (
     <section id="comment-ca-marche" className={`container ${styles.section}`} aria-labelledby="how-titre">

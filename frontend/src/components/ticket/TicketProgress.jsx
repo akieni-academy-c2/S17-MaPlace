@@ -19,12 +19,7 @@ const STEPS = [
 /** Étapes colorées selon le niveau d'alerte (jaune, orange, rouge, vert). */
 const ALERT_STEPS = ['near', 'approaching', 'soon', 'next', 'called']
 
-/**
- * Étape(s) en cours selon le ticket. Un ticket au guichet (SERVING) active à la fois
- * « C'est votre tour » et « En cours », car l'API ne distingue pas l'appel de la prise en charge.
- *
- * @returns {string[]} Clés des étapes en cours ; vide si le ticket est terminé.
- */
+/** Étapes en cours ; un ticket SERVING active "C'est votre tour" et "En cours". */
 function currentSteps(ticket) {
   switch (ticket.status) {
     case TICKET_STATUS.WAITING:

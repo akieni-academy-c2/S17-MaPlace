@@ -83,7 +83,7 @@ const createTicket = async ({ establishmentId, name, phone }) => {
 
 /**
  * Ticket créé au guichet pour un client sans smartphone. Le téléphone est facultatif
- * (enregistré vide). Renvoie le ticket complet (position, personnes devant…) pour l'impression.
+ * (enregistré vide). Renvoie le ticket complet (position, personnes devant...) pour l'impression.
  */
 const createWalkInTicket = async (establishmentId, { name, phone } = {}) => {
   validateName(name);

@@ -3,13 +3,7 @@ import { authApi } from '@/services/api'
 import { storage, STORAGE_KEYS } from '@/utils/storage'
 import { AuthContext } from './authContext'
 
-/**
- * Garde la session de l'établissement connecté (jeton + infos) dans le navigateur
- * et la partage avec toute l'application via `useAuth()`.
- *
- * `logoutReason` vaut 'user' après une déconnexion volontaire et 'expired' quand l'API
- * a refusé le jeton : la page de connexion affiche alors « session expirée ».
- */
+/** Session de l'établissement connecté. `logoutReason` : 'user' ou 'expired'. */
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => storage.get(STORAGE_KEYS.token))
   const [establishment, setEstablishment] = useState(() => storage.get(STORAGE_KEYS.establishment))

@@ -6,12 +6,7 @@ const readTokens = () => storage.get(STORAGE_KEYS.cancelTokens) ?? {}
 /** Jeton d'annulation d'un ticket pris depuis ce navigateur, ou null. */
 export const getCancelToken = (ticketId) => readTokens()[ticketId] ?? null
 
-/**
- * Ticket suivi depuis ce navigateur. Les clients n'ont pas de compte : l'identifiant du ticket
- * et son jeton d'annulation sont gardés dans le localStorage.
- *
- * @returns {{ ticketId: string | null, save: (id: string, cancelToken?: string) => void, clear: () => void }}
- */
+/** Ticket suivi depuis ce navigateur et son jeton d'annulation (localStorage). */
 export function useCurrentTicket() {
   const ticketId = useSyncExternalStore(subscribeStorage, () => storage.get(STORAGE_KEYS.currentTicket))
 

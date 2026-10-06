@@ -7,12 +7,7 @@ import {
   findById,
 } from '../modele/establishmentModel.js';
 
-/**
- * Vérifie l'email et le mot de passe, puis crée un jeton JWT valable 1 jour (par défaut).
- *
- * @returns {Promise<{ token: string, establishment: object }>}
- * @throws {AppError} 401 si l'email ou le mot de passe est incorrect.
- */
+/** Vérifie l'email et le mot de passe puis renvoie un jeton JWT (erreur 401 sinon). */
 const login = async (email, password) => {
   const establishment = await findByEmail(email);
 

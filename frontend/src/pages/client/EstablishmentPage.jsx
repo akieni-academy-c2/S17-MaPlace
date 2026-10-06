@@ -12,7 +12,7 @@ import { PATHS, to } from '@/constants/routes'
 import { formatPhone, formatTicketNumber, plural } from '@/utils/format'
 import styles from './EstablishmentPage.module.css'
 
-/** Message d'état de la file pour le bloc « Prendre un ticket ». */
+/** Message d'état de la file pour le bloc "Prendre un ticket". */
 const STATUS_NOTE = {
   [QUEUE_STATUS.OPEN]: { tone: 'success', icon: ICONS.checkCircle, title: 'La file est ouverte' },
   [QUEUE_STATUS.PAUSED]: { tone: 'warning', icon: ICONS.pause, title: 'Nouveaux tickets temporairement suspendus' },
@@ -28,7 +28,7 @@ const VISIT_STEPS = [
 /**
  * Page publique d'un établissement : état de la file, numéro appelé, nombre de personnes
  * en attente, attente estimée, horaires et adresse. Les chiffres se rechargent toutes les
- * 5 secondes ; le bouton « Prendre un ticket » n'est actif que si la file est ouverte.
+ * 5 secondes ; le bouton "Prendre un ticket" n'est actif que si la file est ouverte.
  */
 export default function EstablishmentPage() {
   const { establishmentId } = useParams()

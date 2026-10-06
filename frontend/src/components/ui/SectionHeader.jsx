@@ -2,7 +2,7 @@ import styles from './SectionHeader.module.css'
 
 /**
  * Titre de section : eyebrow optionnel, titre (avec accent orange décoratif) et texte.
- * `action` s'aligne à droite sur desktop (lien « Voir tout », tri…).
+ * `action` s'aligne à droite sur desktop (lien "Voir tout", tri...).
  */
 export function SectionHeader({ eyebrow, title, text, action, as: Tag = 'h2', align = 'left', id, className = '' }) {
   return (

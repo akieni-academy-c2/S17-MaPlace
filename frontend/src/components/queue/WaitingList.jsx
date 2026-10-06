@@ -4,12 +4,7 @@ import { getPositionAlert, TICKET_STATUS } from '@/constants/status'
 import { formatPhone, formatTime, plural } from '@/utils/format'
 import styles from './WaitingList.module.css'
 
-/**
- * Liste de tickets (tableau en desktop, cartes en mobile).
- * Action selon le statut : WAITING → « Annuler », SERVING → « Terminer » (si `onComplete`).
- * `waiting` : tous les tickets en attente, dans l'ordre : sert à colorer chaque numéro selon sa position.
- * `total` : nombre affiché dans le compteur si la liste est tronquée ou paginée ; `footer` : sous la liste.
- */
+/** Liste de tickets (tableau sur desktop, cartes sur mobile) avec les actions Annuler / Terminer. */
 export function WaitingList({
   tickets,
   pendingId,

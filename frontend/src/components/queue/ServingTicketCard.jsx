@@ -3,7 +3,7 @@ import { ICONS } from '@/constants/icons'
 import { formatPhone, formatSince } from '@/utils/format'
 import styles from './ServingTicketCard.module.css'
 
-/** Ticket actuellement au guichet (SERVING) + action « Terminer ce ticket ». */
+/** Ticket actuellement au guichet (SERVING) + action "Terminer ce ticket". */
 export function ServingTicketCard({ ticket, loading, onComplete }) {
   if (!ticket) {
     return (

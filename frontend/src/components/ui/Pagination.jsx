@@ -2,7 +2,7 @@ import { ICONS } from '@/constants/icons'
 import { Icon } from './Icon'
 import styles from './Pagination.module.css'
 
-/** Pages affichées : 1 … 4 5 6 … 12 */
+/** Pages affichées : 1 ... 4 5 6 ... 12 */
 function pageList(page, count) {
   if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1)
   const pages = new Set([1, count, page - 1, page, page + 1])
@@ -11,7 +11,7 @@ function pageList(page, count) {
 }
 
 /**
- * Pagination (précédent / pages / suivant) + résumé « 1–8 sur 23 ».
+ * Pagination (précédent / pages / suivant) + résumé "1-8 sur 23".
  * Masquée s'il n'y a qu'une page. `targetId` : élément ramené en haut de l'écran au changement de page.
  */
 export function Pagination({ page, pageCount, onChange, from, to, total, itemLabel = 'éléments', targetId, label = 'Pagination' }) {

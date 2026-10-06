@@ -5,7 +5,6 @@ import { PATHS } from '@/constants/routes'
 import { CLIENT_NAV, CONTACT, INFO_LINKS } from '@/constants/site'
 import styles from './SiteFooter.module.css'
 
-/** Pied de page client. */
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>

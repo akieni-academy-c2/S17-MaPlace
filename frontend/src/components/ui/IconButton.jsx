@@ -1,7 +1,7 @@
 import { Icon } from './Icon'
 import styles from './IconButton.module.css'
 
-/** Bouton rond icône seule (menu, recherche, déconnexion…). variant : ghost | filled | tonal | outline. `label` obligatoire pour l'accessibilité. */
+/** Bouton rond icône seule (menu, recherche, déconnexion...). variant : ghost | filled | tonal | outline. `label` obligatoire pour l'accessibilité. */
 export function IconButton({ icon, label, variant = 'ghost', size = 40, className = '', ...rest }) {
   return (
     <button

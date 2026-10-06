@@ -185,7 +185,7 @@ Ces comptes n'existent que si le seed a été chargé. Ils servent au développe
 
 ## API
 
-Préfixe : `/api`. Les routes marquées 🔒 demandent le jeton JWT de l'établissement :
+Préfixe : `/api`. Les routes marquées **(JWT)** demandent le jeton JWT de l'établissement :
 
 ```text
 Authorization: Bearer <token>
@@ -194,19 +194,19 @@ Authorization: Bearer <token>
 | Méthode | Route | Rôle |
 |---|---|---|
 | POST | `/auth/login` | Connexion d'un établissement |
-| GET | `/auth/me` 🔒 | Établissement connecté |
+| GET | `/auth/me` **(JWT)** | Établissement connecté |
 | GET | `/establishments` | Liste des établissements et de leur affluence |
 | GET | `/establishments/:id` | Fiche d'un établissement |
-| PATCH | `/establishments/me` 🔒 | Durée moyenne d'un passage |
+| PATCH | `/establishments/me` **(JWT)** | Durée moyenne d'un passage |
 | POST | `/tickets` | Prendre un ticket |
 | GET | `/tickets/:id` | Suivre un ticket |
 | POST | `/tickets/:id/cancel-by-client` | Annulation par le client (jeton d'annulation) |
-| POST | `/tickets/:id/complete` 🔒 | Terminer un passage |
-| POST | `/tickets/:id/cancel` 🔒 | Annuler un ticket |
-| GET | `/queue` 🔒 | File en cours et ses tickets |
-| POST | `/queue/open` · `/pause` · `/resume` · `/postpone` · `/close` 🔒 | Changer l'état de la file |
-| POST | `/queue/next` 🔒 | Appeler le client suivant |
-| POST | `/queue/tickets` 🔒 | Créer un ticket au guichet |
+| POST | `/tickets/:id/complete` **(JWT)** | Terminer un passage |
+| POST | `/tickets/:id/cancel` **(JWT)** | Annuler un ticket |
+| GET | `/queue` **(JWT)** | File en cours et ses tickets |
+| POST | `/queue/open` · `/pause` · `/resume` · `/postpone` · `/close` **(JWT)** | Changer l'état de la file |
+| POST | `/queue/next` **(JWT)** | Appeler le client suivant |
+| POST | `/queue/tickets` **(JWT)** | Créer un ticket au guichet |
 
 `GET /health` indique si l'API est connectée à la base.
 
@@ -218,7 +218,7 @@ Authorization: Bearer <token>
 | Backend | Render (Web Service) | 
 | Frontend | Vercel ou Render (Static Site) | 
 
-## 👥 Équipe du projet
+## Équipe du projet
 
 | Membre | Rôle |
 |---|---|

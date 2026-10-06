@@ -61,12 +61,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.roundRect(x, y, w, h, r)
 }
 
-/**
- * Dessine le ticket dans un canvas (600 px de large, rendu en double résolution).
- *
- * @param {object} t Données préparées par `ticketExportData`.
- * @returns {Promise<HTMLCanvasElement>}
- */
+/** Dessine le ticket dans un canvas (600 px, double résolution). */
 async function renderTicketCanvas(t) {
   await Promise.all([document.fonts.load(`800 40px ${DISPLAY}`), document.fonts.load(`400 16px ${BODY}`)]).catch(() => {})
 
@@ -181,7 +176,6 @@ const fileName = (t) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')}.png`
 
-/** Télécharge le ticket en PNG. */
 export async function downloadTicket(t) {
   const canvas = await renderTicketCanvas(t)
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
@@ -219,12 +213,7 @@ export async function printTicket(t) {
   setTimeout(() => frame.remove(), 1000)
 }
 
-/**
- * Prépare les données à dessiner à partir d'un ticket renvoyé par l'API.
- *
- * @param {object} ticket Ticket de l'API.
- * @param {object} [extra] Valeurs à remplacer, ex. `issuedBy` pour un ticket remis au guichet.
- */
+/** Données à dessiner à partir d'un ticket de l'API ; `extra` remplace des valeurs. */
 export const ticketExportData = (ticket, extra = {}) => ({
   number: ticket.number,
   establishmentName: ticket.establishment?.name,

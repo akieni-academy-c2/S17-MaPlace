@@ -12,7 +12,7 @@ import { ProPageHeader } from './ProPageHeader'
 import styles from './DashboardPage.module.css'
 
 const HISTORY_SIZE = 5
-/** Nombre de tickets en attente affichés sur le tableau de bord (la liste complète est dans « File d'attente »). */
+/** Nombre de tickets en attente affichés sur le tableau de bord (la liste complète est dans "File d'attente"). */
 const NEXT_SIZE = 5
 const today = () => new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 

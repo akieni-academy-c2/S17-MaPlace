@@ -16,7 +16,7 @@ export const PATHS = Object.freeze({
   proQueue: '/pro/file-attente',
 })
 
-/** Construit une URL avec ses paramètres : to.ticket('42') → '/tickets/42'. */
+/** Construit une URL avec ses paramètres : to.ticket('42') -> '/tickets/42'. */
 export const to = {
   establishments: (query) => (query ? `${PATHS.establishments}?q=${encodeURIComponent(query)}` : PATHS.establishments),
   establishment: (id) => `/etablissements/${id}`,
