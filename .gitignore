@@ -35,3 +35,5 @@ lerna-debug.log*
 
 # OS
 .DS_Store
+# Documentation interne
+docs/
